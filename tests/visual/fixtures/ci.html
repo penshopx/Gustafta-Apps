@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<meta charset="utf-8">
+<title>Isolated pre-release runner fixture</title>
+<style>
+  body { background: #111827; color: white; font-family: sans-serif; }
+  article { width: 400px; height: 200px; background: #334155; }
+</style>
+<div id="root">
+  <h1></h1>
+  <div id="hierarchy"><article class="prose ring-2 ring-violet-400">Fixture tanpa API atau database</article></div>
+</div>
+<script type="module">
+  const headings = {
+    "/": "Kerja konstruksi lebih terarah",
+    "/kontraktor": "Menangkan Tender Lebih Cepat",
+    "/documentation": "Dokumentasi Gustafta",
+    "/pricing": "Anda yang Build",
+  };
+  const heading = document.querySelector("h1");
+  heading.textContent = headings[location.pathname];
+  // The failing page follows a successful capture, so partial evidence is tested.
+  if (import.meta.env.VITE_FIXTURE_MISSING_HEADING === "true" && location.pathname === "/kontraktor") {
+    heading.remove();
+  }
+</script>
+</html>

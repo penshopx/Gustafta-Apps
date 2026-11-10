@@ -1,0 +1,682 @@
+import { useEffect, useState } from "react";
+import { PAYMENT_BASE_URL } from "@/lib/payment-base";
+import { Link } from "wouter";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  trackLead, trackViewContent, trackContact,
+  trackInitiateCheckout, trackCustomEvent, withMetaAttribution,
+} from "@/hooks/use-meta-pixel";
+import {
+  Flame, Check, Star, Lightbulb, Users, Zap, Target, BadgeCheck,
+  BookOpen, Brain, GraduationCap, Briefcase, ChevronRight,
+  HardHat, FileText, ClipboardList, Building2, Award, Wrench,
+} from "lucide-react";
+import { TRILOGI } from "@/data/pricing";
+import coverFlat from "@assets/Monolog-_cover_1781287565935.jpg";
+import cover3D from "@assets/Buku_3D_1781288556255.png";
+import mockupDevices from "@assets/1781288755_1781288818548.jpg";
+import { useContactNumbers } from "@/lib/contact";
+
+const SCALEV_BUNDLE = `${PAYMENT_BASE_URL}`;
+const SCALEV_BUKU1  = `${PAYMENT_BASE_URL}`;
+
+// Data konteks industri konstruksi Indonesia (sumber publik/resmi)
+const STATS_KONSTRUKSI = [
+  {
+    icon: Building2,
+    value: "±300 rb",
+    label: "BUJK terdaftar di LPJK yang wajib memenuhi standar SBU, SKK, dan kelayakan administrasi secara berkala.",
+    source: "LPJK / BPKH Konstruksi, 2024",
+  },
+  {
+    icon: FileText,
+    value: "60–70%",
+    label: "Estimasi tender yang gugur di tahap administrasi — bukan karena harga, tapi karena kelengkapan dokumen.",
+    source: "Laporan LKPP & praktisi pengadaan, 2023–2024",
+  },
+  {
+    icon: Brain,
+    value: "+14%",
+    label: "Rata-rata kenaikan produktivitas profesional yang dibantu AI generatif dalam pekerjaan berbasis dokumen.",
+    source: "Brynjolfsson, Li & Raymond, NBER w31161 / QJE, 2023",
+  },
+];
+
+export default function TrilogiLanding() {
+  const contact = useContactNumbers();
+  const WA_URL = `https://wa.me/${contact.secondary}?text=Halo%20Gustafta%2C%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20Peta%20Jalan%20Konstruksi%20Digital`;
+
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const DEADLINE = new Date("2026-08-15T00:00:00+07:00");
+    const tick = () => {
+      const diff = DEADLINE.getTime() - Date.now();
+      if (diff <= 0) { setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
+      setCountdown({
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    trackViewContent({ content_name: "Peta Jalan Konstruksi Digital", content_category: "Panduan" });
+  }, []);
+
+  const openCheckout = (
+    e: { preventDefault: () => void },
+    url: string,
+    label: string,
+    value: number,
+  ) => {
+    e.preventDefault();
+    trackInitiateCheckout({ content_name: label, value, currency: "IDR" });
+    trackCustomEvent("Checkout_Click", { source: "trilogi-landing", label });
+    window.open(withMetaAttribution(url), "_blank", "noopener,noreferrer");
+  };
+  const handleBundleClick = (e: { preventDefault: () => void }) =>
+    openCheckout(e, SCALEV_BUNDLE, "Peta Jalan Bundle", TRILOGI.bundle.amount);
+  const handleBuku1Click = (e: { preventDefault: () => void }) =>
+    openCheckout(e, SCALEV_BUKU1, "Peta Jalan Buku 1", TRILOGI.bukuSatu.amount);
+
+  return (
+    <div className="min-h-screen bg-gray-50 text-gray-800 font-sans" data-testid="page-trilogi-landing">
+
+      {/* ── NAVBAR ── */}
+      <nav className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+          <Link href="/">
+            <span className="font-extrabold text-xl text-blue-900 cursor-pointer">GUSTAFTA</span>
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-1 text-xs font-mono text-red-600 font-bold">
+              <Flame className="w-3.5 h-3.5 animate-bounce" />
+              {[
+                { v: countdown.days, l: "Hari" },
+                { v: countdown.hours, l: "Jam" },
+                { v: countdown.minutes, l: "Mnt" },
+                { v: countdown.seconds, l: "Dtk" },
+              ].map(({ v, l }, i) => (
+                <span key={l} className="flex items-center gap-0.5">
+                  {i > 0 && <span className="opacity-40">:</span>}
+                  <span className="bg-red-100 px-1 py-0.5 rounded tabular-nums">{String(v).padStart(2, "0")}</span>
+                  <span className="text-gray-400 text-[10px]">{l}</span>
+                </span>
+              ))}
+            </div>
+            <a href={SCALEV_BUNDLE} target="_blank" rel="noopener noreferrer" onClick={handleBundleClick}
+              className="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-5 rounded-full text-sm transition-all transform hover:scale-105 active:scale-95"
+              data-testid="button-nav-earlybird">
+              Mulai Peta Jalan
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* ══════════════════════════════════════════════
+          HERO
+      ══════════════════════════════════════════════ */}
+      <section className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-600 text-white py-16 md:py-20 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-10 items-center">
+
+            {/* LEFT — Teks & CTA */}
+            <div>
+              <span className="bg-blue-950/60 text-blue-100 text-sm font-semibold px-4 py-1.5 rounded-full mb-6 inline-block border border-blue-400/30">
+                🏗️ Untuk BUJK, Tenaga Ahli &amp; Profesional Jasa Konstruksi
+              </span>
+
+              <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-extrabold mb-5 leading-tight" data-testid="text-trilogi-hero">
+                Bisnis Konstruksi Jalan —<br />
+                Tapi Dokumentasi &amp; Kepatuhan Masih{" "}
+                <span className="text-orange-400 underline decoration-wavy decoration-orange-400/50">Jadi Beban?</span>
+              </h1>
+
+              <p className="text-base md:text-lg text-blue-100 mb-8 leading-relaxed">
+                Masalahnya <strong className="text-white">BUKAN</strong> kurang pengalaman.
+                Masalahnya, pengetahuan teknis Anda masih berjalan <strong className="text-orange-300">"MANUAL"</strong> —
+                bergantung pada waktu, tenaga, dan orang yang tidak bisa standby 24 jam.{" "}
+                <strong className="text-white">Saatnya biarkan AI bekerja atas nama keahlian Anda.</strong>
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 mb-5">
+                <a href={SCALEV_BUNDLE} target="_blank" rel="noopener noreferrer" onClick={handleBundleClick}
+                  className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-base font-bold py-4 px-7 rounded-xl shadow-2xl transition-all transform hover:scale-105 active:scale-95"
+                  data-testid="button-hero-bundle">
+                  🗺️ Ambil Peta Jalan Sekarang
+                </a>
+                <a href={WA_URL} target="_blank" rel="noopener noreferrer"
+                  onClick={() => trackContact()}
+                  className="inline-flex items-center justify-center gap-2 border-2 border-white/40 hover:border-white text-white text-base font-semibold py-4 px-7 rounded-xl transition-all hover:bg-white/10"
+                  data-testid="button-hero-wa">
+                  Tanya via WhatsApp
+                </a>
+              </div>
+
+              <p className="text-xs text-blue-200 flex flex-wrap gap-x-3 gap-y-1">
+                <span>✅ Garansi 30 Hari Bersyarat</span>
+                <span>🔒 Checkout Aman via Scalev</span>
+                <span>📦 Akses Lifetime</span>
+              </p>
+            </div>
+
+            {/* RIGHT — 3D Book Cover */}
+            <div className="flex items-center justify-center md:justify-end">
+              <div className="relative">
+                <div className="absolute inset-0 bg-orange-400/20 blur-3xl rounded-full scale-110" />
+                <img
+                  src={cover3D}
+                  alt="Peta Jalan Konstruksi Digital — Panduan AI untuk BUJK dan Profesional"
+                  className="relative w-64 sm:w-72 md:w-80 drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+                />
+                <div className="absolute -top-3 -right-3 bg-orange-500 text-white text-xs font-extrabold px-3 py-1.5 rounded-full shadow-lg rotate-6 border-2 border-white">
+                  Early Bird 🔥
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          PROBLEM — Pain Points Konstruksi
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">
+            Familiar dengan Salah Satu Kondisi Ini?
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              {[
+                "SBU mau diperpanjang, tapi dokumen teknis selalu ada yang kurang atau tidak sesuai format — proses makan waktu berbulan-bulan.",
+                "Ikut tender sudah semangat, tapi gugur di tahap administrasi karena persyaratan tidak lengkap — padahal kemampuan teknis sudah cukup.",
+                "Peraturan PUPR, Perpres pengadaan, dan standar SKK terus diperbarui — susah diikuti sendiri tanpa tim legal khusus.",
+                "Ingin digitalisasi operasional tapi bingung mulai dari mana, dan khawatir biaya konsultan IT terlalu mahal.",
+              ].map((text, i) => (
+                <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-red-50 border border-red-100">
+                  <span className="text-red-500 text-xl mt-0.5 flex-shrink-0">❌</span>
+                  <p className="text-gray-700 text-sm leading-relaxed">{text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-blue-900 text-white p-7 rounded-2xl shadow-xl flex flex-col justify-center">
+              <p className="text-xl font-extrabold mb-3">STOP. Ini bukan salah Anda.</p>
+              <p className="text-blue-100 leading-relaxed text-sm mb-4">
+                Selama ini pengetahuan dan pengalaman Anda <strong className="text-white">bekerja satu arah</strong> —
+                tersimpan di kepala Anda sendiri, tidak bisa diakses kapanpun dibutuhkan, dan habis saat Anda tidak hadir.
+              </p>
+              <p className="text-white font-bold text-sm">
+                Saatnya ubah keahlian konstruksi Anda menjadi{" "}
+                <span className="bg-orange-400 px-1.5 py-0.5 rounded">ASISTEN AI</span>{" "}
+                yang bekerja 24 jam — menjawab pertanyaan, menyusun dokumen, dan memandu tim Anda.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          SOLUTION — 3 Tahap Peta Jalan
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-gray-100">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">Solusinya</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            Peta Jalan 3 Tahap Menuju{" "}
+            <span className="text-blue-700">BUJK &amp; Profesional Konstruksi Berbasis AI</span>
+          </h2>
+          <p className="text-gray-600 max-w-3xl mx-auto text-sm leading-relaxed mb-10">
+            Panduan <strong className="text-gray-900">Trilogi: Dari Monolog ke Dialog</strong> — diadaptasi untuk konteks
+            jasa konstruksi dan keteknikan Indonesia. Tidak perlu coding. Cukup pimpin{" "}
+            <strong className="text-gray-900">Agen AI Spesialis Konstruksi</strong> untuk bekerja atas nama keahlian Anda.
+          </p>
+
+          {/* 3 Buku */}
+          <div className="grid sm:grid-cols-3 gap-4 mb-10">
+            {[
+              {
+                n: "I", icon: BookOpen,
+                title: "Kenali",
+                sub: "Pahami cara kerja AI dalam ekosistem jasa konstruksi: SBU, SKK, tender, dan kepatuhan regulasi",
+                color: "from-blue-700 to-blue-500",
+              },
+              {
+                n: "II", icon: HardHat,
+                title: "Terapkan",
+                sub: "Bangun asisten AI spesialis: Dokumentasi Proyek, Panduan SKK, Analisis Tender, dan Advisor Regulasi",
+                color: "from-emerald-700 to-emerald-500",
+              },
+              {
+                n: "III", icon: Wrench,
+                title: "Skalakan",
+                sub: "Dari satu BUJK ke ekosistem layanan konstruksi digital — termasuk Fasilitator dan kolaborasi multi-tim",
+                color: "from-orange-700 to-orange-500",
+              },
+            ].map((b) => (
+              <div key={b.n} className={`bg-gradient-to-br ${b.color} text-white rounded-2xl p-6 shadow-lg text-left`}>
+                <div className="text-xs font-bold opacity-70 mb-1">TAHAP {b.n}</div>
+                <div className="text-2xl font-extrabold mb-2">{b.title}</div>
+                <p className="text-sm text-white/80 leading-relaxed">{b.sub}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Multi-device mockup */}
+          <div className="max-w-2xl mx-auto mb-10">
+            <img
+              src={mockupDevices}
+              alt="Peta Jalan Konstruksi Digital — tersedia di tablet, HP, dan buku digital"
+              className="w-full rounded-2xl shadow-xl"
+            />
+            <p className="text-xs text-gray-500 text-center mt-2">Tersedia dalam format PDF, Flipbook Interaktif, dan dapat dicetak</p>
+          </div>
+
+          {/* META-CASE — Gustafta sebagai bukti */}
+          <div className="bg-blue-950 text-white p-8 rounded-2xl shadow-2xl max-w-3xl mx-auto border border-blue-700/40">
+            <div className="flex items-center gap-3 mb-4">
+              <Lightbulb className="w-6 h-6 text-yellow-400 flex-shrink-0" />
+              <h3 className="text-lg font-extrabold">Bukti Nyata: Dibangun oleh Praktisi Konstruksi</h3>
+            </div>
+            <p className="text-blue-100 leading-relaxed text-sm">
+              Platform Gustafta dan panduan ini <strong className="text-white">dibuat oleh praktisi</strong> di persimpangan
+              teknologi dan industri konstruksi — bukan konsultan IT yang belajar konstruksi dari buku.
+              Lebih dari <strong className="text-white">1.350+ Agen AI Spesialis</strong> yang aktif hari ini dibangun
+              menggunakan metode yang sama yang Anda akan pelajari.
+            </p>
+            <p className="text-blue-200 text-sm mt-3">
+              <strong className="text-white">Jika Anda bertanya: "Ini cocok untuk konstruksi?"</strong><br />
+              Jawabannya: Platform ini lahir dari dunia konstruksi. Kontraktor, konsultan, dan LSP sudah menggunakannya.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          DATA — Konteks Industri Konstruksi
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 text-center">Menurut Data</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-4">
+            Mengapa Digitalisasi Konstruksi Sudah Tidak Opsional
+          </h2>
+          <p className="text-center text-gray-500 text-sm max-w-2xl mx-auto mb-10">
+            Data industri menunjukkan betapa besarnya potensi yang hilang ketika dokumentasi, kepatuhan,
+            dan kompetensi masih dikelola secara manual.
+          </p>
+
+          <div className="grid sm:grid-cols-3 gap-5 mb-6">
+            {STATS_KONSTRUKSI.map((s, i) => {
+              const SIcon = s.icon;
+              return (
+                <div key={i} className="bg-gray-50 rounded-2xl p-6 border border-gray-100 text-center" data-testid={`stat-trilogi-${i}`}>
+                  <div className="flex justify-center mb-3">
+                    <div className="p-3 bg-white rounded-xl border border-gray-100"><SIcon className="h-6 w-6 text-blue-600" /></div>
+                  </div>
+                  <div className="text-3xl font-extrabold text-gray-900 mb-2">{s.value}</div>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-3">{s.label}</p>
+                  <p className="text-[10px] text-gray-400 leading-snug">Sumber: {s.source}</p>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-center text-[11px] text-gray-400 max-w-2xl mx-auto">
+            Angka di atas adalah estimasi/temuan riset sebagai konteks umum, bukan janji hasil spesifik dari produk ini.
+          </p>
+
+          {/* Trust stats */}
+          <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: Users, value: "1.350+", label: "Agen AI Spesialis" },
+              { icon: Target, value: "131", label: "Hub Orchestrator" },
+              { icon: ClipboardList, value: "80+", label: "Tools Digital" },
+              { icon: BadgeCheck, value: "24/7", label: "AI Selalu Aktif" },
+            ].map((s) => {
+              const SIcon = s.icon;
+              return (
+                <div key={s.label} className="flex flex-col items-center p-4 rounded-xl bg-gray-50 border border-gray-100">
+                  <SIcon className="w-5 h-5 text-blue-600 mb-2" />
+                  <div className="text-2xl font-extrabold text-blue-700 mb-0.5">{s.value}</div>
+                  <div className="text-xs text-gray-500 text-center">{s.label}</div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          FASILITATOR SECTION — Peran dalam Ekosistem
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-blue-50 border-y border-blue-100">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 text-center">Ekosistem Konstruksi Digital</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-4">
+            Menjadi Fasilitator — Bukan Sekadar Pengguna AI
+          </h2>
+          <p className="text-center text-gray-600 text-sm max-w-3xl mx-auto mb-10">
+            Fasilitator adalah pendamping profesional bagi BUJK dan Tenaga Profesional Konstruksi.
+            Bukan konsultan IT — tapi praktisi lapangan yang membekali rekan sejawat dengan alat dan sistem yang tepat.
+          </p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                icon: ClipboardList, color: "text-blue-600", bg: "bg-blue-100",
+                title: "Dokumentasi &amp; Kelayakan",
+                desc: "Memastikan seluruh aktivitas bisnis dan profesi siap dokumentasi — SBU, SKK, laporan proyek, dan rekam jejak kinerja.",
+              },
+              {
+                icon: Wrench, color: "text-emerald-600", bg: "bg-emerald-100",
+                title: "Problem Solver Lapangan",
+                desc: "Hadir sebagai solusi nyata atas masalah yang dihadapi saat pelaksanaan: tender, audit, sertifikasi, dan kepatuhan regulasi.",
+              },
+              {
+                icon: GraduationCap, color: "text-violet-600", bg: "bg-violet-100",
+                title: "Advisor Kompetensi",
+                desc: "Memberikan saran peningkatan kompetensi, produktivitas, dan profesionalitas — termasuk rekomendasi asisten AI dan toolkit digital.",
+              },
+              {
+                icon: Brain, color: "text-orange-600", bg: "bg-orange-100",
+                title: "Efisien &amp; Efektif",
+                desc: "Mempercepat pekerjaan yang selama ini memakan waktu: analisis regulasi, penyusunan dokumen, dan monitoring lapangan.",
+              },
+              {
+                icon: Building2, color: "text-cyan-600", bg: "bg-cyan-100",
+                title: "Mitra BUJK &amp; Profesional",
+                desc: "Bekerja berdampingan dengan kontraktor, konsultan, LSP, dan asosiasi — bukan sebagai vendor tapi sebagai mitra strategis.",
+              },
+              {
+                icon: Award, color: "text-amber-600", bg: "bg-amber-100",
+                title: "Rekomendasi AI &amp; Digital",
+                desc: "Menyarankan asisten AI, toolkit digital, dan sistem yang sesuai kebutuhan spesifik BUJK dan tenaga profesional.",
+              },
+            ].map((item, i) => {
+              const IIcon = item.icon;
+              return (
+                <div key={i} className="bg-white rounded-xl border border-blue-100 p-5 shadow-sm">
+                  <div className={`${item.bg} w-10 h-10 rounded-lg flex items-center justify-center mb-3`}>
+                    <IIcon className={`w-5 h-5 ${item.color}`} />
+                  </div>
+                  <h3 className="font-bold text-gray-900 text-sm mb-1.5" dangerouslySetInnerHTML={{ __html: item.title }} />
+                  <p className="text-xs text-gray-600 leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          PRICING
+      ══════════════════════════════════════════════ */}
+      <section id="pricing" className="py-16 px-4 bg-gray-50">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2">Investasi</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Pilih Paket Anda</h2>
+          <p className="text-gray-500 mb-10 text-sm max-w-2xl mx-auto">
+            Ditulis oleh Wuryanto Kusdjali — praktisi di persimpangan teknologi, pendidikan, dan industri konstruksi,
+            serta pimpinan asosiasi jasa konstruksi dan pengarah lembaga sertifikasi kompetensi.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 items-stretch text-left">
+
+            {/* ── PAKET BASIC ── */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-7 md:p-8 flex flex-col">
+              <div className="text-3xl mb-2">🥉</div>
+              <h3 className="text-lg font-extrabold text-gray-900 mb-1">PAKET BASIC</h3>
+              <p className="text-gray-500 text-xs mb-5 leading-relaxed">
+                Fokus: Memahami cara kerja AI dalam konteks jasa konstruksi dan memulai transformasi digital pertama.
+              </p>
+
+              <div className="mb-5">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-gray-400 line-through text-sm">{TRILOGI.bukuSatu.normal}</span>
+                  <span className="text-3xl font-extrabold text-gray-900">{TRILOGI.bukuSatu.price}</span>
+                </div>
+                <span className="inline-block mt-1 text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                  ({TRILOGI.bukuSatu.savings})
+                </span>
+              </div>
+
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">📦 Yang Anda Dapatkan:</p>
+              <ul className="space-y-2.5 mb-6 text-sm text-gray-700 flex-1">
+                {TRILOGI.bukuSatu.bonuses.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">🎯 Paling Cocok Untuk:</p>
+              <ul className="space-y-1.5 mb-7 text-xs text-gray-500">
+                {[
+                  "BUJK yang ingin mulai adopsi AI tanpa kerumitan teknis",
+                  "Tenaga Ahli yang ingin membangun asisten spesialis bidangnya",
+                  "Konsultan yang ingin efisienkan proses dokumentasi dan audit",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-blue-400 mt-0.5">•</span>{item}
+                  </li>
+                ))}
+              </ul>
+
+              <a href={SCALEV_BUKU1} target="_blank" rel="noopener noreferrer" onClick={handleBuku1Click}
+                className="block w-full text-center border-2 border-gray-900 hover:bg-gray-900 hover:text-white text-gray-900 text-base font-extrabold py-3.5 rounded-xl transition-all"
+                data-testid="button-pricing-basic">
+                AMBIL PAKET BASIC →
+              </a>
+            </div>
+
+            {/* ── PAKET PREMIUM (BUNDLING) ── */}
+            <div className="relative bg-white rounded-2xl shadow-2xl border-2 border-orange-500 overflow-visible p-7 md:p-8 flex flex-col">
+              <div className="absolute top-0 right-6 -translate-y-1/2 bg-orange-500 text-white text-xs font-extrabold py-1.5 px-5 rounded-full shadow-lg whitespace-nowrap">
+                ⭐ BEST VALUE
+              </div>
+              <div className="text-3xl mb-2">🥇</div>
+              <h3 className="text-lg font-extrabold text-gray-900 mb-1">PAKET PREMIUM (BUNDLING LENGKAP)</h3>
+              <p className="text-gray-500 text-xs mb-5 leading-relaxed">
+                Fokus: Transformasi total — dari asisten tunggal, tim virtual, hingga ekosistem layanan konstruksi digital yang bisa diwariskan.
+              </p>
+
+              <div className="mb-5">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-gray-400 line-through text-sm">{TRILOGI.bundle.normal}</span>
+                  <span className="text-3xl font-extrabold text-orange-600">{TRILOGI.bundle.price}</span>
+                </div>
+                <span className="inline-block mt-1 text-xs font-semibold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">
+                  ({TRILOGI.bundle.savings})
+                </span>
+              </div>
+
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">📦 Yang Anda Dapatkan:</p>
+              <ul className="space-y-2.5 mb-6 text-sm text-gray-700 flex-1">
+                {TRILOGI.bundle.bonuses.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div className="rounded-xl bg-orange-50 border border-orange-100 p-3 mb-4">
+                <p className="text-xs text-orange-800 leading-relaxed">🛡️ {TRILOGI.bundle.guarantee}</p>
+              </div>
+
+              <p className="text-xs font-bold text-gray-700 uppercase tracking-wide mb-2">🎯 Paling Cocok Untuk:</p>
+              <ul className="space-y-1.5 mb-7 text-xs text-gray-500">
+                {[
+                  "Pemimpin BUJK yang ingin digitalisasi operasional secara menyeluruh",
+                  "Fasilitator yang ingin membangun layanan pendampingan berbasis AI",
+                  "Asosiasi dan LSP yang ingin memperkuat ekosistem kompetensi anggota",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-orange-400 mt-0.5">•</span>{item}
+                  </li>
+                ))}
+              </ul>
+
+              <a href={SCALEV_BUNDLE} target="_blank" rel="noopener noreferrer" onClick={handleBundleClick}
+                className="block w-full text-center bg-orange-600 hover:bg-orange-500 text-white text-base font-extrabold py-3.5 rounded-xl shadow-lg transition-all transform hover:scale-[1.02] active:scale-95"
+                data-testid="button-pricing-bundle">
+                AMANKAN PREMIUM SEKARANG →
+              </a>
+            </div>
+
+          </div>
+
+          {/* Cover thumbnail */}
+          <div className="flex justify-center mt-8">
+            <img
+              src={coverFlat}
+              alt="Cover Peta Jalan Konstruksi Digital"
+              className="w-28 rounded-xl shadow-lg border border-gray-100"
+            />
+          </div>
+
+          {/* Platform teaser */}
+          <div className="mt-10 p-6 bg-blue-50 border border-blue-200 rounded-2xl text-left max-w-xl mx-auto">
+            <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-2">Sudah punya Panduan?</p>
+            <p className="text-sm text-gray-700 mb-3">
+              Langsung praktik di <strong className="text-blue-700">Gustafta Platform</strong> — lebih dari 1.350 Agen AI
+              Spesialis Konstruksi siap dipakai. Paket Premium sudah termasuk <strong>Trial 7 hari</strong>.
+            </p>
+            <Link href="/packs">
+              <span className="inline-flex items-center gap-1 text-sm font-semibold text-blue-700 hover:text-blue-600 cursor-pointer">
+                Lihat Paket Gustafta <ChevronRight className="w-4 h-4" />
+              </span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          FAQ
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-white">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 text-center">FAQ</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-10">
+            Pertanyaan yang Sering Muncul
+          </h2>
+          <Accordion type="single" collapsible className="space-y-3">
+            {[
+              {
+                q: `🤔 "Saya tidak berlatar belakang IT — apakah bisa menggunakan AI?"`,
+                a: "Justru ini keunggulan Anda. Pengalaman 10–20 tahun di lapangan adalah aset yang tidak dipunya developer IT. Gustafta dirancang no-code — tidak perlu coding. Jika Anda bisa mengisi formulir dan mengirim email, Anda sudah bisa membangun asisten AI spesialis konstruksi.",
+              },
+              {
+                q: `🤔 "Apakah bisa dipakai untuk tender dan pengurusan SBU/SKK?"`,
+                a: "Ya, itu justru kasus penggunaan utama. Gustafta memiliki 1.350+ Agen AI Spesialis termasuk yang khusus membantu analisis dokumen tender, panduan syarat SKK, pemahaman regulasi PUPR, dan monitoring kelayakan BUJK. Panduan ini menjelaskan cara menggunakannya secara optimal.",
+              },
+              {
+                q: `🤔 "Apakah sesuai regulasi konstruksi Indonesia yang terus berubah?"`,
+                a: "Platform Gustafta diperbarui mengikuti Perpres, PP, dan Permen PUPR terbaru. Tim kami dari kalangan praktisi dan asosiasi konstruksi aktif memastikan agen AI selalu relevan dengan regulasi terkini — termasuk Perpres 46/2025 tentang pengadaan dan standar kompetensi.",
+              },
+              {
+                q: `🤔 "Apa bedanya dengan software manajemen proyek yang sudah ada?"`,
+                a: "Software manajemen proyek mengotomatiskan proses yang sudah Anda tahu. Gustafta membuat pengetahuan teknis Anda bisa diakses oleh siapapun di tim — seperti punya ahli yang bisa menjawab pertanyaan kapanpun, tanpa harus menunggu Anda tersedia.",
+              },
+              {
+                q: `🤔 "Bagaimana jika saya tidak puas setelah beli?"`,
+                a: "Untuk Paket Premium berlaku Garansi 30 Hari Bersyarat: uang kembali 100% jika Anda sudah membaca minimal 2 dari 3 buku, mencoba minimal 1 latihan per buku, dan melampirkan dokumentasi singkat. Kami percaya diri karena ribuan BUJK dan profesional sudah membuktikannya.",
+              },
+            ].map((item, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-gray-200 rounded-xl px-4">
+                <AccordionTrigger className="text-sm font-semibold text-gray-900 hover:no-underline py-4 text-left">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-gray-600 leading-relaxed pb-4">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════
+          FINAL CTA
+      ══════════════════════════════════════════════ */}
+      <section className="py-16 px-4 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-extrabold mb-4">Dua Pilihan di Depan Anda</h2>
+          <div className="grid sm:grid-cols-2 gap-4 mb-8 text-left">
+            <div className="bg-red-900/40 border border-red-500/40 rounded-xl p-5">
+              <p className="font-bold text-red-300 mb-2">❌ Tetap seperti sekarang</p>
+              <p className="text-sm text-red-200/80 leading-relaxed">
+                Dokumentasi masih manual, kalah tender karena administrasi, regulasi terus dikejar.
+                5 tahun lagi prosesnya masih sama.
+              </p>
+            </div>
+            <div className="bg-green-900/40 border border-green-400/40 rounded-xl p-5">
+              <p className="font-bold text-green-300 mb-2">✅ Mulai peta jalan hari ini</p>
+              <p className="text-sm text-green-200/80 leading-relaxed">
+                Dalam 3 bulan punya asisten AI spesialis. Tender lebih siap, dokumen lebih rapi,
+                dan tim Anda punya panduan yang bisa diakses kapanpun.
+              </p>
+            </div>
+          </div>
+
+          <a href={SCALEV_BUNDLE} target="_blank" rel="noopener noreferrer" onClick={handleBundleClick}
+            className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-400 text-white text-lg font-extrabold py-5 px-10 rounded-2xl shadow-2xl transition-all transform hover:scale-105 active:scale-95 mb-4"
+            data-testid="button-final-cta">
+            🗺️ Ya, Saya Mau Mulai Sekarang
+          </a>
+          <p className="text-sm text-blue-200">✅ Garansi 30 Hari Bersyarat &nbsp;|&nbsp; ⏰ Harga Early Bird berakhir 15 Agustus 2026</p>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="bg-gray-950 text-gray-500 py-8 px-4 text-center text-sm">
+        <p className="mb-1 text-gray-400">© 2026 Gustafta — Platform AI untuk Ekosistem Jasa Konstruksi Indonesia.</p>
+        <p className="text-xs">
+          Butuh bantuan?{" "}
+          <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackContact()}
+            className="text-green-400 hover:text-green-300 underline">
+            Hubungi kami via WhatsApp
+          </a>
+          {" "}·{" "}
+          <Link href="/">
+            <span className="text-blue-400 hover:text-blue-300 underline cursor-pointer">Kembali ke Gustafta Platform</span>
+          </Link>
+        </p>
+      </footer>
+
+      {/* ── Floating WhatsApp ── */}
+      <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackContact()}
+        className="fixed bottom-6 right-6 bg-green-500 hover:bg-green-400 text-white p-4 rounded-full shadow-2xl flex items-center gap-2 z-50 transition-all transform hover:scale-110 active:scale-95"
+        data-testid="button-floating-wa">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+        </svg>
+        <span className="font-bold text-sm hidden md:inline">Tanya via WhatsApp</span>
+      </a>
+
+      {/* ── Mobile sticky bottom bar ── */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white border-t border-gray-200 px-4 py-3 flex gap-3 shadow-2xl">
+        <a href={SCALEV_BUNDLE} target="_blank" rel="noopener noreferrer" onClick={handleBundleClick}
+          className="flex-1 bg-orange-500 hover:bg-orange-400 text-white text-sm font-bold py-3 rounded-xl text-center transition-all active:scale-95"
+          data-testid="button-mobile-sticky-buy">
+          🗺️ Peta Jalan {TRILOGI.bundle.price}
+        </a>
+        <a href={WA_URL} target="_blank" rel="noopener noreferrer" onClick={() => trackContact()}
+          className="px-4 bg-green-500 hover:bg-green-400 text-white text-sm font-bold py-3 rounded-xl transition-all active:scale-95"
+          data-testid="button-mobile-sticky-wa">
+          WA
+        </a>
+      </div>
+    </div>
+  );
+}

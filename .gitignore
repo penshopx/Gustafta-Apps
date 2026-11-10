@@ -1,0 +1,16 @@
+node_modules/
+attached_assets/
+generated-artifacts/
+dist/
+build/
+.env
+.env.local
+*.db
+*.sqlite
+*.log
+.DS_Store
+.vscode/
+.idea/
+__pycache__/
+uploads/
+public/uploads/

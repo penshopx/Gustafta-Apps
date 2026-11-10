@@ -1,0 +1,11 @@
+Gunakan GUSTAFTA_FEATURE_KIT_UPLOAD.md yang saya unggah sebagai spesifikasi.
+
+Aplikasi tujuan: [nama dan tujuan aplikasi].
+Pilihan fitur/preset: [isi kode Fxx atau ID preset].
+Mode: local. Data tetap di aplikasi ini; tidak memanggil Gustafta.
+
+Periksa proyek ini dahulu dan gunakan fitur yang sudah ada. Hitung dependency wajib dan laporkan konflik. Jangan memasang semua modul atau menyalin database, pelanggan, secrets, harga maupun konfigurasi privat Gustafta.
+
+Jika pilihan belum diisi, rekomendasikan modul minimum dan minta keputusan sebelum implementasi. Jika sudah jelas, terapkan API, UI, penyimpanan, hak akses dan tes modul terpilih mengikuti stack yang ada. Laporkan hasil yang benar-benar diuji, prasyarat yang belum tersedia dan blocker. Tidak publish otomatis.
+
+Gunakan credentials/provider milik aplikasi ini melalui fasilitas secrets, bukan chat atau file unggahan. Integrasi data pusat hanya bila saya meminta F22 dan hybrid_read_only secara eksplisit.

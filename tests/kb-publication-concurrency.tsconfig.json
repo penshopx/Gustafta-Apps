@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": [
+    "kb-publication-concurrency.test.ts",
+    "fixtures/kb-publication-worker.ts",
+    "kb-publication.test.ts",
+    "kb-publication-history.test.ts",
+    "../scripts/setup-kb-context-test-database.ts"
+  ],
+  "exclude": []
+}

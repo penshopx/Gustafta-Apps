@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": ["selected-daily-chat.test.ts", "selected-daily-chat.vitest.tsx"],
+  "exclude": []
+}

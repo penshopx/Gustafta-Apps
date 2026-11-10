@@ -1,0 +1,146 @@
+{
+  "evaluation_date": "2026-10-09",
+  "scope": "Uploaded Notion exports only; no child page fetch, live-app audit or official legal validation",
+  "attachments": [
+    {
+      "attachment": "BLUE_PRINT_APLIKASI_PENUTUP_CELAH_OPERASIONAL_1791516038811.zip",
+      "bytes": 3689,
+      "sha256": "10df373ef6e541c2f57d84b1fd43c0b7d802db70064e5c6a3b2552f4a8c1f285",
+      "entries": [
+        {
+          "name": "Blueprint Aplikasi Penutup Celah Operasional (Kelu f2f41fd2e6fc4f5db3d451351886ce84.md",
+          "bytes": 6745,
+          "sha256": "f09260db5fcb14c6596c5d663eb04a2cd2616541a6100c66612ca21ffe72a445"
+        }
+      ]
+    },
+    {
+      "attachment": "BLUE_PRINT_KONTRAKTOR_OTONOM_1791516038813.zip",
+      "bytes": 15366,
+      "sha256": "19ef237ccea7d78d7317f0d72bdd58500b24a8d22829d4bdc0f99fb62e7a03f5",
+      "entries": [
+        {
+          "name": "Blueprint Kontraktor Otonom Gustafta Apps — Sistem 28fdd97a2dc54736b116190bf07315df.md",
+          "bytes": 34297,
+          "sha256": "80270cb6f7672a9e4cbadd4d1934340c228f29a68974936812a72fb9948420b3"
+        }
+      ]
+    },
+    {
+      "attachment": "SOP_AGENTIC_1791516051937.zip",
+      "bytes": 5922,
+      "sha256": "8952464820faaab5002250916bc9b474d028524e791fda62be23f2ce4a7fcb41",
+      "entries": [
+        {
+          "name": "SOP Agentic 95fce71e83f94a5a8ed1714a9a72515a.csv",
+          "bytes": 8945,
+          "sha256": "502ecb6e7b4364f5280125f715680558e405bed5b72648ceb8849b4bd72dafc8",
+          "rows": 39,
+          "columns": [
+            "Nama SOP",
+            "No",
+            "Alur Nilai",
+            "Agen Utama",
+            "Level Otomasi",
+            "Approver Manusia",
+            "SLA",
+            "Gelombang Migrasi",
+            "Status Adaptasi",
+            "Agen Pendukung",
+            "Jenis",
+            "Trigger"
+          ]
+        },
+        {
+          "name": "SOP Agentic 95fce71e83f94a5a8ed1714a9a72515a_all.csv",
+          "bytes": 8945,
+          "sha256": "66764a36f94ddcca510c00bbb5f068a6275a40c3ac18419fc3c0d3b6204bfbe7",
+          "rows": 39,
+          "columns": [
+            "Nama SOP",
+            "Agen Pendukung",
+            "Agen Utama",
+            "Alur Nilai",
+            "Approver Manusia",
+            "Gelombang Migrasi",
+            "Jenis",
+            "Level Otomasi",
+            "No",
+            "SLA",
+            "Status Adaptasi",
+            "Trigger"
+          ]
+        }
+      ]
+    },
+    {
+      "attachment": "SOP_KONVENSIONAL_1791516051938.zip",
+      "bytes": 10368,
+      "sha256": "60af458e7663ca28dbbd75cda6fd151601febcd4c48ffe9a2140451fa8f43dd9",
+      "entries": [
+        {
+          "name": "Adaptasi SOP Konvensional → SOP Kontraktor Otonom  365174cd624a4234899b090879c08873.md",
+          "bytes": 8294,
+          "sha256": "830374dd4d4ef738c84715cc14c21e0667f0ea4ca5f3a9127506a209c2387233"
+        },
+        {
+          "name": "SOP Agentic 95fce71e83f94a5a8ed1714a9a72515a.csv",
+          "bytes": 8945,
+          "sha256": "502ecb6e7b4364f5280125f715680558e405bed5b72648ceb8849b4bd72dafc8",
+          "rows": 39,
+          "columns": [
+            "Nama SOP",
+            "No",
+            "Alur Nilai",
+            "Agen Utama",
+            "Level Otomasi",
+            "Approver Manusia",
+            "SLA",
+            "Gelombang Migrasi",
+            "Status Adaptasi",
+            "Agen Pendukung",
+            "Jenis",
+            "Trigger"
+          ]
+        },
+        {
+          "name": "SOP Agentic 95fce71e83f94a5a8ed1714a9a72515a_all.csv",
+          "bytes": 8945,
+          "sha256": "66764a36f94ddcca510c00bbb5f068a6275a40c3ac18419fc3c0d3b6204bfbe7",
+          "rows": 39,
+          "columns": [
+            "Nama SOP",
+            "Agen Pendukung",
+            "Agen Utama",
+            "Alur Nilai",
+            "Approver Manusia",
+            "Gelombang Migrasi",
+            "Jenis",
+            "Level Otomasi",
+            "No",
+            "SLA",
+            "Status Adaptasi",
+            "Trigger"
+          ]
+        }
+      ]
+    },
+    {
+      "attachment": "SPESIFIKASI_INTEGRASI_SIGAP_1791516051939",
+      "bytes": 11531,
+      "sha256": "bc73fb0faa6c5766d315aaf93554eed8690afc068fd04f5b582f9989f0321bef",
+      "entries": [
+        {
+          "name": "Spesifikasi Integrasi SIGAP ke Aplikasi Horizontal d3dd1bd665fe4d5c80546f106bf8536d.md",
+          "bytes": 27277,
+          "sha256": "593163d52ee08409692098f7234f35d07ee265fb0efb35ac664736aaaba62fd1"
+        }
+      ]
+    }
+  ],
+  "source_csv_rows": 39,
+  "source_csv_copies": 4,
+  "source_csv_byte_identical": false,
+  "source_csv_values_identical_by_sop_number": true,
+  "revised_sop_rows": 46
+}

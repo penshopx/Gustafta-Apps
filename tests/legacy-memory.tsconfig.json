@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "legacy-memory-recovery.test.ts",
+    "legacy-memory-concurrency.test.ts",
+    "legacy-memory-routes-http.test.ts",
+    "legacy-memory-browser.test.ts",
+    "fixtures/legacy-memory-browser/**/*.ts",
+    "fixtures/legacy-memory-browser/**/*.tsx"
+  ],
+  "exclude": []
+}

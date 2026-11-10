@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "../scripts/setup-lms-test-database.ts",
+    "./lms-test-database.ts",
+    "./lms-reenroll-fixtures.ts",
+    "./lms-reenroll-certificate.test.ts",
+    "./lms-test-isolation.test.ts",
+    "./lms-fixture-recovery.test.ts",
+    "./fixtures/lms-recovery-worker.ts"
+  ],
+  "exclude": [],
+  "compilerOptions": {
+    "incremental": false
+  }
+}

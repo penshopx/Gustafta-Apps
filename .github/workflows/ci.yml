@@ -1,0 +1,107 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lms-recovery:
+    name: LMS isolated database and forced-stop recovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: lms_ci
+          POSTGRES_PASSWORD: disposable_ci_only
+          POSTGRES_DB: ci_lms_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U lms_ci -d ci_lms_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      LMS_TEST_DATABASE_URL: postgres://lms_ci:disposable_ci_only@127.0.0.1:5432/ci_lms_test
+      # Not a repo secret: a TCP canary in the recovery test proves no connection.
+      DATABASE_URL: postgres://forbidden:invalid@127.0.0.1:1/application_canary
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Prepare portable locked dependencies
+        run: |
+          node --test tests/visual-ci-lock.test.mjs
+          node scripts/prepare-visual-ci-lock.mjs
+      - run: npm ci
+      - name: Check LMS recovery test types
+        run: npm run check:lms-recovery
+      - name: Provision disposable LMS schema
+        run: npx tsx scripts/setup-lms-test-database.ts
+      - name: Verify forced-stop recovery and re-enrollment
+        run: npm run test:lms-recovery
+
+  test:
+    name: Run test suite
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ci_runner
+          POSTGRES_PASSWORD: disposable_ci_only
+          POSTGRES_DB: gustafta_ci_integration_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci_runner -d gustafta_ci_integration_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      CI_TEST_DATABASE_URL: postgres://ci_runner:disposable_ci_only@127.0.0.1:5432/gustafta_ci_integration_test
+      DATABASE_URL: postgres://ci_runner:disposable_ci_only@127.0.0.1:5432/gustafta_ci_integration_test
+      DATABASE_URL_POOLED: ""
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Prepare portable locked dependencies
+        run: |
+          node --test tests/visual-ci-lock.test.mjs
+          node scripts/prepare-visual-ci-lock.mjs
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify installed test runtime
+        run: node --input-type=module -e "await import('express'); await import('zod'); await import('vitest/node');"
+
+      - name: Verify isolated database guard
+        run: node --test tests/ci-test-database-guard.test.mjs
+
+      - name: Provision empty disposable database and product-only fixtures
+        run: npx tsx scripts/setup-ci-test-database.ts
+
+      - name: Run tests
+        # This job receives only its disposable service URL, never a repository
+        # DATABASE_URL secret or a connection to the real application.
+        run: npm test

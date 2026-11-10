@@ -1,0 +1,1187 @@
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
+LAMPIRAN:  
+ 
+ 
+
+TOOLKIT LENGKAP  
+UNTUK IMPLEMENTASI MANDIRI 
+ 
+"Kerja keras Anda membaca 9 bab sebelumnya akan siasia jika tidak 
+diikuti dengan tindakan nyata. Lampiran ini adalah 'kotak peralatan' 
+Anda — berisi template, checklist, tabel referensi, dan tools yang siap 
+pakai untuk mengeksekusi seluruh metode PETA4T tanpa harus 
+memulai dari nol." 
+ 
+ 
+ PENDAHULUAN: Dari Teori ke Praktik 
+ 
+Selamat! Anda telah menyelesaikan perjalanan pembelajaran yang 
+komprehensif. Namun, pengetahuan tanpa alat kerja hanyalah 
+potensi yang belum terwujud. 
+ 
+Bab 10 ini dirancang untuk menjadi jembatan antara pemahaman dan 
+eksekusi. Di sini Anda akan menemukan: 
+❖ Template dokumen resmi yang bisa langsung Anda gunakan 
+❖ Tabel referensi cepat untuk pengambilan keputusan 
+❖ Checklist praktis untuk audit mandiri 
+
+❖ Tools digital yang bisa Anda adaptasi 
+❖ FAQ lengkap untuk mengatasi masalah umum 
+❖ Kontak resmi untuk eskalasi dan klarifikasi 
+ 
+Semua materi di bab ini gratis untuk digunakan oleh pembaca ebook 
+ini. Cetak, modifikasi, dan terapkan sesuai kebutuhan perusahaan 
+Anda. 
+ 
+ 
+ 
+ 
+ 
+
+  
+ LAMPIRAN A: Template Surat & Dokumen Resmi 
+ A.1 Template Surat Klarifikasi ke LPJK (Gangguan Sistem OSSRBA) 
+KOP SURAT PERUSAHAAN 
+______________________________________________________________________________ 
+Nomor      
+: [Nomor Surat Internal] 
+Lampiran  
+: 1 (satu) berkas screenshot 
+Perihal    
+: Permohonan Klarifikasi Keterlambatan Pengajuan SBU Akibat  
+  Gangguan Sistem OSSRBA 
+ 
+Kepada Yth. 
+Kepala Lembaga Pengembangan Jasa Konstruksi (LPJK) 
+Kementerian Pekerjaan Umum 
+di Jakarta 
+ 
+Dengan hormat, 
+ 
+Bersama surat ini, kami PT [Nama Perusahaan] dengan NIB [Nomor NIB] ingin menyampaikan 
+bahwa pengajuan perpanjangan SBU kami (Nomor  Pengajuan: [Nomor Pengajuan OSS]) yang 
+seharusnya disubmit pada tanggal [Tanggal Rencana Submit] terkendala gangguan sistem 
+OSSRBA yang berlangsung sejak [Tanggal Mulai Error] hingga [Tanggal Error Berakhir]. 
+ 
+Bukti screenshot error terlampir. Kami telah menghubungi helpdesk OSSRBA pada [Tanggal 
+Kontak] melalui email [Alamat Email] dan nomor tiket [Nomor Tiket], namun hingga saat ini 
+sistem belum sepenuhnya pulih. 
+ 
+Sehubungan dengan hal tersebut, kami memohon: 
+1. Surat keterangan bahwa keterlambatan ini bukan disebabkan oleh  kelalaian perusahaan kami 
+2. Perpanjangan tenggat waktu pengajuan tanpa sanksi administrative  
+3. Prioritas verifikasi setelah sistem pulih 
+ 
+Demikian surat ini kami sampaikan. Atas perhatian dan bantuannya,  
+kami ucapkan terima kasih. 
+ 
+Hormat kami, 
+PT [Nama Perusahaan] 
+ 
+ 
+[Nama Direktur Utama] 
+Direktur Utama 
+ 
+ 
+Tembusan: 
+ Dinas PU Provinsi [Nama Provinsi] 
+ Asosiasi […………………………….] 
+
+A.2 Template Surat Permohonan Percepatan Verifikasi LSBU 
+KOP SURAT PERUSAHAAN 
+________________________________________________________________________________________________________ 
+Nomor      
+: [Nomor Surat Internal] 
+Perihal   
+: Permohonan Percepatan Verifikasi SBU 
+ 
+Kepada Yth. 
+Kepala Lembaga Sertifikasi Badan Usaha (LSBU) 
+[Nama LSBU] 
+di [Kota] 
+ 
+Dengan hormat, 
+Bersama surat ini, kami PT [Nama Perusahaan] dengan NIB [Nomor NIB] ingin 
+menyampaikan bahwa pengajuan perpanjangan SBU kami (Nomor Pengajuan OSS: [Nomor]) 
+telah disubmit pada tanggal [Tanggal Submit] dan saat ini dalam status "Menunggu Verifikasi 
+LSBU". 
+Mengingat: 
+1. Masa berlaku SBU kami akan berakhir pada [Tanggal Kedaluwarsa] 
+2. Kami memiliki tender strategis senilai Rp [Nilai Tender] yang akan dibuka pada [Tanggal 
+Buka Tender] 
+3. Kami telah melengkapi seluruh dokumen persyaratan sesuai regulasi PP 28/2025 dan 
+Permen PU 06/2025 
+Kami memohon dengan hormat agar verifikasi pengajuan kami dapat dipercepat sehingga 
+SBU dapat diterbitkan tepat waktu dan kami dapat mengikuti tender tersebut. 
+ 
+Sebagai bahan pertimbangan, kami lampirkan: 
+1. Bukti submit OSSRBA 
+2. Jadwal tender yang akan diikuti 
+3. Daftar lengkap dokumen yang telah diunggah 
+Demikian permohonan ini kami sampaikan. Atas perhatian dan  
+kerjasamanya, kami ucapkan terima kasih. 
+ 
+Hormat kami, 
+PT [Nama Perusahaan] 
+ 
+ [Nama Direktur Utama] 
+Direktur Utama 
+
+A.3 Template Surat Penunjukan PJT dan Tenaga Ahli 
+KOP SURAT PERUSAHAAN 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 
+SURAT PENUNJUKAN 
+Nomor: [Nomor Surat Internal] 
+ 
+Yang bertanda tangan di bawah ini: 
+ 
+Nama          
+: [Nama Direktur Utama] 
+Jabatan       
+: Direktur Utama 
+Perusahaan    : PT [Nama Perusahaan] 
+NIB           
+: [Nomor NIB] 
+ 
+Dengan ini menunjuk: 
+ 
+1. Penanggung Jawab Teknik (PJT): 
+    Nama             
+: [Nama PJT] 
+    Nomor SKK       
+: [Nomor SKK] 
+    Jenjang          
+: [Ahli Muda/Madya/Utama] 
+    Bidang           
+: [Bidang Keahlian] 
+    Masa Berlaku    
+: [Tanggal Terbit] s.d. [Tanggal Kedaluwarsa] 
+ 
+2. Tenaga Ahli Pendukung: 
+    a. Nama         : [Nama TA1] 
+        Nomor SKK    
+: [Nomor SKK] 
+        Jenjang      : [Jenjang] 
+        Bidang       : [Bidang] 
+    
+   b. Nama          
+: [Nama TA2] 
+       Nomor SKK    
+: [Nomor SKK] 
+       Jenjang       
+: [Jenjang] 
+       Bidang        
+: [Bidang] 
+ 
+Untuk bertindak sebagai Penanggung Jawab Teknik dan Tenaga Ahli Pendukung dalam pengajuan 
+SBU PT [Nama Perusahaan] kualifikasi [Kecil/Menengah/Besar] dengan subklasifikasi:   
+1. [Subklasifikasi 1] (KBLI [Kode]).   
+2. [Subklasifikasi 2] (KBLI [Kode]).  [dst] 
+ 
+Surat penunjukan ini berlaku sejak tanggal diterbitkan dan akan diperbarui apabila terjadi 
+perubahan struktur tenaga ahli perusahaan. 
+ 
+Ditetapkan di: [Kota] 
+Pada tanggal: [Tanggal] 
+ 
+ 
+[Nama Direktur Utama] 
+Direktur Utama 
+
+ 
+ LAMPIRAN B: Tabel Referensi Regulasi & KBLI 
+B.1 Matriks Komparasi Lengkap: PP 05/2021 vs PP 28/2025 
+ 
+Aspek 
+PP 05/2021 (Lama) 
+PP 28/2025 (Baru) 
+Dampak Bagi Anda 
+Status Hukum 
+Dicabut 
+Berlaku sejak 5 Juni 
+2025 
+Semua rujukan lama 
+wajib diperbarui 
+Waktu Layanan 
+(SLA) 
+Belum ada SLA 
+menyeluruh 
+SLA di seluruh tahapan 
+perizinan 
+Anda berhak menagih 
+kepastian waktu 
+Sistem 
+Perizinan 
+OSS-RBA; sebagian 
+kewenangan di 
+daerah 
+Konsolidasi nasional di 
+OSS (±30 K/L) 
+Satu gerbang digital; 
+validasi otomatis 
+Klasifikasi 
+Usaha 
+KBLI 2020 
+Penyesuaian KBLI 2025 Wajib sinkronisasi 
+akta-NIB-SBU 
+Penekanan 
+Kemudahan berusaha Kepastian hukum, 
+kualitas layanan 
+Kepatuhan makin 
+terukur dan terpantau 
+Pengawasan 
+Umum 
+Terperinci dengan 
+indikator kinerja 
+Risiko sanksi 
+administratif lebih 
+jelas 
+Sanksi 
+Administratif 
+Tidak diatur detail 
+Bertahap: peringatan → 
+pembekuan → 
+pencabutan 
+Anda punya 
+kesempatan 
+memperbaiki diri 
+Masa Transisi 
+Tidak diatur 
+Grace period hingga 31 
+Desember 2025 
+Perpanjangan SBU 
+lama masih diterima 
+ 
+ 
+ 
+ 
+ 
+
+B.2 Matriks Komparasi: Permen PUPR 06/2021 vs Permen PU 
+06/2025 
+Aspek 
+Permen PUPR 06/2021 
+(Lama) 
+Permen PU 06/2025 (Baru) 
+Cakupan 
+Sektor PU dan Perumahan 
+Rakyat 
+Sektor Pekerjaan Umum saja (akibat 
+pemisahan kementerian) 
+Substansi 
+Standar kegiatan usaha 
+dan produk 
+Standar kegiatan usaha + pengawasan + 
+sanksi 
+Struktur Kode 
+Kode subklasifikasi 5 digit Kode subklasifikasi 6 digit dengan prefix 
+KBLI 2025 
+Persyaratan 
+Peralatan 
+Harus dimiliki (dibeli) 
+Bisa sewa, asal tercatat di sistem 
+manajemen mutu 
+Persyaratan PJT 
+SKK sesuai subklasifikasi SKK sesuai subklasifikasi + tidak boleh 
+merangkap 
+Integrasi ISO 
+Nilai tambah 
+Wajib untuk kualifikasi Besar, nilai 
+tambah untuk Menengah 
+SLA Layanan 
+Tidak diatur 
+Diatur per jenis perizinan 
+ 
+ 
+ 
+ 
+
+B.3 Tabel Mapping KBLI 2020 → KBLI 2025 (Sektor Konstruksi) 
+KBLI 2020 
+(Lama) 
+KBLI 2025 
+(Baru) 
+Deskripsi 
+Subklasifikasi SBU 
+41011 
+41011 
+Konstruksi gedung hunian 
+Gedung Hunian 
+41012 
+41012 
+Konstruksi gedung non-hunian Gedung Non-Hunian 
+42110 
+42111 
+Konstruksi jalan raya 
+Jalan Raya 
+42120 
+42121 
+Konstruksi jembatan 
+Jembatan 
+42201 
+42211 
+Konstruksi jaringan listrik 
+Jaringan Listrik 
+42202 
+42221 
+Konstruksi jaringan 
+telekomunikasi 
+Jaringan 
+Telekomunikasi 
+42911 
+42911 
+Konstruksi irigasi 
+Irigasi 
+42912 
+42912 
+Konstruksi drainase 
+Drainase 
+43111 
+43111 
+Pembongkaran bangunan 
+Pembongkaran 
+43121 
+43121 
+Penyiapan lahan 
+Penyiapan Lahan 
+43211 
+43211 
+Instalasi listrik 
+Instalasi Listrik 
+43221 
+43221 
+Instalasi plumbing 
+Instalasi Plumbing 
+43291 
+43291 
+Instalasi ME lainnya 
+Instalasi ME Lainnya 
+43301 
+43301 
+Finishing bangunan 
+Finishing Bangunan 
+ 
+ 
+💡 PRO TIP:  
+Verifikasi Kode KBLI 
+ Sebelum mengajukan SBU, pastikan kode KBLI di NIB Anda sudah 
+sesuai dengan KBLI 2025. Jika masih menggunakan KBLI 2020, 
+segera perbarui via OSSRBA (SLA 3 hari kerja). 
+ 
+ 
+
+📋 LAMPIRAN C: Template SOP & Checklist 
+ C.1 Template SOP Perpanjangan SBU H6 Bulan 
+STANDARD OPERATING PROCEDURE (SOP) 
+PERPANJANGAN SBU H6 BULAN 
+_________________________________________________________________________________________________________ 
+Nomor SOP   : SOPLEG001 
+Revisi      : 00 
+Tanggal     : [Tanggal] 
+Halaman     : 1 dari 3 
+ 
+1.  TUJUAN 
+      Memastikan SBU diperpanjang minimal 6 bulan sebelum kedaluwarsa,  
+   tanpa gangguan operasional. 
+ 
+2. RUANG LINGKUP 
+     Seluruh SBU perusahaan (kontraktor, konsultan, terintegrasi). 
+ 
+3. PENANGGUNG JAWAB 
+    PIC Utama: Staf Legal/Perizinan 
+    PIC Pendukung: Manajer Keuangan, PJT, QA/QC 
+    Eskalasi: Direktur Utama (jika terlambat 30 hari) 
+ 
+4. ALUR PROSES 
+ 
+    Tahap 1 (H6 bulan): 
+    Dashboard memberikan alarm  
+ H9 bulan 
+    Tim mulai persiapan dokumen awal 
+    Output: Checklist dokumen awal 
+ 
+   Tahap 2 (H5 bulan): 
+    Hubungi KAP untuk audit laporan keuangan (jika Menengah/Besar) 
+    Output: Kontrak audit KAP 
+ 
+   Tahap 3 (H4 bulan): 
+    Kumpulkan bukti pengalaman proyek 5 tahun terakhir 
+    Output: Folder dokumen pengalaman 
+ 
+   Tahap 4 (H3 bulan): 
+    Verifikasi seluruh SKK tenaga ahli aktif di SIJK 
+    Output: Laporan status SKK 
+ 
+ 
+
+   Tahap 5 (H2 bulan): 
+    Update dokumen ISO (Quality Manual, Master List, HR Matrix) 
+    Output: Dokumen ISO terupdate 
+ 
+   Tahap 6 (H1 bulan): 
+    Submit pengajuan perpanjangan SBU via OSSRBA 
+    Output: Nomor pengajuan OSS 
+ 
+   Tahap 7 (H0 bulan): 
+    Tracking verifikasi LSBU, antisipasi klarifikasi 
+    Output: SBU baru terbit 
+ 
+5. ESKALASI 
+    Terlambat 7 hari: Notifikasi ke Manajer Legal 
+    Terlambat 14 hari: Notifikasi ke Direktur Operasional 
+    Terlambat 30 hari: Eskalasi ke Direktur Utama 
+ 
+6. DOKUMEN TERKAIT 
+    Master Checklist Kepatuhan Terintegrasi 
+    Dashboard Monitoring SBU/SKK 
+    Template Surat Klarifikasi LPJK 
+ 
+7. REVISI 
+   SOP ini akan direview setiap 12 bulan atau apabila ada perubahan  
+   regulasi signifikan. 
+ 
+ 
+Tanggal: [Tanggal] 
+Disetujui oleh: 
+ 
+ 
+ 
+[Nama Direktur Utama] 
+Direktur Utama 
+ 
+ 
+ 
+
+C.2 Template SOP Perpanjangan SKK H6 Bulan 
+STANDARD OPERATING PROCEDURE (SOP) 
+PERPANJANGAN SKK H6 BULAN 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 
+ 
+Nomor SOP    : SOPHRD002 
+Revisi       
+: 00 
+Tanggal      
+: [Tanggal] 
+Halaman      
+: 1 dari 3 
+ 
+1. TUJUAN 
+     Memastikan seluruh SKK tenaga ahli diperpanjang minimal 6 bulan sebelum kedaluwarsa, 
+dengan akumulasi SKPK PKB memenuhi syarat. 
+ 
+2. RUANG LINGKUP 
+     Seluruh tenaga ahli perusahaan (PJT, TA pendukung). 
+ 
+3. PENANGGUNG JAWAB 
+     PIC Utama  
+: Manajer HRD 
+     PIC Pendukung 
+: Tenaga Ahli yang bersangkutan, Manajer Operasional 
+     Eskalasi 
+ 
+: Direktur Utama (jika terlambat 30 hari) 
+ 
+4. ALUR PROSES 
+ 
+     Tahap 1 (H6 bulan): 
+     Alarm  
+ H9 bulan → identifikasi TA yang perlu perpanjangan 
+     Output: Daftar TA yang perlu perpanjangan 
+ 
+     Tahap 2 (H5 bulan): 
+      Cek akumulasi SKPK — apakah sudah memenuhi syarat PKB? 
+      Output: Laporan akumulasi SKPK per TA 
+ 
+     Tahap 3 (H4 bulan): 
+      Jika SKPK kurang → jadwalkan pelatihan PKB intensif 
+      Output: Jadwal pelatihan PKB 
+ 
+      Tahap 4 (H3 bulan): 
+      Pilih jalur perpanjangan: uji kompetensi ulang atau RPL 
+      Output: Keputusan jalur perpanjangan 
+ 
+      Tahap 5 (H2 bulan): 
+      Siapkan portofolio (logbook proyek, referensi, bukti pelatihan) 
+      Output: Folder portofolio lengkap 
+ 
+
+      Tahap 6 (H1 bulan): 
+      Daftarkan ke LSP terakreditasi, ikuti uji kompetensi 
+      Output: Bukti pendaftaran LSP 
+ 
+      Tahap 7 (H0 bulan): 
+      SKK baru terbit, update data di SIJK dan OSSRBA 
+      Output: SKK baru + update sistem 
+ 
+5.  ESKALASI 
+     Terlambat 7 hari: Notifikasi ke Manajer HRD 
+     Terlambat 14 hari: Notifikasi ke PJT 
+     Terlambat 30 hari: Eskalasi ke Direktur Utama 
+ 
+6. DOKUMEN TERKAIT 
+     Kalender PKB Rolling 
+     Dashboard Monitoring SKK 
+     Template Portofolio RPL 
+ 
+7. REVISI 
+     SOP ini akan direview setiap 12 bulan atau apabila ada perubahan  
+     regulasi signifikan. 
+ 
+ 
+Tanggal: [Tanggal] 
+ 
+Disetujui oleh: 
+ 
+ 
+[Nama Direktur Utama] 
+Direktur Utama 
+ 
+ 
+ 
+
+ C.3 Master Checklist Kepatuhan Terintegrasi (Versi Cetak) 
+No
+Domain 
+Item Pemeriksaan 
+Status
+PIC 
+1 Legalitas & SBU 
+NIB sinkron KBLI 2025? 
+/   
+Legal 
+2 
+ 
+Subklasifikasi SBU sesuai? 
+/   
+Legal 
+3 
+ 
+Masa berlaku SBU > 6 bln? 
+/   
+Legal 
+4 Kompetensi (SKK) 
+SKK PJT aktif & SKPK ≥ min? 
+/   
+HRD 
+5 
+ 
+Jumlah SKK TA memenuhi? 
+/   
+HRD 
+6 
+ 
+Tidak ada TA terdaftar ganda di SIJK? 
+/   
+HRD 
+7 Sistem Manajemen 
+(ISO) 
+Ruang lingkup ISO mencakup subklasifikasi 
+SBU? 
+/   QA/QC 
+8 
+ 
+Master List Equipment sinkron dengan SBU? 
+/   QA/QC 
+9 
+ 
+HR Competency Matrix mencerminkan SKK 
+terbaru? 
+/   QA/QC 
+10 Dokumen Proyek 
+CMS merujuk SNI terbaru? 
+/   
+Ops 
+11 
+ 
+HSE Plan ditandatangani Ahli K3 bersertifikat? 
+/   
+HSE 
+12 
+ 
+VOR didukung dokumen kompetensi valid? 
+/   
+Ops 
+13 Keuangan 
+Laporan keuangan diaudit KAP (untuk 
+Menengah/Besar)? 
+/   Keuangan
+14 PUB & Integritas 
+Memiliki Pancek KPK atau Sertifikat ISO 
+37001? 
+/   
+Legal 
+ 
+Catatan Penggunaan: 
+➢ 
+Review checklist ini setiap awal kuartal (alokasikan waktu 30 menit). 
+➢ 
+Jika ada item yang dicentang [ X ] (belum sesuai), segera tetapkan deadline 
+perbaikan di kolom catatan. 
+➢ 
+Simpan hasil review yang sudah diisi sebagai arsip kepatuhan perusahaan. 
+ 
+Disetujui oleh:                     
+ 
+Tanggal Review: 
+ 
+ 
+[Nama Direktur Utama]               
+[Tanggal] 
+Direktur Utama 
+ 
+ 
+
+ 
+ LAMPIRAN D: Tools Digital & Dashboard Template 
+ 
+D.1 Template Dashboard Monitoring (Google Sheets) 
+Struktur Sheet 1: Inventaris Dokumen 
+No 
+Jenis 
+Dokumen Nomor Tanggal 
+Terbit 
+Tanggal 
+Kedaluw
+arsa 
+PIC Status 
+Hari 
+Tersisa 
+Level Alarm 
+1 
+SBU 
+Kontraktor 
+Jalan 
+SBU-
+2024-
+12345 
+10 Jan 
+2024 
+10 Jan 
+2027 
+Legal Aktif 
+=TODAY
+()-
+[Tanggal
+_Kedalu
+warsa] 
+=IF(TODAY()>[Tang
+gal_Kedaluwarsa]-
+90,"🔴 H-3 
+Bulan",IF(TODAY()>[
+Tanggal_Kedaluwar
+sa]-180,"🟠 H-6 
+Bulan",IF(TODAY()>[
+Tanggal_Kedaluwar
+sa]-270,"🟡 H-9 
+Bulan","🟢 Aman"))) 
+2 
+SKK PJT 
+(Pak Budi) 
+SKK-
+2022-
+67890 
+15 Mar 
+2022 
+15 Mar 
+2027 
+HRD Aktif 
+=TODAY
+()-
+[Tanggal
+_Kedalu
+warsa] 
+=IF(...) 
+3 
+ISO 9001 
+ISO-
+2023-
+ABC 
+5 Sep 
+2023 
+5 Sep 
+2026 
+QA/Q
+C 
+Aktif 
+=TODAY
+()-
+[Tanggal
+_Kedalu
+warsa] 
+=IF(...) 
+ 
+ 
+ 
+ 
+
+Struktur Sheet 2: Kalender PKB Rolling 
+Bulan Tenaga Ahli Jenjang Kegiatan PKB 
+SKP 
+Target 
+SKP 
+Terkumpul 
+Status 
+Jan 
+2026 
+Pak Budi 
+(PJT) 
+Ahli 
+Utama 
+Seminar 
+Nasional 
+5 
+5 
+✅ Selesai 
+Jan 
+2026 
+Bu Sari 
+Ahli 
+Madya 
+Webinar ISO 
+2 
+2 
+✅ Selesai 
+Feb 
+2026 
+Pak Andi 
+Ahli Muda Pelatihan K3 
+10 
+0 
+🔄 
+Terjadwal 
+ 
+Struktur Sheet 3: Radar Regulasi 
+Tanggal 
+Cek 
+Sumber 
+Informasi 
+Dampak Potensial 
+Tindakan PIC 
+18 Agu 
+2026 
+JDIH 
+Kemen PU 
+Draft Permen Revisi 
+Subklasifikasi 
+Subklasifikasi jalan 
+mungkin dipecah 
+Monitor 
+Legal
+18 Agu 
+2026 
+Portal 
+BNSP 
+Pembaruan SKKNI 
+2026 
+Unit kompetensi SKK 
+berubah 
+Siapkan 
+PKB 
+HRD 
+ 
+💡 PRO TIP: Otomatisasi Notifikasi 
+ Gunakan Google Apps Script untuk mengirim notifikasi otomatis ke 
+WhatsApp grup tim kepatuhan setiap ada dokumen yang masuk level 
+ 
+,  
+, atau  
+. 
+ 
+ 
+ 
+ 
+
+ D.2 Template KPI Kepatuhan Departemen 
+Departemen 
+KPI Kepatuhan 
+Bobot Target Realisasi Skor
+Legal 
+100% SBU diperpanjang H-6 bulan 15% 100% 100% 
+15 
+HRD 
+100% SKK TA aktif, SKP ≥ minimum 20% 100% 95% 
+19 
+Keuangan 
+Audit KAP selesai H-4 bulan 
+10% 100% 100% 
+10 
+QA/QC 
+Dokumen ISO ter-update 
+15% 100% 100% 
+15 
+Operasional Logbook proyek terdokumentasi 
+10% 100% 90% 
+9 
+Total 
+70% 
+68 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ LAMPIRAN E: FAQ & Troubleshooting 
+ 
+ E.1 Pertanyaan Umum tentang SBU 
+ 
+Q1: Apa yang harus dilakukan jika SBU ditolak OSSRBA? 
+A: Cek alasan penolakan di sistem. Umumnya karena: (1) KBLI tidak 
+sinkron, (2) SKK tidak sesuai, (3) dokumen tidak lengkap. Perbaiki 
+dan submit ulang. Jika error sistem, gunakan Template Surat A.1. 
+ 
+Q2: Berapa lama proses perpanjangan SBU? 
+A: SLA resmi: 5 hari kerja verifikasi LSBU + 3 hari penerbitan. Total: 8 
+hari kerja. Namun, siapkan dokumen H6 bulan untuk antisipasi. 
+ 
+Q3: Apakah bisa menambah subklasifikasi SBU tanpa perpanjangan 
+penuh? 
+A: Ya, melalui pengajuan "Perubahan SBU" di OSSRBA. Prosesnya 
+sama dengan perpanjangan, tapi Anda hanya perlu melengkapi 
+persyaratan untuk subklasifikasi baru. 
+ 
+
+Q4: Apa sanksi jika SBU kedaluwarsa? 
+A: Sanksi bertahap: (1) Peringatan tertulis, (2) Pembekuan SBU 36 
+bulan, (3) Pencabutan SBU. Selama pembekuan, Anda tidak bisa ikut 
+tender. 
+ 
+ E.2 Pertanyaan Umum tentang SKK 
+ 
+Q1: Bagaimana jika SKK PJT resign mendadak? 
+A: Gunakan Protokol Darurat 72 Jam (Bab 8). Segera mutasi PJT ke TA 
+lain yang memiliki SKK sesuai, atau rekrut PJT baru dengan kontrak 
+cepat. 
+Q2: Apakah SKK lama masih berlaku setelah PP 28/2025? 
+A: SKK yang masih berlaku tetap diakui, tapi harus disesuaikan 
+dengan skema baru saat perpanjangan. Cek status di portal SIJK. 
+Q3: Berapa biaya uji kompetensi SKK? 
+A: Ratarata Rp 24 juta per orang, tergantung jenjang dan LSP. Untuk 
+perpanjangan via RPL, biaya lebih murah (5070% dari uji baru). 
+ 
+ 
+
+Q4: Bagaimana cara mengumpulkan SKPK PKB? 
+A: Melalui: (1) Pelatihan/seminar terakreditasi (5 SKPK per 8 jam), 
+(2) Webinar (1 SKPK per 2 jam), (3) Publikasi jurnal (10 SKPK), (4) 
+Menjadi narasumber (8 SKPK), (5) Pengalaman proyek (5 SKPK per 
+tahun). 
+
+E.3 Pertanyaan Umum tentang ISO 
+ 
+Q1: Apakah ISO wajib untuk semua kualifikasi? 
+A: ISO 9001 wajib untuk kualifikasi Besar. Untuk Menengah, ISO 
+menjadi nilai tambah dalam tender. Kualifikasi Kecil tidak wajib. 
+Q2: Berapa lama proses sertifikasi ISO? 
+A: Ratarata 36 bulan untuk sertifikasi awal, 12 bulan untuk 
+perpanjangan. Surveillance audit dilakukan setiap 612 bulan. 
+Q3: Apakah ruang lingkup ISO harus sama dengan subklasifikasi SBU? 
+A: Ya, sangat disarankan. Jika ruang lingkup ISO tidak mencakup 
+subklasifikasi SBU, Anda bisa kehilangan poin dalam evaluasi tender. 
+ 
+ 
+ 
+
+ 
+ LAMPIRAN F: Kontak Resmi & Sumber Informasi 
+F.1 Kontak Resmi 
+Institusi 
+Layanan 
+Kontak 
+Website 
+OSS-RBA 
+Helpdesk perizinan 
+Email: helpdesk@oss.go.id 
+Telp: 1500-576 
+oss.go.id 
+LPJK 
+Registrasi SKK, klarifikasi 
+SBU 
+Email: info@lpjk.pu.go.id 
+Telp: (021) 7255088 
+lpjk.pu.go.id 
+BNSP 
+Lisensi LSP, skema 
+kompetensi 
+Email: info@bnp.go.id 
+Telp: (021) 31988880 
+bnp.go.id 
+Kementerian PU 
+Regulasi, kebijakan 
+Email: 
+pengaduan@pu.go.id 
+pu.go.id 
+JDIH Kementerian 
+PU 
+Dokumen regulasi 
+- 
+jdih.pu.go.id
+ 
+F.2 Asosiasi Jasa Konstruksi 
+Asosiasi 
+Bidang 
+Website 
+GAPENSI 
+Kontraktor Nasional 
+gapensi.org 
+INKINDO 
+Konsultan Nasional 
+inkindo.org 
+ASPEKINDO 
+Kontraktor Nasional 
+aspekindo.id 
+AKLI 
+Kontraktor Listrik 
+akli.org 
+ASDAMKINDO Profesi  
+asdamkindo.id 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ F.3 Sumber Informasi Regulasi 
+1. JDIH Setneg: jdih.setneg.go.id (UU, PP, Perpres) 
+2. JDIH Kementerian PU: jdih.pu.go.id (Permen, SE) 
+3. Portal LPJK: lpjk.pu.go.id (Peraturan LPJK, juknis) 
+4. Portal BNSP: bnp.go.id (Skema kompetensi, lisensi LSP) 
+5. OSS-RBA: oss.go.id (Update sistem, prosedur) 
+ 
+ 
+ LAMPIRAN G: Glosarium Istilah 
+Istilah 
+Kepanjangan 
+Definisi 
+SBU 
+Sertifikat Badan Usaha 
+Izin usaha jasa konstruksi yang diterbitkan 
+via OSS-RBA 
+SKK 
+Sertifikat Kompetensi Kerja 
+Sertifikat kompetensi tenaga kerja 
+konstruksi 
+SKKNI Standar Kompetensi Kerja Nasional 
+Indonesia 
+Standar kompetensi yang menjadi acuan uji 
+kompetensi 
+PJT 
+Penanggung Jawab Teknik 
+Tenaga ahli yang bertanggung jawab atas 
+aspek teknis perusahaan 
+PJBU 
+Penanggung Jawab Badan Usaha 
+Direktur yang bertanggung jawab atas 
+legalitas perusahaan 
+TA 
+Tenaga Ahli 
+Tenaga kerja konstruksi bersertifikat (Ahli 
+Muda/Madya/Utama) 
+PKB 
+Pengembangan Keprofesian 
+Berkelanjutan 
+Kewajiban pengembangan kompetensi 
+tenaga ahli 
+SKPK 
+Satuan Kredit Pengembangan 
+Keprofesian 
+Satuan pengukuran kegiatan PKB 
+RPL 
+Recognition of Prior Learning 
+Pengakuan kompetensi melalui portofolio 
+pengalaman 
+LSP 
+Lembaga Sertifikasi Profesi 
+Lembaga yang melaksanakan uji kompetensi 
+LSBU 
+Lembaga Sertifikasi Badan Usaha 
+Lembaga yang memverifikasi pengajuan SBU 
+LPJK 
+Lembaga Pengembangan Jasa 
+Konstruksi 
+Otoritas registrasi dan pembinaan jasa 
+konstruksi 
+BNSP 
+Badan Nasional Sertifikasi Profesi Lembaga yang melisensi LSP 
+OSS-
+RBA 
+Online Single Submission – Risk 
+Based Approach 
+Sistem perizinan terintegrasi berbasis risiko 
+KBLI 
+Klasifikasi Baku Lapangan Usaha 
+Indonesia 
+Kode klasifikasi usaha (2020 → 2025) 
+
+Istilah 
+Kepanjangan 
+Definisi 
+NIB 
+Nomor Induk Berusaha 
+Nomor identitas perusahaan di OSS 
+KSO 
+Kerja Sama Operasi 
+Joint operation untuk mengikuti tender 
+besar 
+PEP 
+Project Execution Plan 
+Rencana pelaksanaan proyek 
+CMS 
+Construction Method Statement 
+Metode pelaksanaan konstruksi 
+QA 
+Plan 
+Quality Assurance Plan 
+Rencana jaminan mutu 
+HSE 
+Plan 
+Health, Safety, and Environment 
+Plan 
+Rencana K3 dan lingkungan 
+VOR 
+Variation Order Request 
+Permintaan perubahan pekerjaan 
+SLA 
+Service Level Agreement 
+Kesepakatan tingkat layanan (waktu 
+verifikasi) 
+PBBR 
+Perizinan Berusaha Berbasis Risiko Sistem perizinan berdasarkan tingkat risiko 
+usaha 
+KAP 
+Kantor Akuntan Publik 
+Lembaga yang mengaudit laporan keuangan 
+ISO 
+International Organization for 
+Standardization 
+Standar sistem manajemen internasional 
+SMK3 
+Sistem Manajemen Keselamatan 
+dan Kesehatan Kerja 
+Sistem manajemen K3 sesuai PP 50/2012 
+ 
+ 
+ 
+
+ 
+ BONUS: Worksheet Gap Analysis 5 Dimensi 
+ 
+ Worksheet Gap Analysis Komprehensif 
+ 
+Instruksi: 
+1. Kumpulkan seluruh dokumen: SBU, SKK, sertifikat ISO, laporan 
+keuangan, arsip proyek 
+2. Isi setiap kolom dengan jujur 
+3. Gunakan kode:  
+ (sesuai),  
+ (perlu perbaikan),  
+ (tidak 
+sesuai/gap kritis) 
+No Dimensi 
+Aspek 
+Kondisi
+Saat Ini 
+Persyaratan
+Baru 
+Status Gap Prioritas Tindakan PIC Deadline 
+1 
+Legalitas KBLI di 
+NIB 
+2 
+Legalitas Subklasifi
+kasi SBU 
+3 
+Legalitas Audit KAP 
+4 
+SKK 
+SKK PJT 
+5 
+SKK 
+SKK TA 
+pendukun
+g 
+6 
+SKK 
+Akumulas
+i SKP 
+7 
+ISO 
+Ruang 
+lingkup 
+ISO 
+8 
+ISO 
+Master 
+List 
+
+No Dimensi 
+Aspek 
+Kondisi
+Saat Ini 
+Persyaratan
+Baru 
+Status Gap Prioritas Tindakan PIC Deadline 
+Equipmen
+t 
+9 
+ISO 
+HR 
+Competen
+cy Matrix 
+10 Proyek 
+CMS 
+sesuai SNI 
+terbaru 
+11 Proyek 
+HSE Plan 
+terintegra
+si ISO 
+12 Keuangan Modal 
+disetor 
+13 Keuangan 
+Dokument
+asi 
+pengalam
+an 
+ 
+Rencana Aksi: 
+✓ Minggu 1-4: Selesaikan gap kritis 
+✓ Minggu 5-8: Selesaikan gap penting 
+✓ Minggu 9-12: Selesaikan gap strategis 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ PENUTUP LAMPIRAN 
+ 
+Seluruh materi dalam Bab 10 ini adalah milik Anda. Gunakan, 
+modifikasi, dan terapkan sesuai kebutuhan perusahaan Anda. 
+ 
+Ingat: Pengetahuan tanpa tindakan adalah siasia. Lampiran ini hanya 
+akan berguna jika Anda benarbenar menggunakannya. 
+Langkah selanjutnya: 
+1. Cetak lampiran yang paling relevan untuk perusahaan Anda 
+2. Simpan versi digital di folder yang mudah diakses 
+3. Bagikan ke tim terkait (Legal, HRD, Keuangan, QA/QC, Operasional) 
+4. Jadwalkan rapat untuk membahas implementasi 
+5. Mulai eksekusi — hari ini, bukan besok! 
+Selamat bekerja, selamat bertumbuh, dan selamat memenangkan 
+tendertender berikutnya dengan percaya diri! 
+Akhir dari Ebook "Dari Regulasi ke Aksi: Panduan Praktis Transisi 
+SBU SKK Setelah PP 28/2025 dan Perubahan Permen PU 06/2021" 
+Terima kasih telah membaca. Sampai jumpa di puncak kesuksesan 
+Anda. 
+
+ 

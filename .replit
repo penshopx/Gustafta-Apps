@@ -1,0 +1,185 @@
+modules = ["nodejs-20", "web", "python-3.12", "postgresql-16"]
+run = "npm run dev"
+hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["git"]
+
+[env]
+PORT = "5000"
+
+[deployment]
+deploymentTarget = "autoscale"
+run = ["node", "./dist/index.cjs"]
+build = ["npm", "run", "build"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "wa-contact-rotation"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "legacy-memory-review"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "kb-context-http"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "payment-url-migration"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "ruang-simpan-token-rotation"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "legacy-memory-concurrency"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "dashboard-production"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "NODE_ENV=development npx tsx server/index.ts"
+waitForPort = 5000
+
+[[workflows.workflow]]
+name = "wa-contact-rotation"
+author = "agent"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npx tsx --test tests/wa-contact-rotation.test.ts"
+
+[[workflows.workflow]]
+name = "legacy-memory-review"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:legacy-memory-tests && npm run test:legacy-memory-api && npm run test:legacy-memory-browser"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "kb-context-http"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:kb-context-http && npm run test:kb-context-http"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "payment-url-migration"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:payment-url-migration && npm run test:payment-url-migration"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "ruang-simpan-token-rotation"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:ruang-simpan-token-rotation && npm run test:ruang-simpan-token-rotation"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "legacy-memory-concurrency"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:legacy-memory-tests && npm run test:legacy-memory-concurrency"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[[workflows.workflow]]
+name = "dashboard-production"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run check:dashboard-production && npx vitest run tests/dashboard-loading.vitest.tsx tests/dashboard-deferred.vitest.tsx && npm run test:dashboard-production"
+
+[workflows.workflow.metadata]
+isValidation = true
+
+[agent]
+integrations = ["javascript_openai_ai_integrations:2.0.0", "javascript_log_in_with_replit:2.0.0", "javascript_database:1.0.0", "notion:1.0.0", "javascript_gemini_ai_integrations:2.0.0"]
+stack = "FULLSTACK_JS"
+expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
+
+[userenv]
+
+[userenv.shared]
+ADMIN_EMAILS = "tutip98@outlook.com"
+ADMIN_USER_IDS = "58349984,58848919,59024982"
+BREVO_SENDER_EMAIL = "noreply@gustafta.my.id"
+DEEPSEEK_MODEL = "deepseek-chat"
+GEMINI_MODEL = "gemini-2.5-pro"
+OPENAI_MODEL = "gpt-4o"
+PROD_URL = "https://gustafta.my.id"
+QWEN_MODEL = "qwen-plus"
+SCALEV_CHATBOT_SLUG = "gustafta"
+SCALEV_SIGNATURE_STRICT = "true"
+SMTP_HOST = "smtp-relay.brevo.com"
+SMTP_PORT = "587"
+SUPERADMIN_EMAILS = "penshopx@gmail.com"
+SUPABASE_URL = "https://jehmmndmrqyrififkqux.supabase.co"
+NOTIFICATION_PHONE = "081287941900"
+NOTIFICATION_WEBHOOK_URL = "https://gustafta.my.id/api/notify-fonnte?key=98769346a8ad80072d68973c680d4db6"
+PAYMENT_BASE_URL = "https://bayar.dokumenproyek.com"
+VITE_PAYMENT_BASE_URL = "https://bayar.dokumenproyek.com"
+NOTIFY_WEBHOOK_KEY = "98769346a8ad80072d68973c680d4db6"
+SCALEV_STORE_UNIQUE_ID = "store_Q6KHvqE8njFjGsS44N7wcP8d"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 23636
+externalPort = 3000

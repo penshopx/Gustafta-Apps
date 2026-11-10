@@ -1,0 +1,245 @@
+name: External ecosystem link health
+
+on:
+  # Production schedule intentionally disabled pending separate activation approval.
+  workflow_dispatch:
+    inputs:
+      allow_operational_run:
+        description: "Operational check can write alert state/send email; keep false for draft review. Use isolated receipt workflow for notification tests."
+        type: boolean
+        default: false
+      recovery_resolution:
+        description: "Only for a stuck recovery: mark email delivered, or retry after confirming it was not delivered"
+        type: choice
+        options:
+          - none
+          - delivered
+          - retry
+        default: none
+
+permissions:
+  contents: read
+  issues: write
+# Repository Issues must be enabled. The dedicated issue stores only canonical
+# app names and delivery phase; API failures stop recovery instead of resetting
+# the baseline. Do not close/delete the state issue.
+
+concurrency:
+  group: ecosystem-link-health-alert
+  cancel-in-progress: false
+
+jobs:
+  check-links:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_operational_run == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Healthchecks routes this check's down/up alerts to both Email and Telegram;
+      # configure both ON outside GitHub (docs/ecosystem-external-heartbeats.md).
+      # Do not send alerts from Actions: a stopped schedule cannot run Actions.
+      # External cron monitor: ping only the scheduled run, never a manual run.
+      # This step precedes checkout/install so their failure does not hide the
+      # fact that GitHub started the schedule. No report or log is transmitted.
+      - name: Heartbeat scheduled checker to independent monitor
+        if: ${{ github.event_name == 'schedule' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_CHECK_HEARTBEAT_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Checker heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Checker heartbeat could not be delivered."
+            exit 1
+          fi
+      # Separate provider and secret. A Healthchecks outage must not skip this step.
+      # The Cronitor heartbeat carries no report, URL, or workflow output.
+      - name: Heartbeat scheduled checker to Cronitor
+        if: ${{ github.event_name == 'schedule' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_CHECK_CRONITOR_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Checker Cronitor heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Checker Cronitor heartbeat could not be delivered."
+            exit 1
+          fi
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      # A failed write after Brevo accepted an email leaves the state in
+      # "sending". An operator must confirm delivery before clearing it.
+      - name: Resolve ambiguous recovery delivery
+        if: ${{ inputs.recovery_resolution == 'delivered' || inputs.recovery_resolution == 'retry' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RESOLUTION: ${{ inputs.recovery_resolution }}
+        run: npx tsx scripts/ecosystem-health-state.ts "resolve-$RESOLUTION"
+      - name: Install browser for public page checks
+        run: |
+          if ! npx @puppeteer/browsers install chrome@stable --path "$HOME/.cache/puppeteer" > /dev/null 2>&1; then
+            echo "Browser pemeriksa tidak dapat dipasang; pemeriksaan halaman akan melaporkan gangguan pemeriksa."
+          fi
+      - name: Check external app URLs and rendered pages
+        id: check
+        env:
+          ECOSYSTEM_HEALTH_REPORT: ${{ runner.temp }}/ecosystem-health-report.json
+          ECOSYSTEM_LINKS_COMPLETE: ${{ runner.temp }}/ecosystem-links-complete
+          ECOSYSTEM_PAGES_COMPLETE: ${{ runner.temp }}/ecosystem-pages-complete
+          ECOSYSTEM_BROWSER_UNAVAILABLE: ${{ runner.temp }}/ecosystem-browser-unavailable
+          ECOSYSTEM_NETWORK_UNAVAILABLE: ${{ runner.temp }}/ecosystem-network-unavailable
+        run: |
+          set +e
+          npm run check:ecosystem-links
+          links_status=$?
+          # A network failure during either phase must not mark pages complete.
+          # Still report independently confirmed HTTP failures from the link check.
+          if [ -s "$ECOSYSTEM_NETWORK_UNAVAILABLE" ]; then
+            pages_status=1
+          else
+            npm run check:ecosystem-pages
+            pages_status=$?
+          fi
+          if [ "$links_status" -ne 0 ] || [ "$pages_status" -ne 0 ]; then exit 1; fi
+      - name: Identify recovered apps
+        if: ${{ always() && steps.check.outcome != 'skipped' }}
+        id: transition
+        env:
+          ECOSYSTEM_HEALTH_REPORT: ${{ runner.temp }}/ecosystem-health-report.json
+          LINKS_COMPLETE: ${{ runner.temp }}/ecosystem-links-complete
+          PAGES_COMPLETE: ${{ runner.temp }}/ecosystem-pages-complete
+          ECOSYSTEM_RECOVERED_REPORT: ${{ runner.temp }}/ecosystem-recovered-report.json
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -s "$LINKS_COMPLETE" && test -s "$PAGES_COMPLETE"
+          npx tsx scripts/ecosystem-health-state.ts prepare
+      - name: Notify operational email of recovery
+        if: ${{ always() && steps.transition.outcome == 'success' && steps.transition.outputs.recovered == 'true' }}
+        id: recovery
+        env:
+          ECOSYSTEM_RECOVERED_REPORT: ${{ runner.temp }}/ecosystem-recovered-report.json
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_ALERT_EMAIL: ${{ secrets.BREVO_ALERT_EMAIL }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: |
+          set +e
+          npx tsx scripts/notify-ecosystem-links.ts recovery
+          result=$?
+          if [ "$result" -eq 1 ]; then echo "known_failure=true" >> "$GITHUB_OUTPUT"; fi
+          exit "$result"
+      - name: Confirm recovery delivery
+        if: ${{ always() && steps.recovery.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npx tsx scripts/ecosystem-health-state.ts finish
+      - name: Release recovery after known delivery failure
+        if: ${{ always() && steps.recovery.outcome == 'failure' && steps.recovery.outputs.known_failure == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npx tsx scripts/ecosystem-health-state.ts release
+      # Configure BREVO_API_KEY and BREVO_ALERT_EMAIL as repository Actions secrets.
+      # Optional: BREVO_SENDER_EMAIL, if the default noreply@gustafta.my.id is not a verified sender.
+      # Weekly alert claims live in Issues, not Actions cache. If an issue remains
+      # "sending", confirm delivery with the operator before editing it to "sent"
+      # or deleting that alert issue to permit a verified retry. Never clear it
+      # merely because a workflow failed after contacting the mail provider.
+      - name: Prepare alert deduplication key
+        if: ${{ failure() && steps.check.outcome == 'failure' }}
+        id: alert-key
+        env:
+          REPORT: ${{ runner.temp }}/ecosystem-health-report.json
+        run: |
+          test -s "$REPORT"
+          node -e 'const report = require(process.env.REPORT); if (!Array.isArray(report) || report.length === 0) process.exit(1)'
+          echo "key=ecosystem-alert-$(date -u +%G-W%V)-$(sha256sum "$REPORT" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+      - name: Claim weekly failure alert
+        if: ${{ failure() && steps.alert-key.outcome == 'success' }}
+        id: alert-claim
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.alert-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts claim
+      - name: Notify operational email
+        if: ${{ failure() && steps.alert-claim.outputs.send == 'true' }}
+        id: notify
+        env:
+          ECOSYSTEM_HEALTH_REPORT: ${{ runner.temp }}/ecosystem-health-report.json
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_ALERT_EMAIL: ${{ secrets.BREVO_ALERT_EMAIL }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: npx tsx scripts/notify-ecosystem-links.ts
+      - name: Confirm failure alert delivery
+        if: ${{ failure() && steps.notify.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.alert-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts finish
+      - name: Prepare network incident alert
+        if: ${{ always() && steps.check.outcome == 'failure' }}
+        id: network-key
+        env:
+          MARKER: ${{ runner.temp }}/ecosystem-network-unavailable
+        run: |
+          test -s "$MARKER"
+          echo "key=ecosystem-network-alert-$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
+      - name: Claim weekly network alert
+        if: ${{ always() && steps.network-key.outcome == 'success' }}
+        id: network-claim
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.network-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts claim
+      - name: Notify operational email of checker network trouble
+        if: ${{ always() && steps.network-claim.outputs.send == 'true' }}
+        id: network-notify
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_ALERT_EMAIL: ${{ secrets.BREVO_ALERT_EMAIL }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: npx tsx scripts/notify-ecosystem-links.ts network
+      - name: Confirm network alert delivery
+        if: ${{ always() && steps.network-notify.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.network-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts finish
+      - name: Prepare browser incident alert
+        if: ${{ always() && steps.check.outcome == 'failure' }}
+        id: browser-key
+        env:
+          MARKER: ${{ runner.temp }}/ecosystem-browser-unavailable
+        run: |
+          test -s "$MARKER"
+          echo "key=ecosystem-browser-alert-$(date -u +%G-W%V)" >> "$GITHUB_OUTPUT"
+      - name: Claim weekly browser alert
+        if: ${{ always() && steps.browser-key.outcome == 'success' }}
+        id: browser-claim
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.browser-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts claim
+      - name: Notify operational email of browser trouble
+        if: ${{ always() && steps.browser-claim.outputs.send == 'true' }}
+        id: browser-notify
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_ALERT_EMAIL: ${{ secrets.BREVO_ALERT_EMAIL }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: npx tsx scripts/notify-ecosystem-links.ts browser
+      - name: Confirm browser alert delivery
+        if: ${{ always() && steps.browser-notify.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ALERT_KEY: ${{ steps.browser-key.outputs.key }}
+        run: npx tsx scripts/ecosystem-alert-state.ts finish

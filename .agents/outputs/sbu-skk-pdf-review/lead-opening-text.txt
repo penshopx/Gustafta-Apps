@@ -1,0 +1,800 @@
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+MINI EBOOK 
+ 
+SBU & SKK  
+TANPA BINGUNG : 
+Panduan Lengkap Pemenuhan Persyaratan 
+Sertifikasi Konstruksi di Era Regulasi Baru 
+PP 28/2025 dan Permen PU 06 tahun 2025 
+ 
+ 
+
+Tentang Ebook Ini 
+Satu-satunya panduan komprehensif berbahasa Indonesia yang membedah perubahan SBU-SKK 
+pasca PP 28/2025 dan Permen PU terbaru secara berdampingan (side-by-side), lengkap dengan 
+checklist aksi dan timeline kepatuhan — dirancang khusus untuk pelaku usaha konstruksi 
+Indonesia yang ingin tetap patuh tanpa kehilangan peluang tender. 
+Judul alternatif: "Dari Regulasi ke Aksi: Panduan Praktis Transisi SBU-SKK Setelah PP 28/2025 
+dan Perubahan Permen PU 06/2021". 
+Untuk siapa buku ini: pemilik/direktur badan usaha jasa konstruksi (kontraktor & konsultan), 
+penanggung jawab teknik (PJT), tenaga ahli konstruksi, manajer operasional, serta staf 
+legal/perizinan — skala kecil, menengah, maupun besar. Pembaca diasumsikan sudah memahami 
+dasar SBU/SKK dan ingin tahu apa yang berubah serta apa yang harus dilakukan. 
+Setelah membaca buku ini, Anda mampu: 
+1. Memahami peta perubahan regulasi dari PP 5/2021 ke PP 28/2025 serta Permen PUPR 6/2021 
+ke Permen PU 6/2025 secara utuh. 
+2. Mengidentifikasi persyaratan SBU dan SKK terkini untuk badan usaha dan tenaga kerja 
+konstruksi Anda. 
+3. Menyusun checklist dan timeline pemenuhan secara mandiri tanpa bergantung penuh pada 
+konsultan. 
+4. Menghindari risiko sanksi administratif, kegagalan tender, dan pencabutan izin akibat 
+ketidakpatuhan. 
+5. Menyelesaikan pengajuan/perpanjangan SBU dan SKK melalui OSS-RBA dan LSBU/LSP 
+dengan benar pada percobaan pertama. 
+ 
+Kerangka Kerja Buku Ini 
+Tahap 
+Fokus 
+Output 
+Pahami 
+Mapping perubahan regulasi lama → baru 
+Peta perubahan versi perusahaan 
+Anda 
+Evaluasi 
+Gap analysis kondisi saat ini vs persyaratan baru Daftar gap dan prioritas 
+Transisi 
+Eksekusi pemenuhan: dokumen, sistem, uji 
+kompetensi 
+SBU/SKK sesuai standar baru 
+Tamankan Kepatuhan berkelanjutan dan kesiapan tender 
+Kalender kepatuhan dan SOP 
+internal 
+Setiap bab diakhiri kotak Aksi Sekarang — karena informasi tanpa aksi hanyalah beban bacaan 
+tambahan. 
+
+Mulai Cepat: Quick-Start & Rencana Aksi 30 Hari 
+Tidak punya waktu membaca seluruh buku sekarang? Mulai dari sini. 
+Quick-Start Checklist 
+• 
+[ ] Pahami perubahan regulasi: baca rangkuman perubahan PP 5/2021 → PP 28/2025 di Bab 
+2. 
+• 
+[ ] Evaluasi status SBU/SKK: bandingkan kondisi saat ini dengan persyaratan baru (lembar 
+kerja Bab 5). 
+• 
+[ ] Buat timeline pemenuhan: tetapkan tenggat untuk setiap langkah kepatuhan. 
+• 
+[ ] Perbarui dokumen: sesuaikan dokumen SBU/SKK dengan format dan persyaratan 
+terbaru. 
+• 
+[ ] Jadwalkan uji kompetensi: pastikan tenaga ahli memenuhi skema dan persyaratan baru. 
+Rencana Aksi 30 Hari 
+Minggu 
+Fokus 
+Tindakan 
+Minggu 1 Pahami Pelajari perubahan utama PP 28/2025 dan Permen PU 6/2025; diskusikan 
+dampaknya dengan tim legal/perizinan 
+Minggu 2 Evaluasi Audit internal SBU/SKK; perbarui dan sesuaikan dokumen dengan 
+persyaratan baru 
+Minggu 
+3–4 
+Transisi Ajukan SBU/SKK melalui OSS-RBA dan LSBU/LSP; jadwalkan serta 
+lakukan uji kompetensi tenaga ahli 
+Setelah 30 hari, lanjutkan ke roadmap 90 hari di Bab 5 hingga tahap Tamankan. 
+ 
+ 
+
+Bab 1  
+Pendahuluan: Ketika Aturan Berubah di Tengah Jalan 
+Bayangkan Anda berada di ambang kehilangan izin usaha karena perubahan regulasi yang 
+tidak Anda pahami. 
+Itulah yang dialami Pak Hartono, pemilik perusahaan kontraktor di sebuah kabupaten di Jawa 
+Timur. Pukul sebelas malam, staf administrasinya menelepon: "Pak, pengajuan perpanjangan SBU 
+kita tertolak sistem lagi. KBLI-nya belum disesuaikan, laporan keuangannya belum diaudit KAP, 
+dan SKK Pak Slamet sudah kedaluwarsa." Tujuh belas tahun ia merasa paham aturan main; malam 
+itu, map merah dokumen legalitasnya terasa usang. Tiga minggu lagi ada tender senilai tiga miliar 
+rupiah yang sudah dua tahun ia bidik. 
+Kisah ini adalah kisah ribuan pelaku usaha konstruksi hari ini — dan gejalanya mengerucut pada 
+tiga pain point utama: 
+Pain Point 
+Wujudnya di Lapangan 
+1. Ketidakpastian 
+regulasi 
+Perubahan berlapis (PP → Permen → peraturan lembaga → juknis) 
+membuat pelaku usaha tidak tahu syarat mana yang masih berlaku dan 
+mana yang dicabut; informasi simpang siur beredar di grup WhatsApp 
+asosiasi 
+2. Ketergantungan 
+pada konsultan 
+Biaya pendampingan tinggi, padahal prosesnya bisa dilakukan mandiri 
+jika dipahami dengan benar — dan banyak calo/konsultan yang 
+sendirinya belum memahami aturan baru 
+3. Risiko SBU/SKK 
+tidak valid 
+Perpanjangan SBU tertolak karena subklasifikasi/kualifikasi tidak sesuai 
+format baru; tenaga ahli gagal uji kompetensi karena skema berubah; 
+dokumen tender dianggap tidak valid oleh pokja — peluang bisnis 
+hilang 
+Akar masalahnya seragam: regulasi berubah cepat tanpa sosialisasi yang memadai, dan tidak ada 
+satu panduan transisi yang mengintegrasikan semua level regulasi. Pada 5 Juni 2025, PP Nomor 
+28 Tahun 2025 berlaku dan mencabut PP 5/2021. Di sektor pekerjaan umum, Permen PUPR 
+6/2021 digantikan Permen PU 6/2025 yang mempertegas pengawasan dan sanksi. Dua perubahan 
+ini menyentuh jantung bisnis Anda: SBU dan SKK. 
+Janji buku ini: Anda berubah dari pelaku usaha yang kebingungan dan terancam kehilangan 
+SBU/SKK, menjadi perusahaan yang patuh penuh, siap tender, dan mampu mengurus sertifikasi 
+secara mandiri dengan percaya diri. Regulasi berubah — pelaku usaha yang paham aturan selalu 
+selangkah lebih depan. 
+ 
+ 
+
+Aksi Sekarang — Bab 1: 
+• 
+[ ] Tulis tiga kekhawatiran terbesar perusahaan Anda terkait perubahan regulasi ini. 
+• 
+[ ] Kumpulkan dokumen SBU dan SKK terakhir beserta tanggal masa berlakunya. 
+• 
+[ ] Pastikan akun OSS perusahaan aktif dan Anda masih bisa login hari ini juga. 
+ 
+ 
+ 
+ 
+
+Bab 2 
+Peta Regulasi: Membaca Ulang Medan 
+ 
+2.1 Rantai regulasi: dari mata air ke irigasi 
+Anggap regulasi seperti sistem irigasi: undang-undang adalah mata airnya, peraturan pemerintah 
+bendungannya, peraturan menteri saluran primernya, dan peraturan lembaga serta petunjuk 
+teknis adalah saluran ke petak sawah Anda. Ketika bendungan diganti, seluruh saluran di 
+bawahnya ikut berubah. Inilah rantainya untuk jasa konstruksi: 
+• 
+UU No. 2 Tahun 2017 tentang Jasa Konstruksi (diubah melalui UU Cipta Kerja/UU No. 6 
+Tahun 2023) — mata air. 
+• 
+PP No. 22 Tahun 2020 jo. PP No. 14 Tahun 2021 — peraturan pelaksanaan UU Jasa 
+Konstruksi. 
+• 
+PP No. 5 Tahun 2021 → PP No. 28 Tahun 2025 — bendungan perizinan berusaha berbasis 
+risiko (PBBR). 
+• 
+Permen PUPR No. 6 Tahun 2021 → Permen PU No. 6 Tahun 2025 — saluran primer 
+standar kegiatan usaha sektor pekerjaan umum, kini lengkap dengan pengawasan dan sanksi. 
+• 
+SE Menteri PU, Peraturan LPJK, serta ketentuan BNSP — saluran tersier dan petunjuk 
+teknis: pedoman layanan LSBU, lisensi, skema sertifikasi, dan juknis. 
+2.2 Matriks Komparasi: PP 5/2021 vs PP 28/2025 
+Aspek 
+PP 5/2021 (lama) 
+PP 28/2025 (baru) 
+Dampak bagi Anda 
+Status 
+Dicabut 
+Berlaku sejak 5 Juni 2025 
+Semua rujukan lama wajib 
+diperbarui 
+Waktu 
+layanan 
+Belum ada SLA 
+menyeluruh 
+SLA di seluruh tahapan 
+perizinan 
+Anda berhak menagih 
+kepastian waktu 
+Sistem 
+OSS-RBA; sebagian 
+kewenangan di 
+daerah 
+Konsolidasi nasional di OSS 
+(±30 kementerian/lembaga) 
+Satu gerbang digital; 
+validasi otomatis, tak bisa 
+"dibicarakan di loket" 
+Klasifikasi 
+usaha 
+KBLI 2020 
+Penyesuaian KBLI 2025 
+Wajib sinkronisasi akta–
+NIB–sertifikat standar 
+Penekanan Kemudahan 
+berusaha 
+Kepastian hukum, proses 
+bisnis, jaminan kualitas layanan 
+Kepatuhan makin terukur 
+dan terpantau 
+ 
+ 
+
+2.3 Matriks Komparasi: Permen PUPR 6/2021 vs Permen PU 6/2025 
+Aspek 
+Permen PUPR 
+6/2021 (lama) 
+Permen PU 6/2025 (baru) 
+Cakupan 
+Sektor PU dan 
+Perumahan Rakyat 
+Sektor Pekerjaan Umum (seiring pemisahan Kementerian 
+PUPR menjadi Kementerian PU dan Kementerian PKP 
+pada akhir 2024) 
+Substansi 
+Standar kegiatan 
+usaha dan produk 
+Standar kegiatan usaha dan/atau produk/jasa • 
+pelaksanaan pengawasan + pengenaan sanksi 
+Detail teknis 
+SBU 
+Klasifikasi, 
+subklasifikasi, 
+kualifikasi era awal 
+PBBR 
+Penyesuaian subklasifikasi/kualifikasi dan persyaratan 
+teknis — misalnya aturan penggunaan peralatan yang 
+sama untuk memenuhi syarat peralatan utama pada 
+subklasifikasi lain (maksimal 5 subklasifikasi) 
+Konsekuensi 
+Sertifikat standar 
+cenderung "sekali 
+terbit" 
+Kepatuhan menjadi objek pengawasan berkelanjutan 
+dengan sanksi bertingkat 
+Catatan: selalu cocokkan detail teknis dengan naskah resmi Permen PU 6/2025 dan petunjuk 
+teknis terbarunya. 
+2.4 Siapa berwenang atas apa 
+Lembaga 
+Peran di era baru 
+BKPM / OSS 
+Gerbang tunggal perizinan berusaha berbasis risiko 
+Kementerian PU / Ditjen Bina 
+Konstruksi 
+Penetapan standar, pembinaan, dan pengawasan sektor jasa 
+konstruksi 
+LPJK 
+Pengembangan jasa konstruksi, akreditasi, pembinaan — 
+bertransformasi, bukan hilang 
+LSBU 
+Penerbit SBU (penilaian kesesuaian badan usaha) 
+LSP 
+Penerbit SKK, di bawah lisensi BNSP 
+BNSP 
+Pemberi lisensi LSP dan pengawal mutu sertifikasi profesi 
+DPMPTSP daerah 
+Peran menyesuaikan karena perizinan terkonsolidasi di OSS 
+Aksi Sekarang — Bab 2: 
+• [ ] Unduh PP 28/2025 dan Permen PU 6/2025 dari JDIH resmi; simpan di folder "Regulasi 
+2025" perusahaan. 
+• [ ] Tandai bagian yang menyebut subsektor jasa konstruksi, SBU, dan SKK. 
+• [ ] Tulis satu nama penanggung jawab regulasi di perusahaan Anda. 
+ 
+
+Bab 3 
+SBU: Persyaratan Baru yang Menentukan Hidup-Mati 
+Badan Usaha 
+3.1 Posisi SBU di sistem baru 
+Di era PBBR, SBU adalah sertifikat standar pemenuhan komitmen perizinan berusaha untuk 
+subsektor jasa konstruksi. Permohonannya diajukan melalui OSS yang terhubung dengan sistem 
+informasi jasa konstruksi dan LSBU. Tanpa SBU yang valid, badan usaha praktis kehilangan tiket 
+mengikuti tender dan menandatangani kontrak pekerjaan konstruksi. 
+3.2 Jenis usaha, klasifikasi, subklasifikasi, kualifikasi 
+• 
+Jenis usaha: pelaksana konstruksi (kontraktor), perencana/pengawas (konsultan), dan 
+konstruksi terintegrasi. Pilih satu jenis usaha yang dijalankan. 
+• 
+Klasifikasi dan subklasifikasi: spesialisasi teknis dengan kode tertentu. Di Permen PU 
+6/2025 terdapat penyesuaian nomenklatur dan syarat — pastikan subklasifikasi lama Anda 
+masih ada atau temukan padanan barunya. 
+• 
+Kualifikasi: kecil (K1, K2), menengah (M1, M2), dan besar (B1, B2), yang menentukan 
+batas nilai pekerjaan yang boleh Anda kerjakan. 
+3.3 Enam gerbang pemeriksaan yang paling sering menggagalkan 
+1. Legalitas dan KBLI 2025 — akta, NIB, dan kode KBLI harus sinkron; ketidakcocokan 
+sekecil apa pun membuat pengajuan tertolak sistem. 
+2. Keuangan — laporan keuangan diaudit Kantor Akuntan Publik terdaftar; struktur 
+permodalan sesuai kualifikasi yang dibidik. 
+3. SDM bersertifikat — tenaga ahli/terampil dengan SKK aktif sesuai jabatan kerja, 
+termasuk PJT dan PJB. 
+4. Peralatan konstruksi — bukti kepemilikan atau penguasaan yang sah; perhatikan 
+pembatasan penggunaan alat yang sama antar-subklasifikasi. 
+5. Sistem manajemen — SMK3/Sistem Manajemen Keselamatan Konstruksi. 
+6. Integritas — komitmen anti-penyuapan (SMAP/ISO 37001) sesuai ketentuan yang 
+berlaku. 
+3.4 Masa berlaku dan perpanjangan 
+Masa berlaku SBU umumnya 3 tahun sejak diterbitkan dan wajib diperpanjang agar badan usaha 
+tetap legal beroperasi. Jangan menunggu bulan-bulan terakhir: mulai proses perpanjangan paling 
+lambat 3–6 bulan sebelum habis masa berlaku, karena pemenuhan dokumen baru (audit 
+keuangan, asesmen SKK) memakan waktu. Selalu cek ketentuan masa berlaku dan masa transisi 
+terbaru di portal resmi. 
+
+3.5 Alur tiga langkah: Siapkan → Ajukan → Verifikasi 
+Langkah 
+Kegiatan 
+Bukti keberhasilan 
+1. Siapkan Gap analysis, sinkronisasi KBLI 2025, audit KAP, cek 
+SKK tim, dokumen peralatan, SMK3/SMAP 
+Semua checklist Bab 6 
+tercentang 
+2. Ajukan Login OSS, pilih LSBU berlisensi, unggah dokumen, 
+bayar sesuai tarif resmi 
+Nomor registrasi 
+permohonan terbit 
+3. 
+Verifikasi 
+Pantau status sesuai SLA, tanggapi permintaan perbaikan 
+dengan cepat 
+SBU terbit dan 
+tervalidasi di sistem 
+3.6 Jebakan regulasi — kesalahan umum penyebab penolakan SBU 
+• 
+Mengajukan dengan kode KBLI lama yang belum disesuaikan dengan KBLI 2025. 
+• 
+Laporan keuangan "asal ada" tanpa audit KAP terdaftar. 
+• 
+Baru sadar SKK tenaga ahli kedaluwarsa saat pengajuan berjalan. 
+• 
+Memilih subklasifikasi yang sudah berubah nomenklatur atau syarat kualifikasinya. 
+• 
+Dokumen peralatan lemah: alat bekas tanpa bukti sah, sewa tanpa perjanjian rapi. 
+• 
+Mengandalkan calo/konsultan yang sendirinya belum memahami aturan baru. 
+• 
+Menunggu mendekati tenggat tender untuk memulai proses. 
+Aksi Sekarang — Bab 3: 
+• 
+[ ] Cocokkan kode KBLI di NIB Anda dengan KBLI 2025 — hari ini, sebelum yang lain. 
+• 
+[ ] Buat daftar enam gerbang di atas dengan status perusahaan Anda: SIAP / BELUM. 
+• 
+[ ] Jika SBU Anda habis dalam 12 bulan ke depan, jadwalkan kick-off perpanjangan minggu 
+ini. 
+ 
+ 
+
+Bab 4 
+SKK: Tiket Karier Tenaga Kerja Konstruksi 
+4.1 SKK di era baru 
+Sertifikat Kompetensi Kerja (SKK) konstruksi adalah bukti kompetensi tenaga ahli dan tenaga 
+terampil, diterbitkan melalui uji kompetensi oleh LSP yang terlisensi BNSP, dan terintegrasi 
+dengan sistem perizinan Kementerian PU. Di era baru, SKK bukan lampiran formalitas tender — 
+ia tervalidasi sistem dan menjadi syarat keras, baik bagi pemegangnya maupun bagi SBU 
+perusahaan tempatnya bekerja. 
+4.2 Jabatan kerja dan kodefikasi 
+Setiap kompetensi kini dipetakan dalam jabatan kerja (jabker) terkodefikasi. Jabker lama 
+dikonversi mengacu klasifikasi dan kualifikasi terbaru. Implikasi praktis: cek apakah jabker pada 
+SKK lama Anda masih ada, berubah nama, atau memerlukan konversi. 
+4.3 Mekanisme uji kompetensi 
+• 
+Skema dan materi uji (MUK) disusun berdasarkan standar kompetensi terkini — jangan 
+belajar dari materi uji era lama. 
+• 
+Asesmen dilakukan asesor kompetensi di Tempat Uji Kompetensi (TUK), mencakup bukti 
+portofolio dan pengalaman kerja. 
+• 
+Pendaftaran melalui LSP terlisensi; pilih skema sesuai jabker yang dibidik. 
+4.4 Masa berlaku, perpanjangan, PJT dan PJB 
+Masa berlaku SKK konstruksi adalah 5 tahun sejak diterbitkan; perpanjangan dilakukan sebelum 
+habis masa berlaku melalui mekanisme yang ditetapkan LSP. Bagi perusahaan, pastikan jabatan 
+PJT dan PJB diisi pemegang SKK yang sesuai — kekosongan di dua posisi ini langsung 
+menggagalkan SBU. 
+4.5 Jebakan SKK — kesalahan umum 
+• 
+Menunggu SKK kedaluwarsa baru mengurus perpanjangan. 
+• 
+Salah memilih jabatan kerja sehingga tidak dikenali kebutuhan SBU. 
+• 
+Bukti pengalaman proyek lemah atau tidak terdokumentasi. 
+• 
+Menganggap skema dan materi uji lama masih berlaku. 
+• 
+Menggunakan jalur tidak resmi — risiko sertifikat tidak tervalidasi sistem. 
+ 
+ 
+
+Aksi Sekarang — Bab 4: 
+• 
+[ ] Audit seluruh SKK di perusahaan Anda: nomor, jabker, dan tanggal kedaluwarsa 
+(gunakan template di Bab 6). 
+• 
+[ ] Jadwalkan asesmen ulang di LSP terlisensi untuk SKK yang habis dalam 12 bulan ke 
+depan. 
+• 
+[ ] Pastikan posisi PJT dan PJB terisi pemegang SKK yang sesuai dan aktif. 
+ 
+ 
+ 
+
+Bab 5 
+Gap Analysis & Transisi: Saat PETA-4T Bekerja 
+ 
+5.1 Lembar kerja gap analysis 
+Salin tabel ini ke dokumen kerja perusahaan Anda dan isi dengan jujur: 
+Aspek 
+Kondisi Saat 
+Ini 
+Syarat 
+Baru 
+Gap Aksi 
+Penanggung 
+Jawab 
+Target 
+Tanggal 
+Legalitas/KBLI 2025 
+ 
+ 
+ 
+ 
+ 
+ 
+Laporan keuangan (audit 
+KAP) 
+ 
+ 
+ 
+ 
+ 
+ 
+SKK tenaga ahli/terampil  
+ 
+ 
+ 
+ 
+ 
+PJT & PJB 
+ 
+ 
+ 
+ 
+ 
+ 
+Peralatan 
+ 
+ 
+ 
+ 
+ 
+ 
+SMK3/SMKK 
+ 
+ 
+ 
+ 
+ 
+ 
+SMAP/ISO 37001 
+ 
+ 
+ 
+ 
+ 
+ 
+Subklasifikasi & 
+kualifikasi SBU 
+ 
+ 
+ 
+ 
+ 
+ 
+5.2 Roadmap transisi indikatif 90 hari 
+Fase 
+Waktu 
+Fokus 
+Pahami 
+Hari 1–7 
+Unduh regulasi, petakan perubahan, bentuk tim kecil kepatuhan 
+Evaluasi 
+Hari 8–21 
+Gap analysis menyeluruh; audit legalitas, keuangan, SKK, peralatan 
+Transisi 
+Hari 22–75 
+Penyesuaian KBLI/akta/NIB, audit KAP, asesmen SKK di LSP, 
+pengajuan di OSS via LSBU 
+Tamankan Hari 76–90 
+Verifikasi penerbitan, susun kalender kepatuhan tahunan, SOP 
+penanggung jawab regulasi 
+Roadmap di atas bersifat indikatif sebagai kerangka kerja internal. Tenggat resmi masa transisi 
+mengikuti ketentuan peralihan pada peraturan yang berlaku — cek selalu pengumuman resmi 
+Kementerian PU dan LPJK. 
+ 
+ 
+
+5.3 Skenario kondisional: jika X, maka Y 
+• 
+Jika SBU Anda habis kurang dari 3 bulan lagi → prioritaskan Transisi: kunci dulu 
+legalitas dan SKK, baru dokumen lain; komunikasikan SLA dengan LSBU sejak hari 
+pertama. 
+• 
+Jika SKK tenaga ahli kunci kedaluwarsa → jadwalkan asesmen di LSP segera dan 
+siapkan satu kandidat pengganti (buffer) agar syarat minimal tenaga ahli tidak bolong. 
+• 
+Jika tender kurang dari 30 hari → verifikasi validitas SBU/SKK di sistem resmi dan 
+siapkan bukti tayangnya; jangan bertaruh pada dokumen yang masih "dalam proses". 
+• 
+Jika subklasifikasi Anda berubah nomenklatur → temukan padanan barunya di Permen 
+PU 6/2025 dan konsultasikan ke LSBU sebelum mengajukan, bukan sesudah ditolak. 
+Aksi Sekarang — Bab 5: 
+• 
+[ ] Isi lembar kerja gap analysis hari ini juga — versi kasar pun tidak apa-apa. 
+• 
+[ ] Tetapkan satu tanggal kick-off 90 hari dan satu penanggung jawab. 
+ 
+ 
+
+Bab 6 
+Checklist & Template Siap Pakai 
+ 
+6.1 Checklist pemenuhan SBU 
+No 
+Item 
+Status Bukti/Catatan 
+1 
+Akta pendirian & perubahan terakhir sinkron dengan NIB 
+☐ 
+ 
+2 
+Kode KBLI sesuai KBLI 2025 
+☐ 
+ 
+3 
+NIB aktif dan terbaca di OSS 
+☐ 
+ 
+4 
+Laporan keuangan diaudit KAP terdaftar 
+☐ 
+ 
+5 
+Struktur permodalan sesuai kualifikasi 
+☐ 
+ 
+6 
+SKK tenaga ahli/terampil aktif & sesuai jabker 
+☐ 
+ 
+7 
+PJT dan PJB terisi pemegang SKK sesuai 
+☐ 
+ 
+8 
+Dokumen kepemilikan/penguasaan peralatan sah 
+☐ 
+ 
+9 
+SMK3/SMKK terdokumentasi 
+☐ 
+ 
+10 Komitmen SMAP/ISO 37001 
+☐ 
+ 
+11 Subklasifikasi & kualifikasi sesuai Permen PU terbaru 
+☐ 
+ 
+12 LSBU berlisensi dipilih; tarif resmi diketahui 
+☐ 
+ 
+6.2 Checklist pemenuhan SKK 
+No 
+Item 
+Status Bukti/Catatan 
+1 
+Jabatan kerja & kode sesuai kodefikasi terbaru 
+☐ 
+ 
+2 
+SKK aktif (masa berlaku 5 tahun belum lewat) 
+☐ 
+ 
+3 
+Portofolio pengalaman proyek terdokumentasi 
+☐ 
+ 
+4 
+Materi uji kompetensi (MUK) terbaru dipelajari 
+☐ 
+ 
+5 
+LSP terlisensi BNSP & TUK dipilih 
+☐ 
+ 
+6 
+Jadwal asesmen ditetapkan 
+☐ 
+ 
+ 
+ 
+ 
+
+6.3 Template surat pernyataan (contoh kerangka) 
+ 
+SURAT PERNYATAAN 
+Saya yang bertanda tangan di bawah ini, [nama], selaku [jabatan] [nama badan usaha], menyatakan 
+dengan sesungguhnya bahwa seluruh data dan dokumen yang disampaikan dalam permohonan 
+[penerbitan/perpanjangan] Sertifikat Badan Usaha adalah benar, valid, dan dapat diverifikasi. 
+Apabila di kemudian hari ditemukan ketidakbenaran, kami bersedia menerima sanksi sesuai 
+ketentuan peraturan perundang-undangan. 
+[Kota, tanggal] — [Tanda tangan dan stempel] 
+Sesuaikan dengan format resmi yang diminta LSBU/OSS. 
+6.4 Template daftar tenaga ahli 
+No Nama Jabatan Kerja No. SKK Masa Berlaku Status 
+1 
+ 
+ 
+ 
+ 
+ 
+2 
+ 
+ 
+ 
+ 
+ 
+3 
+ 
+ 
+ 
+ 
+ 
+ 
+Aksi Sekarang — Bab 6: cetak kedua checklist, tempel di ruang legal/perizinan, dan mulai 
+centang satu per satu. 
+ 
+ 
+ 
+
+Bab 7 
+Studi Kasus: Tiga Perusahaan, Tiga Jalan Transisi 
+ 
+Kasus 1 — PT Konstruksi Maju (kualifikasi kecil): subklasifikasi yang 
+"menghilang" 
+Masalah: SBU lama memuat subklasifikasi yang berubah di regulasi baru. Dokumen tender 
+pemerintah ditolak karena SBU dianggap tidak valid. 
+PETA-4T: Pahami — mengidentifikasi subklasifikasi baru yang setara; Evaluasi — 
+menyiapkan dokumen perubahan; Transisi — mengajukan perubahan melalui OSS dalam 14 
+hari; Tamankan — membuat kalender perpanjangan tahunan. 
+Hasil: SBU baru terbit dalam 21 hari kerja; perusahaan kembali memenuhi syarat tender. 
+Pelajaran: perubahan nomenklatur bukan akhir riwayat — asalkan dipetakan cepat ke padanan 
+barunya. 
+Kasus 2 — Konsultan perencana menengah: tiga dari lima SKK kedaluwarsa 
+Masalah: Tiga dari lima tenaga ahli SKK-nya kedaluwarsa dan skema uji kompetensi berubah; 
+syarat minimal tenaga ahli untuk SBU menengah tidak terpenuhi. 
+PETA-4T: memetakan skema SKK baru, menjadwalkan uji kompetensi ulang di LSP terlisensi, 
+dan secara paralel merekrut satu tenaga ahli tambahan sebagai penyangga. 
+Hasil: SBU berhasil diperpanjang tepat waktu; perusahaan memenangkan dua tender 
+konsultansi. 
+Pelajaran: ketergantungan pada jumlah tenaga ahli yang pas-pasan adalah risiko struktural — 
+selalu sediakan buffer. 
+Kasus 3 — Perusahaan besar multi-klasifikasi: delapan subklasifikasi, tiga 
+berubah 
+Masalah: Dari delapan subklasifikasi SBU, tiga berubah nomenklatur dan syarat kualifikasi; PJT 
+tidak memahami persyaratan baru. 
+PETA-4T: workshop internal dua hari menggunakan Matriks Komparasi, memperbarui seluruh 
+dokumen, lalu berkoordinasi dengan LSBU untuk penyesuaian. 
+Hasil: Transisi selesai dalam 45 hari tanpa gangguan operasional. 
+Pelajaran: untuk organisasi besar, masalah utamanya bukan biaya melainkan sinkronisasi 
+pengetahuan — matriks komparasi adalah alat kerja wajib. 
+ 
+ 
+
+Bab 8  
+FAQ: Sepuluh Pertanyaan yang Paling Sering Muncul 
+1. Apakah SBU/SKK lama saya masih berlaku? Selama masa berlakunya belum habis 
+umumnya tetap diakui sesuai ketentuan peralihan; namun untuk perpanjangan dan perubahan, 
+Anda wajib mengikuti standar baru. Cek ketentuan peralihan resmi. 
+2. Apakah saya harus mengganti SBU sekarang meski belum kedaluwarsa? Tidak selalu. 
+Yang wajib adalah memastikan data Anda (KBLI 2025, SKK tim, keuangan) siap sebelum 
+jadwal perpanjangan. 
+3. Apa beda LPJK, LSBU, dan LSP sekarang? LPJK bertransformasi menjadi lembaga 
+pengembangan dan akreditasi; SBU diterbitkan LSBU; SKK diterbitkan LSP terlisensi BNSP. 
+4. Bisakah mengurus tanpa konsultan? Bisa. Dengan checklist dan matriks di buku ini, 
+sebagian besar proses dapat dilakukan mandiri; konsultan hanya bernilai tambah jika ia benar-
+benar paham aturan baru. 
+5. Berapa lama proses SBU? Tergantung kelengkapan dokumen dan SLA layanan; pengalaman 
+lapangan berkisar 2–4 minggu setelah dokumen lengkap. 
+6. SKK saya kedaluwarsa, apakah harus uji ulang? Umumnya perpanjangan mengikuti 
+mekanisme LSP terkait; siapkan portofolio pengalaman dan ikuti skema terbaru. 
+7. Apa itu penyesuaian KBLI 2025 dan mengapa krusial? KBLI 2025 adalah klasifikasi 
+lapangan usaha terbaru; ketidaksinkronan kode KBLI di NIB dengan akta adalah penyebab 
+penolakan paling umum di sistem. 
+8. Apakah peralatan sewa bisa memenuhi syarat? Bisa, selama penguasaannya sah dan 
+terdokumentasi; perhatikan pembatasan penggunaan alat yang sama antar-subklasifikasi. 
+9. Apa sanksi jika tetap beroperasi tanpa memenuhi standar baru? Permen PU 6/2025 
+memuat pengawasan dan pengenaan sanksi bertingkat — dari administratif hingga 
+konsekuensi pada izin berusaha. Jangan uji batasnya. 
+10. Di mana cek validitas SBU/SKK? Melalui sistem informasi resmi Kementerian PU/LPJK 
+dan kanal verifikasi LSBU/LSP — tautan ada di Lampiran. 
+ 
+ 
+
+Bab 9 
+Penutup: Kepatuhan Adalah Senjata Kompetitif 
+Perubahan regulasi tidak harus menjadi momok. Tiga bulan setelah telepon pukul sebelas malam 
+itu, Pak Hartono membuka laptopnya: KBLI sudah disesuaikan, laporan keuangan sudah diaudit, 
+SKK timnya diperbarui melalui LSP. Pagi itu, notifikasi OSS yang dulu ia takuti membawa kabar 
+yang ia tunggu: SBU baru telah terbit. Ia memang kehilangan tender tiga miliar yang pertama — 
+tetapi dua bulan kemudian memenangkan tender lain dengan dokumen yang tak bisa digugat siapa 
+pun. 
+Di forum asosiasi, ia berkata kepada kawan-kawannya: "Aturan berubah bukan untuk 
+menyingkirkan kita. Ia menaikkan standar — dan standar yang lebih tinggi adalah kabar baik bagi 
+yang mau naik." 
+Mulailah langkah pertama Anda hari ini: terapkan PETA-4T, gunakan Matriks Komparasi 
+Regulasi sebagai alat kerja utama, dan jangan biarkan ketidakpastian menghalangi langkah. 
+Selamat berbenah — dan selamat membangun Indonesia. 
+Lampiran 
+Glosarium 
+• 
+SBU — Sertifikat Badan Usaha; sertifikat standar pemenuhan komitmen perizinan berusaha 
+subsektor jasa konstruksi. 
+• 
+SKK — Sertifikat Kompetensi Kerja konstruksi bagi tenaga ahli dan tenaga terampil. 
+• 
+PBBR / OSS-RBA — Perizinan Berusaha Berbasis Risiko / Online Single Submission Risk 
+Based Approach. 
+• 
+NIB — Nomor Induk Berusaha. 
+• 
+KBLI 2025 — Klasifikasi Baku Lapangan Usaha Indonesia terbaru yang wajib disesuaikan. 
+• 
+LSBU — Lembaga Sertifikasi Badan Usaha (penerbit SBU). 
+• 
+LSP — Lembaga Sertifikasi Profesi (penerbit SKK, terlisensi BNSP). 
+• 
+LPJK — Lembaga Pengembangan Jasa Konstruksi. 
+• 
+BNSP — Badan Nasional Sertifikasi Profesi. 
+• 
+PJT / PJBU — Penanggung Jawab Teknik / Penanggung Jawab Badan Usaha. 
+• 
+KAP — Kantor Akuntan Publik. 
+• 
+SMK3/SMKK — Sistem Manajemen Keselamatan (dan Kesehatan Kerja) Konstruksi. 
+• 
+SMAP — Sistem Manajemen Anti Penyuapan (ISO 37001). 
+• 
+MUK / TUK — Materi Uji Kompetensi / Tempat Uji Kompetensi. 
+• 
+SLA — Service Level Agreement; jaminan waktu layanan di tiap tahap perizinan. 
+ 
+ 
+
+Akses langsung (pasang sebagai QR code di versi cetak) 
+• 
+Portal OSS: oss.go.id 
+• 
+Portal Perizinan Kementerian PU: perizinan.pu.go.id 
+• 
+LPJK: lpjk.pu.go.id 
+• 
+BNSP: bnsp.go.id 
+• 
+JDIH Kementerian PU: jdih.pu.go.id 
+• 
+Koleksi peraturan BPK: peraturan.bpk.go.id 
+Rujukan regulasi utama 
+• 
+UU No. 2 Tahun 2017 tentang Jasa Konstruksi (sebagaimana diubah, termasuk melalui UU 
+No. 6 Tahun 2023). 
+• 
+PP No. 22 Tahun 2020 jo. PP No. 14 Tahun 2021 (peraturan pelaksanaan UU Jasa 
+Konstruksi). 
+• 
+PP No. 5 Tahun 2021 → PP No. 28 Tahun 2025 tentang Penyelenggaraan PBBR. 
+• 
+Permen PUPR No. 6 Tahun 2021 → Permen PU No. 6 Tahun 2025 tentang standar 
+kegiatan usaha dan/atau standar produk/jasa, pengawasan, dan sanksi PBBR sektor PU. 
+• 
+Permen PUPR No. 8 Tahun 2022 tentang tata cara pemenuhan sertifikat standar jasa 
+konstruksi. 
+• 
+Permen PUPR No. 10 Tahun 2021 tentang Pedoman Sistem Manajemen Keselamatan 
+Konstruksi. 
+• 
+SE Menteri PU dan Peraturan LPJK terkait layanan LSBU serta sertifikasi kompetensi kerja. 
+CATATAN REDAKSI — Sebelum diterbitkan, verifikasi atau ganti klaim statistik yang beredar 
+(mis. "70% perusahaan kesulitan transisi", "penolakan SBU naik 30%", "keberhasilan tender 
+naik 50%") dengan data resmi bersumber, atau hapus angka-angka tersebut. Angka tanpa sumber 
+melemahkan kredibilitas buku ini. 
+ 

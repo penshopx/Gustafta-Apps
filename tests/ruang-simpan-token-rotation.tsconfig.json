@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": ["ruang-simpan-token-rotation.test.ts", "ruang-simpan-token-rotation.vitest.tsx"],
+  "exclude": []
+}

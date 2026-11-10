@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": ["ruang-simpan-quota.vitest.ts", "object-storage-cleanup.vitest.ts", "ruang-simpan-quota.config.ts", "fixtures/ruang-simpan-reservation-kill-child.ts"],
+  "exclude": []
+}

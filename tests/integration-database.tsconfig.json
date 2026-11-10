@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": [
+    "integration-database-lifecycle.test.ts",
+    "test-database-isolation.test.ts",
+    "test-database-lease.test.ts",
+    "fixtures/test-database-lease-worker.ts",
+    "commerce-network.test.ts",
+    "fixtures/commerce-network.ts",
+    "../scripts/integration-test-database.ts",
+    "../scripts/setup-integration-test-database.ts"
+  ],
+  "exclude": []
+}

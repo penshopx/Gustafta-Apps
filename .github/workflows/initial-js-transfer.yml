@@ -1,0 +1,66 @@
+name: Initial JavaScript transfer
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  initial-js-transfer:
+    name: Production cold-visit JavaScript budget
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CI: "true"
+      TZ: UTC
+      LANG: en_US.UTF-8
+    steps:
+      - uses: actions/checkout@v4
+      # A report exists even if installation/browser setup fails. The runner
+      # replaces this sentinel, so an old successful report cannot survive.
+      - name: Initialize failure report
+        run: |
+          mkdir -p generated-artifacts/initial-js-production
+          printf '%s\n' '{"schemaVersion":1,"valid":false,"outcome":"measurement-error","exitCode":2,"problems":["CI setup or verification did not finish; inspect job logs"]}' > generated-artifacts/initial-js-production/report.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.20.0"
+          cache: npm
+      - name: Prepare portable locked dependencies
+        run: |
+          node --test tests/visual-ci-lock.test.mjs
+          node scripts/prepare-visual-ci-lock.mjs
+      - run: npm ci
+      - name: Verify installed measurement runtime
+        run: node --input-type=module -e "await import('puppeteer-core'); await import('vite'); await import('tsx/esm');"
+      - name: Install browser runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libasound2t64 libatk-bridge2.0-0t64 libatk1.0-0t64 libatspi2.0-0t64 \
+            libcairo2 libcups2t64 libdbus-1-3 libgbm1 libglib2.0-0t64 libnspr4 \
+            libnss3 libpango-1.0-0 libudev1 libx11-6 libxcb1 libxcomposite1 \
+            libxdamage1 libxext6 libxfixes3 libxkbcommon0 libxrandr2 curl unzip fontconfig
+      - name: Prepare checksum-pinned Chromium
+        run: npm run visual:setup
+      - name: Verify measurement and failure contracts
+        env:
+          CHROME_PATH: ${{ github.workspace }}/generated-artifacts/visual-env/chrome-linux64/chrome
+        run: |
+          npm run check:initial-js-transfer-types
+          npm run test:initial-js-transfer
+      - name: Build production and enforce browser and static budgets
+        run: npm run check:initial-js-production
+      - name: Save browser transfer JSON on success or failure
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: initial-js-transfer-${{ github.run_id }}-${{ github.run_attempt }}
+          path: generated-artifacts/initial-js-production/*.json
+          retention-days: 14
+          if-no-files-found: error

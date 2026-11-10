@@ -1,0 +1,61 @@
+{
+  "tanggal": "2026-10-18",
+  "blueprint_entry": "Blueprint Kontraktor Otonom Gustafta Apps — Sistem 28fdd97a2dc54736b116190bf07315df.md",
+  "sigap_entry": "Spesifikasi Integrasi SIGAP ke Aplikasi Horizontal d3dd1bd665fe4d5c80546f106bf8536d.md",
+  "kode_sumber": 73,
+  "kode_tabel_delapan_kelompok": 77,
+  "kelompok_sumber": {
+    "BG": 9,
+    "BS": 20,
+    "IN": 9,
+    "KK": 16,
+    "KP": 2,
+    "PA": 1,
+    "PB": 8,
+    "PL": 8
+  },
+  "kelompok_tabel": {
+    "BG": 9,
+    "BS": 20,
+    "IN": 13,
+    "KK": 16,
+    "KP": 2,
+    "PB": 8,
+    "PA": 1,
+    "PL": 8
+  },
+  "tambahan": [
+    "IN011",
+    "IN012",
+    "IN013",
+    "IN014"
+  ],
+  "kode_sumber_tidak_ditemukan": [],
+  "klaim_per_status": {
+    "verified": 136,
+    "corrected": 103,
+    "unresolved": 18
+  },
+  "nama_sumber_per_status": {
+    "verified": 56,
+    "unresolved": 13,
+    "corrected": 4
+  },
+  "nama_unresolved": [
+    "BG008",
+    "BS006",
+    "BS011",
+    "BS014",
+    "BS016",
+    "BS018",
+    "IN003",
+    "IN010",
+    "KP002",
+    "PB003",
+    "PB005",
+    "PB011",
+    "PL005"
+  ],
+  "total_klaim": 257,
+  "batas": "Validasi dokumen; tidak membuktikan legalitas tenant, operasi SIJK atau keaslian digital salinan."
+}

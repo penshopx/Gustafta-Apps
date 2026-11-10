@@ -1,0 +1,40 @@
+{
+  "kit_version": "1.0.0",
+  "application": {
+    "name": "",
+    "purpose": "",
+    "sector": "",
+    "target_repository": "proyek yang menerima unggahan"
+  },
+  "deployment_target": "desktop_web",
+  "integration_mode": "local",
+  "data_authority": "target_application",
+  "preset": null,
+  "selected_modules": [],
+  "selection_confirmed": false,
+  "excluded_modules": [],
+  "identity_mode": "reuse_existing_or_choose_local",
+  "organization_mode": "single_company",
+  "branding": {
+    "reuse_gustafta_name": false,
+    "application_name": ""
+  },
+  "providers": {
+    "ai": null,
+    "email": null,
+    "whatsapp": null,
+    "payment": null,
+    "storage": null
+  },
+  "implementation": {
+    "respect_existing_stack": true,
+    "replace_database": false,
+    "copy_production_data": false
+  },
+  "acceptance": {
+    "two_owner_isolation": true,
+    "persistent_data": true,
+    "no_mock_production": true
+  },
+  "notes": "Isi pilihan sebelum implementasi. Kosong bukan berarti semua fitur. Tidak ada credential di file ini."
+}

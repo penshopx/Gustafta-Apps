@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "profile": "production-gzip6-anonymous-v1",
+  "browserVersion": "138.0.7204.100",
+  "observationMs": 5000,
+  "limits": {
+    "total": 340000,
+    "localInitial": 335000,
+    "localRuntime": 5000,
+    "thirdParty": 0
+  }
+}

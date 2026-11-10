@@ -1,0 +1,100 @@
+name: Ecosystem monitoring regression tests
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/ecosystem-*.yml"
+      - "scripts/*ecosystem*"
+      - "scripts/audit-cronitor-config.ts"
+      - "scripts/audit-healthchecks-config.ts"
+      - "scripts/notify-monitor-config-audit.ts"
+      - "scripts/test-ecosystem-alert-receipt.mjs"
+      - "scripts/lib/owned-browser-cleanup.ts"
+      - "scripts/prepare-visual-ci-lock.mjs"
+      - "client/src/data/ecosystem-apps.ts"
+      - "tests/*ecosystem*.ts"
+      - "tests/notify-ecosystem-links.test.ts"
+      - "package.json"
+      - "package-lock.json"
+
+permissions:
+  contents: read
+
+jobs:
+  offline-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      # No repository secrets or provider access. Chromium verification is
+      # opt-in and skipped here; these tests use local fixtures and fake APIs.
+      - name: Run isolated monitoring regression tests
+        run: |
+          npx tsx --test \
+            tests/check-ecosystem-links.test.ts \
+            tests/check-ecosystem-pages.test.ts \
+            tests/check-ecosystem-browser-cleanup.test.ts \
+            tests/check-ecosystem-chromium-cleanup.test.ts \
+            tests/ecosystem-alert-state.test.ts \
+            tests/ecosystem-alert-receipt-test.test.ts \
+            tests/ecosystem-draft-activation.test.ts \
+            tests/ecosystem-health-state.test.ts \
+            tests/ecosystem-monitor-watchdog.test.ts \
+            tests/ecosystem-external-heartbeats.test.ts \
+            tests/ecosystem-config-audit-heartbeats.test.ts \
+            tests/ecosystem-cronitor-config-audit.test.ts \
+            tests/notify-ecosystem-links.test.ts
+
+  chromium-cleanup:
+    name: Real Chromium cleanup (local fixtures only)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      RUN_CHROMIUM_CLEANUP_TESTS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      # Preserve locked versions/integrity while making workspace-only registry
+      # URLs usable on GitHub-hosted runners. No repository secrets are needed.
+      - name: Prepare portable locked dependencies
+        run: node scripts/prepare-visual-ci-lock.mjs
+      - run: npm ci
+      - name: Install explicit Chromium build
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { install, Browser } from '@puppeteer/browsers';
+          import { appendFileSync } from 'node:fs';
+          const browser = await install({
+            browser: Browser.CHROME,
+            buildId: '138.0.7204.100',
+            cacheDir: `${process.env.RUNNER_TEMP}/chromium-cleanup`,
+          });
+          appendFileSync(process.env.GITHUB_ENV, `CHROME_PATH=${browser.executablePath}\n`);
+          NODE
+      - name: Check Chromium cleanup types
+        run: npm run check:ecosystem-chromium-cleanup
+      # Only this job opts into real browsers. Test request interception, dead
+      # proxy and DNS rules prevent application/production network access.
+      - name: Run and verify real Chromium scenarios (no skips)
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -x "$CHROME_PATH"
+          "$CHROME_PATH" --version
+          npm run test:ecosystem-chromium-cleanup | tee "$RUNNER_TEMP/chromium-cleanup.tap"
+          for scenario in stalled-close stopped-root-forces-kill checker-browser-close checker-tab-and-browser-close; do
+            grep -E "^ok [0-9]+ - Chromium nyata: ${scenario};" "$RUNNER_TEMP/chromium-cleanup.tap"
+          done
+          grep -Fx '# fail 0' "$RUNNER_TEMP/chromium-cleanup.tap"
+          grep -Fx '# skipped 0' "$RUNNER_TEMP/chromium-cleanup.tap"

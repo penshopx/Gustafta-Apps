@@ -1,0 +1,326 @@
+/**
+ * Ruang Proyek — ruang kerja per proyek (login).
+ * Menyatukan: dokumen (link ke Ruang Simpan), checklist administrasi,
+ * costing & rugi-laba per proyek.
+ *
+ * SECURITY: isAuthenticated · ownership per user_id · Zod validation ·
+ *           UUID guard · sanitized errors.
+ */
+import type { Express } from "express";
+import { pool } from "./db";
+import { isAuthenticated } from "./replit_integrations/auth";
+import { z } from "zod";
+
+type QueryPool = Pick<typeof pool, "query">;
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function extractUid(req: any, res: any): string | null {
+  const uid = req.user?.claims?.sub || req.user?.id || null;
+  if (!uid) { res.status(401).json({ error: "Tidak terautentikasi" }); return null; }
+  return String(uid);
+}
+
+function safeErr(res: any, e: unknown, ctx: string) {
+  console.error(`[RuangProyek] ${ctx}:`, e);
+  res.status(500).json({ error: "Terjadi kesalahan di server" });
+}
+
+const checklistItemSchema = z.object({
+  id: z.string().min(1).max(64),
+  label: z.string().min(1).max(300),
+  done: z.boolean(),
+});
+
+const costItemSchema = z.object({
+  id: z.string().min(1).max(64),
+  label: z.string().min(1).max(300),
+  type: z.enum(["biaya", "pendapatan"]),
+  amount: z.number().finite().min(0).max(1e15),
+});
+
+const createSchema = z.object({
+  name: z.string().trim().min(1, "Nama proyek wajib diisi").max(200),
+  client: z.string().trim().max(200).optional().nullable(),
+  location: z.string().trim().max(200).optional().nullable(),
+  description: z.string().trim().max(5000).optional().nullable(),
+  status: z.enum(["aktif", "selesai", "tertunda"]).optional(),
+  contractValue: z.number().int().min(0).max(1e15).optional().nullable(),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+});
+
+const adminDocSchema = z.object({
+  id: z.string().min(1).max(64),
+  key: z.string().min(1).max(64),
+  label: z.string().min(1).max(300),
+  stage: z.enum(["persiapan", "pelaksanaan", "serah_terima"]),
+  status: z.enum(["belum", "proses", "selesai", "tidak_perlu"]),
+  fileId: z.string().regex(UUID_RE).optional().nullable(),
+  note: z.string().max(500).optional().nullable(),
+});
+
+const patchSchema = createSchema.partial().extend({
+  checklist: z.array(checklistItemSchema).max(200).optional(),
+  adminDocs: z.array(adminDocSchema).max(300).optional(),
+  costItems: z.array(costItemSchema).max(500).optional(),
+  linkedFileIds: z.array(z.string().regex(UUID_RE)).max(200).optional(),
+  expectedRevision: z.number().int().min(1).optional(),
+  isShowcased: z.boolean().optional(),
+  showValue: z.boolean().optional(),
+  showClient: z.boolean().optional(),
+});
+
+const CONCURRENT_FIELDS = ["checklist", "adminDocs", "costItems", "linkedFileIds"] as const;
+
+function mapRow(r: any) {
+  // jsonb bisa saja tersimpan sebagai string (lihat memory jsonb-double-encoding) — normalisasi saat baca.
+  const arr = (v: any) => {
+    if (Array.isArray(v)) return v;
+    if (typeof v === "string") { try { const p = JSON.parse(v); return Array.isArray(p) ? p : []; } catch { return []; } }
+    return [];
+  };
+  return {
+    id: r.id,
+    name: r.name,
+    client: r.client,
+    location: r.location,
+    description: r.description,
+    status: r.status,
+    contractValue: r.contract_value === null ? null : Number(r.contract_value),
+    startDate: r.start_date,
+    endDate: r.end_date,
+    checklist: arr(r.checklist),
+    adminDocs: arr(r.admin_docs),
+    costItems: arr(r.cost_items),
+    linkedFileIds: arr(r.linked_file_ids),
+    isShowcased: r.is_showcased === true,
+    showValue: r.show_value === true,
+    showClient: r.show_client === true,
+    createdAt: r.created_at,
+    updatedAt: r.updated_at,
+    revision: Number(r.revision),
+  };
+}
+
+// DDL idempotent — dijalankan saat boot (drizzle push dihindari di proyek ini).
+export async function ensureRuangProyekTable(dbPool: QueryPool = pool) {
+  await dbPool.query(`
+    CREATE TABLE IF NOT EXISTS ruang_proyek_projects (
+      id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+      user_id text NOT NULL,
+      name text NOT NULL,
+      client text,
+      location text,
+      description text,
+      status text NOT NULL DEFAULT 'aktif',
+      contract_value bigint,
+      start_date date,
+      end_date date,
+      checklist jsonb NOT NULL DEFAULT '[]'::jsonb,
+      cost_items jsonb NOT NULL DEFAULT '[]'::jsonb,
+      linked_file_ids jsonb NOT NULL DEFAULT '[]'::jsonb,
+      admin_docs jsonb NOT NULL DEFAULT '[]'::jsonb,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      updated_at timestamptz NOT NULL DEFAULT now()
+    );
+    CREATE INDEX IF NOT EXISTS idx_ruang_proyek_user ON ruang_proyek_projects (user_id, created_at);
+    ALTER TABLE ruang_proyek_projects ADD COLUMN IF NOT EXISTS admin_docs jsonb NOT NULL DEFAULT '[]'::jsonb;
+    ALTER TABLE ruang_proyek_projects ADD COLUMN IF NOT EXISTS is_showcased boolean NOT NULL DEFAULT false;
+    ALTER TABLE ruang_proyek_projects ADD COLUMN IF NOT EXISTS show_value boolean NOT NULL DEFAULT false;
+    ALTER TABLE ruang_proyek_projects ADD COLUMN IF NOT EXISTS show_client boolean NOT NULL DEFAULT false;
+    ALTER TABLE ruang_proyek_projects ADD COLUMN IF NOT EXISTS revision bigint NOT NULL DEFAULT 1;
+    CREATE INDEX IF NOT EXISTS idx_ruang_proyek_showcase ON ruang_proyek_projects (user_id) WHERE is_showcased;
+  `);
+}
+
+export function registerRuangProyekRoutes(app: Express, dbPool: QueryPool = pool) {
+  ensureRuangProyekTable(dbPool).catch((e) => console.error("[RuangProyek] ensure table failed:", e));
+  // ── List proyek milik user ──
+  app.get("/api/ruang-proyek/projects", isAuthenticated, async (req: any, res) => {
+    const userId = extractUid(req, res);
+    if (!userId) return;
+    try {
+      const { rows } = await dbPool.query(
+        `SELECT * FROM ruang_proyek_projects WHERE user_id = $1 ORDER BY created_at DESC`,
+        [userId]
+      );
+      res.json(rows.map(mapRow));
+    } catch (e) { safeErr(res, e, "GET list"); }
+  });
+
+  // ── Buat proyek ──
+  app.post("/api/ruang-proyek/projects", isAuthenticated, async (req: any, res) => {
+    const userId = extractUid(req, res);
+    if (!userId) return;
+    const parsed = createSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0]?.message || "Data tidak valid" });
+    const d = parsed.data;
+    try {
+      const { rows } = await dbPool.query(
+        `INSERT INTO ruang_proyek_projects (user_id, name, client, location, description, status, contract_value, start_date, end_date)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *`,
+        [userId, d.name, d.client ?? null, d.location ?? null, d.description ?? null, d.status ?? "aktif",
+         d.contractValue ?? null, d.startDate ?? null, d.endDate ?? null]
+      );
+      res.status(201).json(mapRow(rows[0]));
+    } catch (e) { safeErr(res, e, "POST create"); }
+  });
+
+  // ── Detail ──
+  app.get("/api/ruang-proyek/projects/:id", isAuthenticated, async (req: any, res) => {
+    const userId = extractUid(req, res);
+    if (!userId) return;
+    if (!UUID_RE.test(req.params.id)) return res.status(400).json({ error: "ID tidak valid" });
+    try {
+      const { rows } = await dbPool.query(
+        `SELECT * FROM ruang_proyek_projects WHERE id = $1 AND user_id = $2`,
+        [req.params.id, userId]
+      );
+      if (!rows[0]) return res.status(404).json({ error: "Proyek tidak ditemukan" });
+      res.json(mapRow(rows[0]));
+    } catch (e) { safeErr(res, e, "GET detail"); }
+  });
+
+  // ── Ubah (field parsial) ──
+  app.patch("/api/ruang-proyek/projects/:id", isAuthenticated, async (req: any, res) => {
+    const userId = extractUid(req, res);
+    if (!userId) return;
+    if (!UUID_RE.test(req.params.id)) return res.status(400).json({ error: "ID tidak valid" });
+    const parsed = patchSchema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: parsed.error.issues[0]?.message || "Data tidak valid" });
+    const d = parsed.data;
+    const changesWholeArray = CONCURRENT_FIELDS.some((field) => d[field] !== undefined);
+    if (changesWholeArray && !d.expectedRevision) {
+      return res.status(400).json({ error: "Versi proyek wajib disertakan untuk perubahan daftar" });
+    }
+
+    const sets: string[] = [];
+    const vals: any[] = [];
+    const put = (col: string, v: any) => { vals.push(v); sets.push(`${col} = $${vals.length}`); };
+
+    if (d.name !== undefined) put("name", d.name);
+    if (d.client !== undefined) put("client", d.client ?? null);
+    if (d.location !== undefined) put("location", d.location ?? null);
+    if (d.description !== undefined) put("description", d.description ?? null);
+    if (d.status !== undefined) put("status", d.status);
+    if (d.contractValue !== undefined) put("contract_value", d.contractValue ?? null);
+    if (d.startDate !== undefined) put("start_date", d.startDate ?? null);
+    if (d.endDate !== undefined) put("end_date", d.endDate ?? null);
+    if (d.checklist !== undefined) put("checklist", JSON.stringify(d.checklist));
+    if (d.adminDocs !== undefined) {
+      // fileId pada dokumen administrasi juga wajib milik user (anti-IDOR).
+      const fids = Array.from(new Set(d.adminDocs.map((x) => x.fileId).filter(Boolean))) as string[];
+      if (fids.length > 0) {
+        try {
+          const { rows } = await dbPool.query(
+            `SELECT id FROM ruang_simpan_files WHERE id = ANY($1::uuid[]) AND user_id = $2`,
+            [fids, userId]
+          );
+          if (rows.length !== fids.length) {
+            return res.status(400).json({ error: "Ada file yang tidak ditemukan di Ruang Simpan Anda" });
+          }
+        } catch (e) { return safeErr(res, e, "PATCH validate adminDocs files"); }
+      }
+      put("admin_docs", JSON.stringify(d.adminDocs));
+    }
+    if (d.costItems !== undefined) put("cost_items", JSON.stringify(d.costItems));
+    if (d.isShowcased !== undefined) put("is_showcased", d.isShowcased);
+    if (d.showValue !== undefined) put("show_value", d.showValue);
+    if (d.showClient !== undefined) put("show_client", d.showClient);
+    if (d.linkedFileIds !== undefined) {
+      // Anti-IDOR: setiap file yang dikaitkan harus milik user ini di Ruang Simpan.
+      if (d.linkedFileIds.length > 0) {
+        try {
+          const { rows } = await dbPool.query(
+            `SELECT id FROM ruang_simpan_files WHERE id = ANY($1::uuid[]) AND user_id = $2`,
+            [d.linkedFileIds, userId]
+          );
+          if (rows.length !== new Set(d.linkedFileIds).size) {
+            return res.status(400).json({ error: "Ada file yang tidak ditemukan di Ruang Simpan Anda" });
+          }
+        } catch (e) { return safeErr(res, e, "PATCH validate files"); }
+      }
+      put("linked_file_ids", JSON.stringify(d.linkedFileIds));
+    }
+    if (sets.length === 0) return res.status(400).json({ error: "Tidak ada perubahan" });
+    sets.push(`updated_at = now()`, `revision = revision + 1`);
+
+    vals.push(req.params.id, userId);
+    const idParam = vals.length - 1;
+    const userParam = vals.length;
+    let versionCondition = "";
+    if (changesWholeArray) {
+      vals.push(d.expectedRevision);
+      versionCondition = ` AND revision = $${vals.length}::bigint`;
+    }
+    try {
+      const { rows } = await dbPool.query(
+        `UPDATE ruang_proyek_projects SET ${sets.join(", ")}
+         WHERE id = $${idParam} AND user_id = $${userParam}${versionCondition} RETURNING *`,
+        vals
+      );
+      if (!rows[0]) {
+        const current = await dbPool.query(
+          `SELECT * FROM ruang_proyek_projects WHERE id = $1 AND user_id = $2`,
+          [req.params.id, userId]
+        );
+        if (!current.rows[0]) return res.status(404).json({ error: "Proyek tidak ditemukan" });
+        if (changesWholeArray) {
+          return res.status(409).json({
+            error: "Proyek telah berubah di tab atau perangkat lain. Data terbaru sudah dimuat.",
+            project: mapRow(current.rows[0]),
+          });
+        }
+        return res.status(404).json({ error: "Proyek tidak ditemukan" });
+      }
+      res.json(mapRow(rows[0]));
+    } catch (e) { safeErr(res, e, "PATCH update"); }
+  });
+
+  // ── Etalase publik (Portfolio proyek) — TANPA login, hanya field aman ──
+  // Nilai kontrak & nama klien hanya tampil bila pemilik mengizinkan per proyek.
+  app.get("/api/etalase/:userId", async (req, res) => {
+    const userId = String(req.params.userId || "").trim();
+    if (!userId || userId.length > 64 || !/^[A-Za-z0-9_-]+$/.test(userId)) {
+      return res.status(400).json({ error: "ID tidak valid" });
+    }
+    try {
+      const { rows } = await dbPool.query(
+        `SELECT name, location, description, status, start_date, end_date,
+                contract_value, client, show_value, show_client
+         FROM ruang_proyek_projects
+         WHERE user_id = $1 AND is_showcased = true
+         ORDER BY COALESCE(end_date, start_date, created_at::date) DESC
+         LIMIT 100`,
+        [userId]
+      );
+      res.json(rows.map((r) => ({
+        name: r.name,
+        location: r.location,
+        description: r.description,
+        status: r.status,
+        year: r.end_date ? String(r.end_date).slice(0, 4) : r.start_date ? String(r.start_date).slice(0, 4) : null,
+        ...(r.show_value === true ? {
+          contractValue: r.contract_value === null ? null : Number(r.contract_value),
+        } : {}),
+        ...(r.show_client === true ? { client: r.client } : {}),
+      })));
+    } catch (e) { safeErr(res, e, "GET etalase"); }
+  });
+
+  // ── Hapus ──
+  app.delete("/api/ruang-proyek/projects/:id", isAuthenticated, async (req: any, res) => {
+    const userId = extractUid(req, res);
+    if (!userId) return;
+    if (!UUID_RE.test(req.params.id)) return res.status(400).json({ error: "ID tidak valid" });
+    try {
+      const { rowCount } = await dbPool.query(
+        `DELETE FROM ruang_proyek_projects WHERE id = $1 AND user_id = $2`,
+        [req.params.id, userId]
+      );
+      if (!rowCount) return res.status(404).json({ error: "Proyek tidak ditemukan" });
+      res.json({ ok: true });
+    } catch (e) { safeErr(res, e, "DELETE"); }
+  });
+}

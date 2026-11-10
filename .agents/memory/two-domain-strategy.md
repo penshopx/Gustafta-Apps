@@ -1,0 +1,42 @@
+---
+name: Strategi dua domain Gustafta × dokumenproyek
+description: Pembagian peran gustafta.my.id vs dokumenproyek.com yang sudah disepakati Bos (Agustus 2026)
+---
+
+# Strategi dua domain (KEPUTUSAN BOS — final)
+
+- **gustafta.my.id = platform/rumah besar.** Semua produk AI, ebook, toolkit, ruang-ruang, akun pelanggan, database. Terus dilengkapi di sini.
+- Integrasi SBU–Ruang Simpan tetap harus memakai `https://gustafta.my.id`, bukan mengganti alamat integrasi ke domain `.replit.app`.
+
+**Why:** Pengguna menegaskan bahwa domain publik yang akan dipakai adalah gustafta.my.id.
+
+**How to apply:** Jika API hanya bekerja di domain utama Replit, selesaikan keterhubungan domain publik dan verifikasi endpoint di gustafta.my.id; jangan menganggap domain alternatif menyelesaikan integrasi.
+
+- **dokumenproyek.com = etalase Gustafta + produk unik sendiri**: jasa pengurusan dokumen yang dikerjakan MANUSIA (SBU, NIB, SKK, ISO). Jasa manusia TIDAK dijual di Gustafta; produk digital/AI TIDAK di-host di dokumenproyek.
+
+**Why:** transfer produk antar app berisiko konflik data (2 database, nama fitur beda); satu database = satu login = satu kebenaran.
+
+**How to apply:**
+- dokumenproyek TIDAK boleh punya database pelanggan/login sendiri — hanya halaman marketing + tombol WA; semua link produk menunjuk langsung ke gustafta.my.id.
+- Pembayaran jasa tetap via bayar.dokumenproyek.com (Scalev) — lihat payment-domain-migration.md.
+- Halaman jasa manusia di Gustafta (/jasa-dokumen, /jasa-keuangan) menaut ke dokumenproyek.com (ada task antrean untuk ini).
+- Ganti nama domain = keputusan merek, ditunda; JANGAN pasang 2 domain untuk 1 app yang sama (SEO kembar + cookie).
+
+# Katalog pusat "Produk" (/produk)
+
+- KEPUTUSAN BOS: satu katalog untuk SEMUA produk BERBAYAR; produk gratis TIDAK tampil di katalog (tetap di halaman fiturnya).
+- Kelompok katalog memakai NAMA FITUR yang dikenal konsumen (Produk AI, Ebook & Toolkit, Klinik, CASHFLOW-PBJ, Ruang Simpan, Jasa AI Custom, Jasa Manusia→dokumenproyek.com) agar "tidak kehilangan jejak".
+- Halaman lama /produk (builder Paket Bisnis/Modul/Chatbot) dipindah ke /produk-builder; hub baru = client/src/pages/katalog-produk.tsx di /produk. Menu header "Produk AI"→"Produk".
+- Nama dipilih "Produk", bukan "Katalog" (bahasa pembeli).
+- Kelompok katalog per Agu 2026: Produk AI (2 bentuk: AI Spesialis = 1 agen tanpa orchestrator; AI Claw = tim di bawah 1 orchestrator — pakai istilah ini konsisten), Ebook & Toolkit, Klinik, Ruang Proyek (payung produk; CASHFLOW-PBJ salah satu isinya), Brain Project (jasa pendampingan), Bedah Dokumen, Bimtek SKK (mentoring uji kompetensi), PKB-PUB (e-Learning & exec summary; kepanjangan belum dijelaskan Bos), Ruang Simpan, Jasa AI Custom, Jasa Manusia.
+- Harga Klinik DIREVISI naik (arahan Bos, basis: klinik = dialog+upload+perakitan Claw+workroom); Bos yang menyamakan harga produk di dashboard Scalev — sampai itu selesai, harga web vs checkout Scalev bisa beda.
+
+# Rak digital "Ebook & Toolkit"
+
+- Halaman /ebook-toolkit; sumber data tunggal client/src/data/digital-products.ts (harga tetap dari pricing.ts).
+- Arah lama dua jenjang (lead gratis + premium) tidak dipakai untuk keluarga SBU/SKK: semua aset bernilai menjadi bagian dari tier berbayar; preview pemasaran boleh publik, tetapi bukan produk/fungsi gratis tanpa batas. Lihat `sbu-skk-product-families.md`.
+
+## Hub "Dokumen Proyek" (Agu 2026)
+- Fitur payung layanan jasa manusia di gustafta.my.id: /dokumen-proyek — berisi Jasa Dokumen (/jasa-dokumen), Jasa Keuangan (/jasa-keuangan), dan Sewa Peralatan Konstruksi (perantara, CTA WA rotasi live, TANPA janji stok), plus link keluar ke https://dokumenproyek.com.
+- Nav header: item "Jasa Dokumen"+"Jasa Keuangan" digantikan satu item "Dokumen Proyek"; halaman lamanya tetap hidup sebagai sub-halaman.
+- "Mitra" dipindah dari nav header ke footer landing (kolom Ekosistem, bersama Peta Jalan).

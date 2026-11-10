@@ -1,0 +1,105 @@
+# Pipeline Marketing Gustafta
+
+Framework tim marketing Gustafta yang berjalan **otomatis tiap hari** (06:30 WIB) sebagai
+satu alur berurutan. Engine: `server/lib/research-feed.ts` → `runResearchSweep()`. Dijadwalkan
+di `server/index.ts` (`scheduleAtWIB`). Semua tahap **fire-and-forget** — kegagalan satu tahap
+tidak menggagalkan tahap lain.
+
+Model kolaborasi mengikuti Trilogi Buku II (KOLABORASI): agen mengerjakan yang repetitif,
+manusia (founder) memegang **◆ gerbang manusia** untuk keputusan (publikasi iklan, pengiriman
+sequence). Lihat `.agents/memory/ebook2-collaboration-model.md`.
+
+## Tim & orkestrator
+Kepala Tim Marketing (`kepala-tim-marketing`, id 1511) mengorkestrasi 6 sub-agen:
+
+| Role | Agen | Slug | Peran |
+|---|---|---|---|
+| RISET | Tim Riset | `riset-*` (id 1476) | Pain point lokal, tren global, suara pelanggan, kompetitor |
+| KONTEN | Pembuat Konten | (1508) | Headline, caption, artikel, email, skrip |
+| MEDSOS | Media Sosial | (1509) | Distribusi & kalender posting lintas platform |
+| IKLAN | Strategi Iklan | (1510) | Struktur kampanye berbayar (Meta/TikTok/Google) |
+| MATERI_IKLAN | Pembuat Materi Iklan | `mkt-materi-iklan` (1522) | Temuan riset → materi iklan siap pakai per platform |
+| RETENSI | Perawatan Pelanggan | `mkt-retensi-sequence` (1553) | Draf sequence email/WA retensi/nurture |
+| CLOSING | Asisten Closing | `mkt-closing-asisten` (1564) | Jawab keberatan, skrip closing WA, follow-up prospek (Amunisi Jualan harian) + chatbot bantu jualan |
+
+## Tahapan harian (berurutan)
+
+### Tahap 1 — RISET
+`FEED_STREAMS` (pasar, lokal, global) ditarik dari Google News RSS → diformat → di-ingest jadi
+KB per agen riset (prefix `Feed Riset`). Playbook metode riset di-seed sekali (`Panduan Metode Riset`).
+
+### Tahap 2 — MATERI IKLAN (per platform)
+`generateDailyAdMaterials()` mengubah temuan riset jadi brief 3-bagian: **Inti Kreatif** (sudut dari
+riset) → **Adaptasi per Platform** (TikTok/IG/FB/YouTube, sadar batas karakter) → **Cara Beriklan**.
+Rujukan spesifikasi statis: `Panduan Platform Iklan` (`ensureAdPlatformLibrary`). Output disimpan KB
+prefix `Materi Iklan Harian`. Mengembalikan `content` untuk dikonsumsi Tahap 3.
+
+### Tahap 3 — SEQUENCE RETENSI (email/WA)
+`generateDailyRetentionSequence()` menyusun draf **sequence email (4-5 tahap) + WhatsApp (4-5 pesan)**
+untuk memelihara hubungan dengan pelanggan yang sudah ada. Bahan:
+- **Konteks marketing hari ini** (output Tahap 2 + temuan pasar), dan
+- **Fondasi Gustafta** (`buildGustaftaFoundationDoc` / KB `Fondasi Gustafta` via
+  `ensureRetentionFoundationLibrary`) = visi AI Organization Builder + Trilogi "Dari Monolog ke
+  Dialog" + produk & jasa.
+Output disimpan KB prefix `Sequence Retensi Harian`. **Tidak auto-kirim** — draf untuk disetujui founder.
+
+### Tahap 4 — AMUNISI JUALAN (bantu closing)
+`generateDailyClosingKit()` menyusun **amunisi jualan** siap salin-tempel untuk membantu founder
+MENUTUP penjualan: (A) 5-7 **keberatan umum + jawaban terbaik**, (B) **skrip closing WhatsApp** per
+situasi (baru tanya / ragu harga / membandingkan / sudah tertarik), (C) **follow-up prospek** (belum
+beli) bertahap. Bahan:
+- **Konteks marketing hari ini** (materi iklan Tahap 2 + temuan pasar),
+- **Fondasi Penjualan** (`buildSalesPlaybookDoc` / KB `Fondasi Penjualan` via `ensureSalesPlaybookLibrary`)
+  = 3 jalur jualan, kerangka menjawab keberatan, prinsip skrip closing (jujur, ◆ gerbang manusia), dan
+- **Fondasi Gustafta** (via `ensureRetentionFoundationLibrary` — juga di-seed di agen closing agar chat grounded).
+Output disimpan KB prefix `Amunisi Jualan Harian`. **Tidak auto-kirim** — draf & alat bantu; keputusan
+final founder. Agen ini juga berfungsi sebagai **chatbot bantu jualan** (RAG) yang siap menjawab calon
+pembeli dengan grounding yang sama.
+
+### Tahap 5 — PETA KEBUTUHAN & REKOMENDASI SOLUSI
+Temuan riset publik digabungkan dengan sinyal internal yang sudah diagregasi (jumlah event penggunaan,
+order, dan langganan per produk/AI Specialist selama 30 hari) serta katalog resmi yang aktif. Tahap ini
+menghasilkan 3 status: **promote**, **monitor**, atau **product gap**. ID produk dan tautan tidak dipercaya
+dari keluaran model—server mencocokkannya kembali ke katalog resmi sebelum laporan disimpan.
+
+Setiap eksekusi tersimpan sebagai snapshot immutable (termasuk rerun manual pada hari yang sama) dan hanya
+tersedia untuk **superadmin**. Sinyal internal dengan kelompok kurang dari 3 disembunyikan; hitungan yang
+ditampilkan memakai rentang/bucket, bukan angka kecil yang presisi. Sistem tidak membaca
+isi chat, dokumen privat, email, telepon, atau metadata identitas pelanggan. Karena telemetry Store untuk
+impression/search/click belum tersedia, laporan tidak boleh disebut daftar “paling dicari”. Laporan juga
+tidak pernah mengubah featured product, mengirim pesan, memasang iklan, atau mempublikasikan konten secara
+otomatis; semua tindakan tetap melalui **◆ gerbang manusia**.
+
+## Riset khusus atas permintaan Super Admin
+
+Selain sweep harian, Super Admin dapat mengirim brief satu kali dari
+`/monitor-marketing`. Brief dapat merujuk produk katalog aktif atau topik baru,
+serta memuat tujuan keputusan, segmen sasaran, dan cakupan pasar.
+
+- Permintaan disimpan dalam antrean persisten dengan status `queued`, `running`,
+  `completed`, atau `failed`.
+- Worker memproses satu permintaan pada satu waktu. Leader worker memakai lease
+  tersendiri (terpisah dari scheduler harian), sedangkan setiap klaim request juga
+  memakai lease. Pekerjaan yang terputus dapat dipulihkan setelah lease kedaluwarsa
+  tanpa membiarkan worker lama menimpa hasil worker baru.
+- Riset memakai query khusus ke Google News RSS. Hasilnya tidak dimasukkan ke feed
+  harian. Berbeda dari laporan harian, jalur ini tidak mengirim sinyal penggunaan,
+  order, atau langganan internal ke model; juga tidak membaca chat, dokumen unggahan,
+  atau identitas pelanggan.
+- Produk pilihan divalidasi ulang terhadap katalog kanonik server. Narasi model
+  dibersihkan dari nama produk, angka, harga, dan tautan; kartu produk serta draf
+  pesan disusun ulang oleh server dari fakta katalog kanonik.
+- Setiap retry membuat permintaan dan laporan baru. Riwayat lama tidak ditimpa.
+- Laporan khusus tetap privat untuk Super Admin dan tidak memiliki jalur publikasi
+  otomatis. Status rekomendasi tetap `promote`, `monitor`, atau `product_gap`.
+
+## Prune-scope KB (terpisah, tidak saling hapus)
+`Feed Riset` · `Panduan Metode Riset` · `Materi Iklan Harian` · `Panduan Platform Iklan` ·
+`Fondasi Gustafta` · `Sequence Retensi Harian` · `Fondasi Penjualan` · `Amunisi Jualan Harian`.
+Yang "Harian" di-refresh (delete+recreate) tiap run; yang panduan/fondasi idempoten (seed sekali).
+
+## Catatan
+- Semua agen tim ini **tanpa pemilik** (`user_id=''`), dibuat via SQL (bukan seed file) — reseed/redeploy
+  TIDAK membuat ulang. Bila reseed, buat ulang manual (agen 1522, 1553 & 1564 + wiring sub di 1511).
+  Selalu resolve via slug (`getAgentBySlug`), jangan hardcode ID — ID bisa drift di prod.
+- Spesifikasi platform iklan bisa berubah → verifikasi angka final di dashboard resmi tiap platform.

@@ -1,0 +1,1 @@
+export const DEFAULT_PAYMENT_BASE_URL = "https://bayar.dokumenproyek.com";

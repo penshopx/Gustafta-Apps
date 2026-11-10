@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": [
+    "kb-context-access-http.test.ts",
+    "kb-context-delegation-http.test.ts",
+    "kb-context-access.test.ts",
+    "kb-publication-history.test.ts",
+    "kb-publication.test.ts",
+    "fixtures/kb-context-http.ts",
+    "fixtures/kb-context-kill-child.ts",
+    "../scripts/setup-kb-context-test-database.ts"
+  ],
+  "exclude": []
+}

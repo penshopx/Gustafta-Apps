@@ -1,0 +1,659 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Evaluasi dan Revisi Blueprint Gustafta × SIGAP</title><style>
+    :root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#eef3f8;color:#152238;
+    font:16px/1.7 system-ui,-apple-system,Segoe UI,sans-serif}header{background:#0b1423;color:#f5faff;padding:40px 5vw}
+    header p{color:#c4ddf5;margin:8px 0}main{max-width:1200px;margin:24px auto;padding:32px;background:white;
+    border:1px solid #dbe5f0;border-radius:12px}h1,h2,h3{line-height:1.3;color:#102a48}header h1{color:#fff}
+    h1{font-size:28px;border-top:2px solid #d7e5f4;padding-top:24px}h2{font-size:23px;margin-top:32px}
+    h3{font-size:19px;margin-top:26px}p{margin:12px 0}.list-item{padding-left:16px;margin:6px 0}
+    .table-scroll{overflow-x:auto;margin:20px 0}table{border-collapse:collapse;width:100%;font-size:14px}
+    th,td{border:1px solid #cddae8;padding:10px 12px;text-align:left;vertical-align:top;min-width:140px}
+    th{background:#15385d;color:#fff}tr:nth-child(even) td{background:#f3f7fb}
+    pre{padding:18px;overflow-x:auto;background:#0c1828;color:#e8f3ff;border-radius:8px;font-size:13px;line-height:1.6}
+    p code,td code{background:#eaf1f9;padding:2px 5px;border-radius:4px}hr{border:0;border-top:1px solid #ccdbea;margin:44px 0}
+    footer{max-width:1200px;margin:20px auto;padding:16px;color:#485c73}
+    @media(max-width:640px){main{margin:12px;padding:18px}header{padding:24px}h1{font-size:24px}body{font-size:15px}}
+    @media print{body{background:white;font-size:11pt}main{border:0;max-width:none;margin:0;padding:0}
+    header{background:white;color:#102a48;padding:0}header h1,header p{color:#102a48}pre{white-space:pre-wrap;background:#eef3f8;color:#102a48}
+    th{background:#eaf1f9;color:#102a48}.table-scroll{overflow:visible}th,td{min-width:0;font-size:9pt;padding:5px}tr{break-inside:avoid}}
+    </style></head><body><header><h1>Evaluasi dan Revisi Blueprint</h1><p>Gustafta × SIGAP • Kontraktor berbasis AI</p><p>9 Oktober 2026 — Dokumen usulan, bukan persetujuan produksi.</p></header><main><h1>Paket Revisi Blueprint Gustafta × SIGAP</h1>
+<p>Evaluasi dan revisi usulan • 9 Oktober 2026 • Belum disahkan untuk produksi</p>
+<h2>Daftar isi</h2>
+<p class='list-item'>- Evaluasi Blueprint Notion: Kontraktor Berbasis AI dan Integrasi SIGAP</p>
+<p class='list-item'>- Blueprint Kontraktor Berbasis AI — Gustafta × SIGAP</p>
+<p class='list-item'>- Blueprint Penutup Celah Operasional — Portofolio SIAP/SIGAP</p>
+<p class='list-item'>- Kontrak Integrasi SIGAP — Usulan yang Dapat Diuji</p>
+<p class='list-item'>- Revisi SOP dan Kriteria Penerimaan</p>
+<p class='list-item'>- Lampiran matriks 46 SOP; CSV lengkap tersedia terpisah</p>
+<h1>Evaluasi Blueprint Notion: Kontraktor Berbasis AI dan Integrasi SIGAP</h1>
+<p>Tanggal evaluasi: 9 Oktober 2026   Status: revisi untuk review pemilik proses; bukan persetujuan produksi atau opini hukum.</p>
+<h2>1. Kesimpulan</h2>
+<p>Materi layak menjadi rancangan awal, tetapi belum layak dipakai sebagai spesifikasi implementasi tanpa perbaikan. Kekuatan utamanya adalah pemetaan 39 SOP, pembagian peran spesialis, penekanan persetujuan manusia, dan upaya menentukan pemilik data. Hambatan utamanya adalah identitas bisnis yang tercampur, kontrak keamanan yang belum mengikat, duplikasi domain aplikasi, dan status kemampuan yang belum dibuktikan.</p>
+<p>Revisi memisahkan tiga hal:</p>
+<p class='list-item'>1. <strong>Gustafta:</strong> platform identitas, izin, memori bisnis, penugasan, kolaborasi, dan audit aktivitas platform.</p>
+<p class='list-item'>2. <strong>Perusahaan pengguna:</strong> badan usaha yang memiliki legalitas, proyek, pekerja, kontrak, dan kewajiban hukum.</p>
+<p class='list-item'>3. <strong>Aplikasi domain:</strong> sumber transaksi resmi; SIGAP mengoordinasikan, bukan mengambil alih kepemilikan transaksi.</p>
+<p>“Otonom” dibatasi pada pekerjaan administratif berisiko rendah. Tindakan keuangan final, komitmen kontraktual, penerimaan mutu, keputusan ketenagakerjaan, dan pengoperasian alat tetap menjadi tanggung jawab manusia berwenang.</p>
+<h2>2. Cakupan sumber yang benar-benar dibaca</h2>
+<div class='table-scroll'><table><thead><tr><th>Lampiran</th><th>Isi yang tersedia</th><th>Batas evaluasi</th></tr></thead><tbody>
+<tr><td>BLUE_PRINT_APLIKASI_PENUTUP_CELAH_OPERASIONAL</td><td>Satu Markdown induk</td><td>Tujuh tautan rincian aplikasi tidak berisi dokumen turunannya dalam ZIP</td></tr>
+<tr><td>BLUE_PRINT_KONTRAKTOR_OTONOM</td><td>Satu Markdown induk</td><td>Tidak berisi bukti legalitas atau hasil uji runtime</td></tr>
+<tr><td>SOP_AGENTIC</td><td>CSV biasa dan CSV <code>_all</code></td><td>Tabel ringkasan 39 SOP, bukan langkah lengkap per SOP</td></tr>
+<tr><td>SOP_KONVENSIONAL</td><td>Markdown adaptasi dan dua CSV SOP Agentic</td><td>Bukan 39 naskah SOP konvensional asli; diagnosis salah isi tidak dapat dibuktikan terhadap naskah aslinya</td></tr>
+<tr><td>SPESIFIKASI_INTEGRASI_SIGAP</td><td>ZIP tanpa ekstensi berisi satu Markdown</td><td>API, event, tools, dan aplikasi berstatus “sudah dibuat” belum diverifikasi live dalam evaluasi ini</td></tr>
+</tbody></table></div>
+<p>Evaluasi tidak membuka tautan Notion, mengubah halaman Notion, mengubah kode aplikasi, menerbitkan aplikasi, atau memindahkan data perusahaan. Paket hasil dapat diimpor atau disalin kembali setelah review.</p>
+<h2>3. Daftar masalah dan koreksi</h2>
+<div class='table-scroll'><table><thead><tr><th>ID</th><th>Prioritas</th><th>Sumber dan bukti</th><th>Dampak</th><th>Koreksi</th></tr></thead><tbody>
+<tr><td>F01</td><td>Kritis</td><td>Blueprint Kontraktor §1: Nama “Gustafta Apps”; kategori “BUJKN &amp; BUJKA”; daftar legalitas</td><td>Merek platform dianggap kontraktor berizin dan dua kategori badan usaha dianggap sekaligus berlaku</td><td>Pisahkan platform dari perusahaan pengguna; legalitas hanya dari bukti terverifikasi</td></tr>
+<tr><td>F02</td><td>Kritis</td><td>Kontraktor §2, §7: Notion SSOT; Integrasi §4.2: Notion bukan sumber transaksi kedua; Celah §3: aplikasi domain pemilik</td><td>Angka stok, progres, upah, dan termin dapat bercabang</td><td>Tetapkan satu pemilik per domain; Notion untuk spesifikasi/SOP/ringkasan nonotoritatif</td></tr>
+<tr><td>F03</td><td>Kritis</td><td>Integrasi §3.3 keputusan memuat <code>by</code>; §2 memuat <code>X-Actor</code></td><td>Identitas approver berpotensi dipalsukan jika dipercayai server</td><td>Identitas berasal dari sesi/token terverifikasi; field dan header klien bukan sumber otorisasi</td></tr>
+<tr><td>F04</td><td>Kritis</td><td>Kontraktor §4.6: “klaim retur otomatis”; Integrasi §4.8.1: tender menang membuat jaminan; §8: agen hanya read/draft/propose</td><td>Aksi final terjadi sebelum persetujuan atau diterima pihak ketiga</td><td>Semua hanya proposal/draf; posting/issue/release oleh aplikasi pemilik setelah gate dan pengecekan ulang</td></tr>
+<tr><td>F05</td><td>Kritis</td><td>Kontraktor §4.5 dan §6: stop-work menunggu konfirmasi HSE</td><td>Respons bahaya dapat menunggu AI atau antrean digital</td><td>Alarm segera; manusia mengikuti prosedur darurat tanpa menunggu AI; izin melanjutkan pekerjaan harus eksplisit</td></tr>
+<tr><td>F06</td><td>Tinggi</td><td>Approval hanya ID, peran, nilai; tidak ada revisi/hash bukti/masa berlaku</td><td>Objek berubah setelah disetujui; persetujuan lama dapat dipakai ulang</td><td>Ikat ke tenant, proyek, object_revision, payload_hash, evidence_refs, policy_version, expiry</td></tr>
+<tr><td>F07</td><td>Tinggi</td><td>Integrasi §2 OAuth/JWT dan scope; belum ada kontrak tenant/project; <code>*:read</code> di Insight</td><td>Scope baca dianggap hak ke semua perusahaan atau semua field</td><td>Izin = aplikasi + tenant + proyek + aksi + field + status akun; default deny</td></tr>
+<tr><td>F08</td><td>Tinggi</td><td>HMAC hanya <code>sha256=&lt;hmac&gt;</code>; tidak ada timestamp/replay window</td><td>Event lama dapat diputar ulang</td><td>Tanda tangani timestamp + delivery ID + raw body; validasi waktu dan inbox dedup</td></tr>
+<tr><td>F09</td><td>Tinggi</td><td>Outbox disebut “tidak ada event hilang”; retry/DLQ tanpa replay/reconciliation</td><td>Jaminan berlebihan; kegagalan tetap mungkin</td><td>Outbox/inbox durable, observability, replay terbatas, rekonsiliasi; at-least-once bukan exactly-once</td></tr>
+<tr><td>F10</td><td>Tinggi</td><td>MCP contoh <code>requiresApproval</code>, <code>destructive</code> dalam annotations</td><td>Metadata tool dianggap kontrol keamanan; field tersebut bukan nama hint standar MCP</td><td>Gunakan hint standar yang sesuai dan extension kebijakan; otorisasi/gate tetap di server API</td></tr>
+<tr><td>F11</td><td>Tinggi</td><td>Celah memiliki SIAP GUDANG; Integrasi memiliki SIGAP Procure; RAB/Tender, HR/Tenaga, Legal/LKUT tumpang tindih</td><td>Pembuatan aplikasi baru menggandakan data dan biaya operasi</td><td>Registry alias dan kemampuan; perluasan aplikasi lebih dulu sebelum proyek aplikasi baru</td></tr>
+<tr><td>F12</td><td>Tinggi</td><td>Celah §5, Kontraktor §9, Adaptasi §8 berbeda; governance di gelombang terakhir</td><td>Tim tidak memiliki satu urutan dependensi; rilis terjadi tanpa kontrol dasar</td><td>Satu roadmap berbasis stage gate; governance/security sejak fase 0</td></tr>
+<tr><td>F13</td><td>Tinggi</td><td>SOP17 berlabel L4 namun memerlukan persetujuan lembur; SOP23 L4 mencakup pemeliharaan fisik</td><td>Level otomatisasi salah dibaca sebagai kewenangan operasional</td><td>Pisahkan rekap/pengingat L4 dari izin lembur/servis L2–L3</td></tr>
+<tr><td>F14</td><td>Tinggi</td><td>SOP30–39 “agen utama” untuk SOP jabatan</td><td>Jabatan manusia dan tanggung jawabnya seolah digantikan AI</td><td>SOP jabatan tetap manusia accountable; agen hanya copilot</td></tr>
+<tr><td>F15</td><td>Tinggi</td><td>Ekspor SOP tidak punya langkah, input, output, guardrail, KPI per baris</td><td>Tabel belum menjadi SOP yang dapat diuji</td><td>Lengkapi matriks 46 SOP + kerangka wajib; detail lokal dan pengesahan tetap diperlukan</td></tr>
+<tr><td>F16</td><td>Tinggi</td><td>Roadmap menunda K3, sementara pemantauan dijanjikan otomatis</td><td>K3 dasar seolah menunggu aplikasi/vision</td><td>K3 manual dan jalur darurat berlaku sejak hari pertama; AI K3 hanyalah tambahan</td></tr>
+<tr><td>F17</td><td>Sedang</td><td>Celah offline queue tanpa konflik/auth saat sinkron</td><td>Stok ganda, unggahan lama, transaksi setelah izin dicabut</td><td>Status lokal belum final; idempotensi, revision, reauth, conflict queue, cache privat</td></tr>
+<tr><td>F18</td><td>Sedang</td><td>Semua rupiah integer tanpa aturan kuantitas/pembulatan</td><td>Volume pecahan dan perhitungan AHSP/pajak tidak terdefinisi</td><td>Decimal deterministik untuk volume/tarif; pembulatan nilai final tercatat per aturan versi</td></tr>
+<tr><td>F19</td><td>Sedang</td><td>“Self-hosted” dianggap data tidak keluar; model frontier via API disarankan</td><td>Risiko transfer data tetap ada</td><td>Kebijakan klasifikasi, minimisasi, penyedia yang disetujui, dan persetujuan transfer</td></tr>
+<tr><td>F20</td><td>Sedang</td><td>Penawaran ≥60%, respons &lt;5 menit, zero accident tanpa baseline</td><td>Janji hasil yang belum diukur; respons otomatis disamakan solusi</td><td>Target pilot, bukan jaminan; bedakan acknowledgment, respons substantif, dan penyelesaian</td></tr>
+<tr><td>F21</td><td>Sedang</td><td>Integrasi §11 “73 Paket” tetapi daftar menghilangkan PA</td><td>Cakupan katalog tidak konsisten</td><td>Angka 73 adalah hitungan internal tabel termasuk PA001; tanpa PA = 72; bukan verifikasi resmi regulasi</td></tr>
+<tr><td>F22</td><td>Sedang</td><td>“HPS pembanding” dalam tugas estimator kontraktor</td><td>Harga penawaran kontraktor dapat tercampur HPS resmi pemberi kerja</td><td>Gunakan estimasi internal/RAB penawaran; HPS resmi hanya sebagai sumber dari pemberi kerja bila tersedia</td></tr>
+<tr><td>F23</td><td>Tinggi</td><td>Integrasi §4.5 mendengar <code>project.ncr.opened</code>, sedangkan §4.2 NCR milik QA/QC</td><td>Temuan mutu memiliki dua penerbit final</td><td>QA/QC menerbitkan NCR; Project dan ISO menyimpan referensi/read model</td></tr>
+<tr><td>F24</td><td>Tinggi</td><td>Legalitas, SKK, SIO dan AHSP dicampur tanpa register applicability</td><td>Sertifikat atau aturan domain yang berbeda dianggap saling menggantikan</td><td>Register bukti, jenis sertifikat, regulator, penerbit, periode berlaku, ruang lingkup dan verifikator</td></tr>
+</tbody></table></div>
+<p>Prioritas “Kritis” berarti harus diselesaikan sebelum alur produksi yang terkait, bukan pernyataan bahwa sistem live sudah mengandung kerentanan tersebut.</p>
+<h2>4. Bagian yang dipertahankan</h2>
+<p class='list-item'>- 39 nomor SOP asli sebagai identifier migrasi; 29 proses dan 10 jabatan.</p>
+<p class='list-item'>- Tujuh alur operasional A–G; tambah alur pra-kontrak dan governance tanpa mengganti nomor lama.</p>
+<p class='list-item'>- Roster 16 spesialis sebagai katalog peran jangka panjang, bukan jumlah worker minimum.</p>
+<p class='list-item'>- Progres diterima manusia dan dihitung deterministik; angka finansial resmi milik ERP.</p>
+<p class='list-item'>- Upload penawaran, tanda tangan, transfer dana, dan pengesahan tetap terkontrol manusia.</p>
+<p class='list-item'>- CloudEvents, OpenAPI, outbox, idempotensi, dan circuit breaker sebagai kontrak target yang perlu diuji.</p>
+<h2>5. Batas kepastian hukum dan kemampuan</h2>
+<p>Daftar subklasifikasi dan angka 73 hanya diperiksa konsistensi internalnya, tidak dicocokkan ulang dengan lampiran resmi regulasi. Dokumen ini tidak menetapkan bahwa perusahaan pengguna memiliki semua subklasifikasi.</p>
+<p>PP 28/2025 dibedakan dari Perpres pengadaan; jangan menulis “Perpres 28/2025”. Permen PU 6/2025 dan Kepdirjen Bina Konstruksi 281/2026 ditempatkan pada konteks standar usaha/BUJK/SBU, bukan dasar tunggal SKK. Persyaratan tiap subklasifikasi, tender, tenaga ahli, KSO, dan badan usaha asing harus diperiksa dari naskah resmi serta dokumen pemilihan yang berlaku.</p>
+<p>Belum ada validasi tarif upah/lembur, pajak, BPJS, AHSP, aturan tanda tangan, atau kewajiban sertifikasi ISO untuk perusahaan/proyek tertentu. Semua wajib memiliki applicability register, sumber resmi, effective date, versi, dan reviewer kompeten sebelum dipakai produksi.</p>
+<h2>6. Keputusan yang perlu disahkan pemilik</h2>
+<p class='list-item'>1. Identitas badan usaha pilot beserta bukti legalitas dan penanggung jawab manusia.</p>
+<p class='list-item'>2. Aplikasi pemilik tiap domain dan aliasnya; bukan sekadar daftar nama aplikasi.</p>
+<p class='list-item'>3. Tiga peran pilot, batas akses, plafon biaya AI, dan indikator keberhasilan.</p>
+<p class='list-item'>4. Kebijakan approval berdasarkan nilai kumulatif, risiko, transaksi terkait, dan segregasi tugas. Angka Rp50 juta dalam sumber hanyalah contoh, bukan kebijakan otomatis yang telah disahkan.</p>
+<p class='list-item'>5. Retensi, penggunaan foto/CCTV/lokasi pekerja, transfer ke penyedia AI, dan jadwal pemulihan.</p>
+<p class='list-item'>6. Penerimaan hasil uji integrasi; keberadaan aplikasi bukan bukti bahwa API dan MCP-nya siap.</p>
+<h2>7. Paket revisi</h2>
+<p class='list-item'>- <code>02-blueprint-kontraktor-berbasis-ai.md</code>: identitas, arsitektur, roster, workflow dan roadmap yang diselaraskan.</p>
+<p class='list-item'>- <code>03-blueprint-penutup-celah.md</code>: pemilik data dan scope MVP aplikasi/modul.</p>
+<p class='list-item'>- <code>04-kontrak-integrasi-sigap.md</code>: auth, approval, API, events, MCP, offline dan tes kontrak.</p>
+<p class='list-item'>- <code>05-sop-dan-kriteria-penerimaan.md</code>: template eksekusi SOP dan aturan migrasi.</p>
+<p class='list-item'>- <code>06-matriks-sop-revisi.csv</code>: 39 SOP yang diperbaiki + tujuh SOP baru.</p>
+<p class='list-item'>- <code>BLUEPRINT_REVISI_LENGKAP.md</code> dan <code>BLUEPRINT_REVISI_LENGKAP.html</code>: dokumen gabungan.</p>
+<p class='list-item'>- <code>manifest-sumber.json</code>: inventaris sumber, hash, jumlah baris dan kesamaan CSV.</p>
+<p>Semua revisi adalah usulan dokumen. Tidak ada klaim bahwa aplikasi, konektor, runtime, atau integrasi live telah selesai karena paket ini dibuat.</p>
+<hr>
+<h1>Blueprint Kontraktor Berbasis AI — Gustafta × SIGAP</h1>
+<p>Status: rancangan target untuk pilot terbatas; menggantikan asumsi implementasi penuh pada blueprint sumber.</p>
+<h2>1. Identitas dan hasil yang dituju</h2>
+<p><strong>Gustafta bukan nama badan usaha kontraktor secara otomatis.</strong> Gustafta adalah platform pendukung penyelesaian pekerjaan. Perusahaan pengguna wajib mengisi identitas sendiri:</p>
+<div class='table-scroll'><table><thead><tr><th>Elemen</th><th>Nilai yang harus diisi dari bukti</th></tr></thead><tbody>
+<tr><td>Nama badan usaha dan jenis badan hukum</td><td>Belum ditetapkan dalam lampiran</td></tr>
+<tr><td>NIB dan identitas perusahaan</td><td>Nomor, penerbit, tanggal verifikasi, dokumen referensi</td></tr>
+<tr><td>Kategori badan usaha</td><td>BUJKN atau BUJKA/struktur lain yang benar-benar berlaku; bukan sekaligus dipilih</td></tr>
+<tr><td>SBU aktif</td><td>Hanya subklasifikasi/kualifikasi yang dibuktikan; periode berlaku dan status verifikasi</td></tr>
+<tr><td>Tenaga penanggung jawab</td><td>Jabatan dan sertifikat yang dipersyaratkan menurut aturan applicable</td></tr>
+<tr><td>Proyek pilot</td><td>Satu proyek dan satu tenant perusahaan dengan tim pengguna yang ditetapkan</td></tr>
+<tr><td>Process owner</td><td>Manusia yang bertanggung jawab atas tiap domain</td></tr>
+</tbody></table></div>
+<p>Visi operasional: mengurangi administrasi berulang dan meningkatkan kualitas keputusan, tanpa mengganti tanggung jawab profesional, keselamatan, atau kewenangan hukum.</p>
+<p>Target seperti penghematan waktu penawaran 60% atau laporan tepat waktu 98% adalah hipotesis pilot. “Zero accident” adalah aspirasi keselamatan, bukan hasil yang dijamin AI.</p>
+<h2>2. Arsitektur kendali</h2>
+<pre><code>Pengguna / kanal terverifikasi
+            |
+Gustafta: identitas, hak akses, konteks berizin, penugasan Workroom
+            |
+SIGAP coordinator: workflow, task queue, policy-aware routing
+            |
+Adapter API berizin / tools MCP opsional
+            |
+Aplikasi domain: transaksi resmi, validasi, approval, audit domain
+            |
+Read model / ringkasan -&gt; Gustafta dan Notion (nonotoritatif)</code></pre>
+<h3>Batas setiap lapisan</h3>
+<p class='list-item'>- <strong>Control plane Gustafta:</strong> identitas dan akses platform, konteks memori bisnis yang diizinkan, penugasan, status Workroom, audit interaksi, dan administrasi produk.</p>
+<p class='list-item'>- <strong>Aplikasi domain:</strong> keputusan transaksi dan otorisasi domain diperiksa kembali oleh server aplikasi. Approval resmi tersimpan di pemilik objek, bukan hanya pesan chat.</p>
+<p class='list-item'>- <strong>SIGAP coordinator:</strong> menyimpan task, inbox event, routing, referensi objek, status delivery dan audit orkestrasi. Tidak memiliki saldo stok, jurnal, upah, atau progres final.</p>
+<p class='list-item'>- <strong>SIGAP HUB:</strong> registry koneksi, pemetaan ID, schema/event registry dan proyeksi terbatas. Bukan pemilik kedua seluruh master data.</p>
+<p class='list-item'>- <strong>Notion:</strong> blueprint, SOP, kebijakan, knowledge yang dikurasi, dan ringkasan bertanda sumber/waktu. Tidak menjadi ledger transaksi paralel.</p>
+<p class='list-item'>- <strong>Ruang Simpan:</strong> penyimpanan arsip/fakta berizin dan referensi dokumen; aplikasi domain tetap pemilik status transaksi. Akses profil tidak otomatis memberi akses berkas.</p>
+<p>Hermes, OpenClaw dan MultiClaw adalah pilihan runtime worker, bukan syarat platform. “Hermes” harus dijelaskan apakah runtime tertentu, model, atau nama peran; keputusan produk, versi, lisensi, dukungan dan evaluasinya dicatat sebelum adopsi.</p>
+<p>Worker eksternal mulai dari pilot internal read-only yang terisolasi. Tidak ada akses langsung database, shell bebas, folder server bebas, atau kredensial semua aplikasi. Integrasi tool hanya allowlist dan melalui server yang memeriksa izin. Penempatan runtime eksternal pada VPS tidak menjadi instruksi memasang Docker pada workspace Replit.</p>
+<h2>3. Prinsip wajib</h2>
+<p class='list-item'>1. Satu domain memiliki satu pemilik transaksi; proyeksi diberi label sumber, revision, dan waktu freshness.</p>
+<p class='list-item'>2. Agen menyiapkan read/draft/propose. Kewenangan final bukan berasal dari prompt.</p>
+<p class='list-item'>3. Kebijakan akses dan approval ditegakkan pada aplikasi pemilik, termasuk ketika dipanggil tanpa SIGAP.</p>
+<p class='list-item'>4. Context, memory, embedding dan cache dipisah per tenant/proyek sesuai grant dokumen.</p>
+<p class='list-item'>5. Angka dihitung engine deterministik; LLM menjelaskan atau mengekstrak kandidat fakta.</p>
+<p class='list-item'>6. Setiap kandidat fakta menyimpan provenance: dokumen/foto, versi, halaman/posisi bila tersedia, waktu dan verifikator.</p>
+<p class='list-item'>7. Bahaya dan prosedur darurat manusia tidak menunggu respons LLM.</p>
+<p class='list-item'>8. Aplikasi domain tetap dapat bekerja ketika SIGAP/AI tidak tersedia.</p>
+<p class='list-item'>9. Versi prompt/skill/model harus melalui proposal, pengujian, review dan rollback; tidak self-modify produksi.</p>
+<p class='list-item'>10. Manusia accountable atas pekerjaan; keberhasilan dinilai dari waktu kembali, kualitas, dan pengurangan rework.</p>
+<h2>4. Roster spesialis dan gate manusia</h2>
+<p>Roster ini memuat peran, bukan kewajiban menjalankan 16 instans atau 16 akun sejak pilot. Identitas layanan dipisah per role-app-environment ketika role tersebut benar-benar diaktifkan.</p>
+<div class='table-scroll'><table><thead><tr><th>Peran</th><th>Batas keluaran AI</th><th>Gate manusia</th></tr></thead><tbody>
+<tr><td>Tender Hunter</td><td>Peluang, kecocokan berbukti, rekomendasi Go/No-Go</td><td>Direktur/manajer tender memilih; syarat tidak diketahui menjadi needs-review</td></tr>
+<tr><td>Estimator RAB</td><td>Ekstraksi BoQ, estimasi internal dan RAB draf</td><td>Estimator senior memvalidasi volume, koefisien, harga dan asumsi</td></tr>
+<tr><td>Bid Document</td><td>Paket penawaran draf, checklist, sumber</td><td>Manajer tender + penandatangan berwenang; upload final manusia</td></tr>
+<tr><td>Legal &amp; Kontrak</td><td>Risk memo, redline, draf adendum/claim</td><td>Legal dan pejabat berwenang; AI tidak memberi persetujuan hukum final</td></tr>
+<tr><td>Procurement</td><td>Perbandingan vendor, RFQ/PO draf</td><td>Pejabat pengadaan/PM/direktur sesuai policy; komitmen final manusia</td></tr>
+<tr><td>Scheduler</td><td>Simulasi jadwal, kurva dan recovery proposal</td><td>PM menerima baseline/perubahan; progres hanya dari kuantitas accepted</td></tr>
+<tr><td>Site Reporter</td><td>Laporan harian draf dan bukti terstruktur</td><td>Site Manager memverifikasi; laporan eksternal disetujui khusus</td></tr>
+<tr><td>K3/HSE</td><td>Temuan kandidat, alarm, dokumentasi</td><td>Petugas lapangan/HSE menangani bahaya; izin lanjut kerja manusia berwenang</td></tr>
+<tr><td>QA/QC</td><td>Checklist, RFI dan NCR draf</td><td>QC Engineer/pihak sesuai ITP mengesahkan penerimaan atau penolakan</td></tr>
+<tr><td>Finance &amp; Termin</td><td>Invoice/jurnal/payroll/pajak draf</td><td>Finance/Tax/otoritas pembayaran; maker-checker, tidak agent pay/post</td></tr>
+<tr><td>HR &amp; SKK</td><td>Rekap, kebutuhan tenaga, kandidat kelayakan</td><td>HR + PM; izin lembur, keputusan pekerja dan kontrak manusia</td></tr>
+<tr><td>Client Relations</td><td>Acknowledgment dan balasan draf</td><td>PM menyetujui komitmen waktu, biaya, scope, atau pernyataan sengketa</td></tr>
+<tr><td>Asset &amp; Alat Berat</td><td>Jadwal, rekomendasi, draf sewa/servis</td><td>Kepala Alat/operator memverifikasi kondisi; release to service manusia</td></tr>
+<tr><td>Logistik &amp; Gudang</td><td>MR, rekonsiliasi, penerimaan kandidat</td><td>Storekeeper bukti fisik; QC acceptance; adjustment Kepala Gudang + Finance</td></tr>
+<tr><td>Security &amp; Area Control</td><td>Alarm akses, anomali, laporan draf</td><td>Petugas keamanan/manajemen memverifikasi; tidak menuduh otomatis</td></tr>
+<tr><td>Aftersales &amp; Garansi</td><td>Tiket, triase, jadwal dan draf respons</td><td>Manajer Aftersales memutus cakupan garansi dan komitmen perbaikan</td></tr>
+</tbody></table></div>
+<h3>Tiga peran pilot</h3>
+<p>Site Reporter, Scheduler, dan Logistik &amp; Gudang sebagai rekomendasi starter. Mulai read-only/draft, satu proyek, pengguna eksplisit. Penggantian role dimungkinkan jika kesiapan data menunjukkan use case lain lebih layak; bukan menambah seluruh roster sekaligus.</p>
+<p>Pilot external runtime internal monitoring/research dapat dilakukan terpisah, tetapi tidak memberi hak transaksi pelanggan.</p>
+<h2>5. Workflow dan gerbang</h2>
+<h3>5.1 Tender sampai kontrak</h3>
+<p>Peluang -&gt; bukti syarat -&gt; eligibility review -&gt; <strong>gate Go/No-Go direktur</strong> -&gt; estimasi/dokumen draf -&gt; review angka/legal -&gt; <strong>gate penawaran final</strong> -&gt; unggah manusia -&gt; hasil terverifikasi.</p>
+<p>SBU tidak cocok yang terbukti memberi kandidat No-Go; syarat belum pasti harus needs-review, bukan ditolak otomatis tanpa konteks paket/KSO yang sah. Tender menang membuat calon proyek/kontrak/register jaminan, bukan menerbitkan kontrak atau jaminan bank.</p>
+<h3>5.2 Pelaksanaan harian</h3>
+<p>Mandor mengirim bukti -&gt; ekstraksi kandidat -&gt; verifikasi Site Manager/Quantity -&gt; acceptance mutu bila perlu -&gt; engine menghitung progres -&gt; Scheduler membandingkan baseline -&gt; recovery proposal -&gt; <strong>gate PM</strong> -&gt; laporan eksternal melalui <strong>gate penerbitan</strong>.</p>
+<p>Untuk item berbobot kuantitas: progres item = kuantitas accepted / kuantitas baseline, dengan aturan batas dan change order. Progres proyek = jumlah bobot baseline × progres item. Milestone/lumpsum memakai rule acceptance kontrak, bukan dipaksa menjadi volume. Perubahan baseline tidak boleh mengganti histori.</p>
+<p>Deviasi &gt;5 pada sumber diperjelas: contoh ambang <strong>5 poin persentase</strong>, parameter dapat diganti pemilik; bukan “5%” tanpa definisi.</p>
+<h3>5.3 Material</h3>
+<p>Kebutuhan jadwal + BoQ accepted -&gt; stok tersedia/terpesan/reserved -&gt; MR draf -&gt; <strong>gate Site Manager</strong> -&gt; RFQ/perbandingan -&gt; budget reserve/approval -&gt; <strong>gate PO</strong> -&gt; penerimaan kandidat -&gt; cek jumlah fisik dan mutu -&gt; penerimaan final -&gt; mutasi stok -&gt; opname -&gt; <strong>gate adjustment</strong>.</p>
+<p>Barang belum lolos QC dipisah di quarantine dan tidak masuk available stock. RFQ tiga vendor adalah target kebijakan internal bila feasible, bukan syarat hukum universal. Single-source membutuhkan alasan dan approval sesuai policy. Selisih stok tidak otomatis berarti pencurian.</p>
+<h3>5.4 Termin dan keuangan</h3>
+<p>Kuantitas accepted + BA sesuai kontrak -&gt; estimasi termin -&gt; invoice draf -&gt; <strong>gate Finance dan pejabat berwenang</strong> -&gt; penerbitan -&gt; pencocokan pembayaran dari sumber resmi -&gt; jurnal oleh ERP -&gt; retensi/pajak sesuai ruleset.</p>
+<p>Approval PO mencatat komitmen anggaran; penerimaan belum otomatis menjadi utang final tanpa pencocokan PO–GRN–invoice dan aturan ERP. Reminder eksternal mengikuti template/kebijakan yang disetujui; status kirim bukan status pembayaran.</p>
+<h3>5.5 K3 dan alat</h3>
+<p>Indikasi bahaya -&gt; alarm segera melalui jalur independen -&gt; manusia melindungi pekerja/menghentikan pekerjaan sesuai prosedur -&gt; HSE dokumentasi dan investigasi -&gt; tindakan korektif -&gt; <strong>gate izin lanjut kerja</strong>.</p>
+<p>AI tidak mengesahkan keselamatan alat, diagnosis medis, APD compliant, atau lokasi aman dari foto saja. Checklist gagal mengubah status administratif ke hold; operasi fisik dikendalikan prosedur dan petugas. Release to service oleh manusia setelah pemeriksaan.</p>
+<h3>5.6 SDM</h3>
+<p>Kebutuhan jadwal -&gt; HR memvalidasi -&gt; seleksi/kontrak manusia -&gt; absensi kandidat -&gt; dispute/review -&gt; <strong>gate lembur</strong> -&gt; payroll draf -&gt; validasi parameter upah/pajak/BPJS -&gt; <strong>gate payroll dan pembayaran terpisah</strong>.</p>
+<p>Absensi foto/GPS tidak membuktikan otomatis jam kerja. Kandidat atau pekerja tidak boleh ditolak/dihukum hanya dari skor AI.</p>
+<h3>5.7 Change order, serah terima dan garansi</h3>
+<p>Permintaan perubahan -&gt; CR draf -&gt; dampak biaya/jadwal/risiko -&gt; <strong>gate kewenangan kontrak</strong> -&gt; adendum sah -&gt; baseline revision baru.</p>
+<p>PHO, FHO dan BAST konsumen memiliki persyaratan berbeda sesuai kontrak. Punch list, as-built, hasil uji dan manual diterima pihak berwenang. Garansi -&gt; tiket -&gt; pemeriksaan cakupan -&gt; <strong>gate Aftersales</strong> -&gt; pekerjaan teknisi -&gt; bukti closure -&gt; konfirmasi pelanggan bila applicable.</p>
+<h2>6. Roadmap tunggal berbasis bukti</h2>
+<p>Rentang waktu indikatif, bukan janji 12 sprint tanpa mengetahui tim dan kesiapan aplikasi.</p>
+<div class='table-scroll'><table><thead><tr><th>Fase</th><th>Indikasi waktu</th><th>Scope</th><th>Gate keluar</th></tr></thead><tbody>
+<tr><td>0: inventaris &amp; governance</td><td>1–2 minggu</td><td>Badan usaha, pemilik aplikasi/data, SOP40–46 terutama45–46, izin, baseline KPI, policy, backup</td><td>Owner sign-off, data pilot, jalur manual dan darurat aktif</td></tr>
+<tr><td>1: baca &amp; draf pilot</td><td>2–4 minggu</td><td>Tiga role; SIAP PROYEK/readiness dan satu domain pendukung; read API minimal</td><td>Negatif lintas pemilik/proyek lulus, sumber terlihat, revoke efektif</td></tr>
+<tr><td>2: logistik terkendali</td><td>4–6 minggu</td><td>MR/PO draf, quarantine/QC, outbox/inbox, approval version-bound</td><td>Uji transaksi paralel, stale approval, stock replay dan rekonsiliasi lulus</td></tr>
+<tr><td>3: tenaga dan finansial</td><td>4–6 minggu</td><td>Rekap tenaga, payroll/termin draf, budget commitment</td><td>Ruleset divalidasi, maker-checker, tiga-arah invoice lulus</td></tr>
+<tr><td>4: modul lanjutan</td><td>Sesuai kesiapan</td><td>Alat, aftersales, estimasi, subkon, CDE, jaminan</td><td>Tiap modul memiliki owner, API test dan fallback sebelum aktif</td></tr>
+<tr><td>5: ekspansi</td><td>Setelah bukti manfaat</td><td>Role lain dan lebih banyak proyek</td><td>KPI, cost cap, incident drill, restore dan rollout/rollback diterima</td></tr>
+</tbody></table></div>
+<p>K3 manual, inspeksi, dokumen dasar dan aftersales yang diwajibkan kontrak <strong>tidak menunggu fase AI-nya</strong>. Jika proyek pilot sudah membutuhkan RAB, prioritaskan adapter estimasi sebelum fitur gudang lanjutan.</p>
+<h2>7. KPI pilot</h2>
+<div class='table-scroll'><table><thead><tr><th>KPI</th><th>Definisi ukur</th><th>Sumber</th></tr></thead><tbody>
+<tr><td>Waktu administrasi kembali</td><td>Median menit manusia sebelum/sesudah untuk tugas sejenis</td><td>Sampling baseline 2–4 minggu dan log task</td></tr>
+<tr><td>Laporan tepat waktu</td><td>Laporan terverifikasi sebelum cutoff / laporan wajib</td><td>SIAP PROYEK</td></tr>
+<tr><td>Rework</td><td>Draf dikembalikan karena salah angka/sumber / draf direview</td><td>Workroom + domain review</td></tr>
+<tr><td>Progres berbukti</td><td>Item accepted dengan bukti dan verifikator / total item accepted</td><td>Project + QA/QC</td></tr>
+<tr><td>Lead time invoice</td><td>Hari kerja BA accepted sampai invoice issued</td><td>ERP + referensi BA</td></tr>
+<tr><td>Keamanan</td><td>Akses lintas tenant yang ditolak; tidak ada akses tak berizin yang diterima</td><td>Tes negatif dan audit</td></tr>
+<tr><td>Kesehatan integrasi</td><td>Oldest outbox age, DLQ, reconciliation mismatch</td><td>Aplikasi + HUB</td></tr>
+<tr><td>Biaya AI</td><td>Biaya per task accepted dan total per proyek</td><td>Log model/worker tersanitasi</td></tr>
+</tbody></table></div>
+<p>Target ditentukan setelah baseline; jumlah tender yang diikuti bukan satu-satunya ukuran keberhasilan.</p>
+<h2>8. Syarat produksi</h2>
+<p>Tidak boleh produksi jika identitas badan usaha belum jelas, app owner belum disepakati, auth negatif gagal, approval dapat dipalsukan, sumber angka tidak tersedia, atau jalur manual/darurat tidak berjalan.</p>
+<p>Review legal/ketenagakerjaan/pajak/K3 dan acceptance process owner diperlukan. Empat minggu tanpa insiden saja tidak cukup; harus lulus suite negatif, latihan gangguan, restore, dan bukti manfaat.</p>
+<hr>
+<h1>Blueprint Penutup Celah Operasional — Portofolio SIAP/SIGAP</h1>
+<p>Status: rancangan scope dan ownership; tidak menyatakan semua aplikasi sudah dibangun.</p>
+<h2>1. Aturan inventaris</h2>
+<p>Nama aplikasi tidak cukup untuk membuktikan domain atau kemampuan. Buat registry dengan app_id stabil, nama dagang/alias, workspace, URL deployment terverifikasi, owner proses, tenant model, API version, auth scheme, event types, contract-test date dan status.</p>
+<p>Status kemampuan: <strong>belum diketahui -&gt; dokumen tersedia -&gt; prototype -&gt; endpoint terverifikasi -&gt; pilot diterima -&gt; produksi disetujui</strong>. “Sudah dibuat” tidak otomatis berarti API read/write, MCP, outbox dan approval siap.</p>
+<p>Rincian per aplikasi yang hanya ditautkan dalam ekspor masih merupakan dependency dokumen. Scope di bawah adalah proposal pengganti minimal untuk review, bukan rekonstruksi rincian Notion yang tidak tersedia.</p>
+<h2>2. Registry domain dan alias</h2>
+<div class='table-scroll'><table><thead><tr><th>Domain</th><th>Nama/alias dari sumber</th><th>Keputusan revisi</th></tr></thead><tbody>
+<tr><td>Project control</td><td>SIAP PROYEK / SIGAP Project</td><td>Satu engine; Ruang Proyek Gustafta pintu masuk, bukan ledger proyek kedua</td></tr>
+<tr><td>Keuangan</td><td>ERP Keuangan / SIGAP Finance</td><td>Satu owner jurnal, anggaran, invoice, pajak dan pembayaran</td></tr>
+<tr><td>Pengadaan + gudang</td><td>SIAP GUDANG / SIGAP Procure</td><td>Satu domain logistik; pisah modul procurement/gudang jika perlu, tidak dua master vendor/stok</td></tr>
+<tr><td>Tenaga</td><td>SIAP TENAGA / SIGAP HR &amp; SKK</td><td>Satu owner personel/absensi; payroll finansial tetap ERP</td></tr>
+<tr><td>Alat</td><td>SIAP ALAT / SIGAP Aset &amp; Alat / perluasan TATABANGUN</td><td>Tentukan host modul setelah audit; satu register aset dan booking</td></tr>
+<tr><td>Purnajual</td><td>SIAP LAYAN / SIGAP Klien &amp; Purnajual / TATABANGUN</td><td>Satu owner tiket/garansi; CRM dan work order lewat referensi</td></tr>
+<tr><td>Estimasi</td><td>SIAP RAB / SIGAP Tender &amp; Estimasi</td><td>Tender pipeline dan estimator bisa modul; satu versi RAB penawaran</td></tr>
+<tr><td>Legal</td><td>SIAP LKUT / KontrakKonstruksi / SIGAP Legal</td><td>SBU/perizinan dan kontrak boleh berbeda owner objek; bukan tiga register identik</td></tr>
+<tr><td>Mutu</td><td>QA/QC Core + ISO Hub</td><td>QA/QC owner keputusan mutu proyek; ISO owner SOP/audit/CAPA sistem; saling referensi</td></tr>
+<tr><td>Keselamatan</td><td>Contractor Safety Passport / SIGAP K3</td><td>Satu owner keputusan keselamatan; worker qualifications direferensi HR</td></tr>
+<tr><td>Integritas</td><td>SMAP / Pancek / ProComply</td><td>Domain terkait tetapi tidak identik; kasus whistleblowing tetap terpisah dan restricted</td></tr>
+<tr><td>Lintas domain</td><td>SIGAP HUB / Insight / Akademi</td><td>Registry/proyeksi/knowledge, tidak mengambil ledger owner</td></tr>
+<tr><td>Dokumen</td><td>Ruang Simpan / CDE / ISO documents</td><td>Bytes/arsip, status drawing, dan dokumen terkendali dibedakan; grant eksplisit</td></tr>
+</tbody></table></div>
+<h2>3. Pemilik data yang diselaraskan</h2>
+<div class='table-scroll'><table><thead><tr><th>Objek</th><th>Owner otoritatif</th><th>Konsumen dan syarat</th></tr></thead><tbody>
+<tr><td>Profil resmi perusahaan dan arsip berizin</td><td>Ruang Simpan sesuai kontrak koneksi</td><td>Aplikasi sektoral read sesuai scope/grant; tidak otomatis baca berkas</td></tr>
+<tr><td>Project ID, WBS, baseline pelaksanaan, jadwal, progres accepted</td><td>SIAP PROYEK</td><td>ERP, gudang, alat membaca referensi/revision</td></tr>
+<tr><td>RAB/BoQ penawaran</td><td>Estimasi</td><td>Baseline kontrak diserahkan lewat handover accepted; sumber versi tetap tersimpan</td></tr>
+<tr><td>Nilai kontrak legal dan adendum</td><td>KontrakKonstruksi/legal owner</td><td>Project dan ERP menyimpan referensi beserta snapshot terkontrol</td></tr>
+<tr><td>Anggaran/COA/kode biaya/jurnal/invoice/pajak</td><td>ERP</td><td>Project tidak boleh menjadikan hasil LLM angka finansial resmi</td></tr>
+<tr><td>Vendor/material/MR/PO/mutasi stok</td><td>Gudang/Procure owner</td><td>ERP payable setelah validasi; QC acceptance dari QA/QC</td></tr>
+<tr><td>SDM/absensi/SKK dan bukti personel</td><td>Tenaga/HR owner</td><td>Minimal fields ke K3/Legal/Project; ERP untuk pembayaran</td></tr>
+<tr><td>SIO/izin dan fitness yang relevan</td><td>Registry jenis sertifikat sesuai penerbit/domain</td><td>Jangan samakan SKK dan SIO; sumber bukti selalu terlihat</td></tr>
+<tr><td>Aset/log jam/servis/booking/sewa operasional</td><td>Alat owner</td><td>ERP penyusutan/tagihan; kontrak sewa legal melalui referensi</td></tr>
+<tr><td>NCR/acceptance hasil uji</td><td>QA/QC Core</td><td>Project progres; ISO read reference untuk analisis/CAPA</td></tr>
+<tr><td>Insiden/permit K3/izin lanjut kerja</td><td>Safety Passport/K3 owner</td><td>Project mendapat status minimal sesuai izin</td></tr>
+<tr><td>SOP resmi, audit dan CAPA sistem</td><td>ISO Hub</td><td>Aplikasi menaut versi yang berlaku</td></tr>
+<tr><td>Tiket garansi/komplain</td><td>Layan owner</td><td>Work order TATABANGUN referensi; retensi finansial ERP</td></tr>
+<tr><td>App/project/vendor/person mapping</td><td>HUB registry</td><td>Hanya ID dan pemetaan, tidak mengedit master bisnis milik aplikasi</td></tr>
+</tbody></table></div>
+<p>Tidak semua aplikasi menyimpan hanya ID tanpa data: read model atau snapshot historis dapat diperlukan. Snapshot harus memuat source_app, source_id, source_revision, captured_at dan tidak diedit sebagai master.</p>
+<h2>4. MVP per modul</h2>
+<h3>4.1 HUB — fondasi minimum, bukan aplikasi master raksasa</h3>
+<p>Scope: app/capability registry, mapping ID, credential reference, event schema registry, inbox dedup, delivery status, task references, approval deep link dan audit koordinasi. Kredensial disimpan di Secrets/secret manager, bukan kolom plaintext.</p>
+<p>Tidak termasuk: master personel lengkap, jurnal, saldo stok, database approval final paralel, atau seluruh data transaksi semua aplikasi.</p>
+<p>Acceptance: alias tidak membuat duplikat; app down tidak mematikan aplikasi lain; revoke koneksi efektif; outbox backlog dan schema mismatch terlihat; isolasi tenant/project lulus.</p>
+<h3>4.2 GUDANG / Procure</h3>
+<p>Entitas minimum: vendor, material + uom conversion, gudang/lokasi, MR, RFQ, PO, receipt kandidat, acceptance reference, stock ledger, reservation, adjustment proposal.</p>
+<p>Status: MR draft -&gt; pending -&gt; approved/rejected; PO draft -&gt; approved -&gt; issued; receipt recorded -&gt; quarantined -&gt; accepted/rejected. available stock tidak termasuk quarantined.</p>
+<p>Kontrol: mutasi append-only dan reversal, anti-negative stock sesuai kebijakan, penguncian saldo/reservation, unit conversion deterministik, three-way matching, audit item/lot, FEFO bila masa kedaluwarsa relevan.</p>
+<p>Acceptance: receipt duplikat tidak menambah stok; dua issue serentak tidak overdraw; stale approval gagal; adjustment perlu alasan dan reviewer independen.</p>
+<h3>4.3 TENAGA / HR</h3>
+<p>Entitas: pekerja, hubungan kerja, penempatan proyek, bukti keahlian, attendance observation, attendance accepted, overtime request, approved recap dan payroll input snapshot.</p>
+<p>Kontrol: minimisasi data, pembatasan field upah/identitas, mekanisme dispute absensi, effective-date rules, approval lembur terpisah rekap.</p>
+<p>Tidak termasuk transfer dana, penandatanganan kontrak otomatis, atau keputusan disiplin dari AI. Slip upah tidak disebar ke grup WA; portal pribadi/kanal terverifikasi.</p>
+<p>Acceptance: pengguna hanya melihat pekerja yang diizinkan; revisi absensi merubah draft payroll bukan payroll posted; snapshot approved tidak diam-diam berubah.</p>
+<h3>4.4 ALAT</h3>
+<p>Entitas: asset, meter reading, inspeksi, maintenance plan, work order, booking, rental draft, handover dan return.</p>
+<p>Kontrol: hold administratif ketika inspection failed; release oleh petugas berwenang; konflik booking; jam operasi/BBM anomali menjadi investigasi; sewa tidak ditawarkan otomatis karena idle tujuh hari.</p>
+<p>Acceptance: tidak double-booking; alat hold tidak bisa dipesan untuk operasi; jadwal maintenance boleh otomatis tetapi servis/kelayakan tetap manusia; billing tetap ERP.</p>
+<h3>4.5 LAYAN</h3>
+<p>Entitas: kontrak/unit, handover reference, warranty rules, ticket, triage, work order reference, visit, closure evidence.</p>
+<p>Kontrol: acknowledgment berbeda diagnosis; urgent safety issue langsung dialihkan; cakupan garansi sesuai kontrak/version; pelanggan tidak membaca tiket pelanggan lain.</p>
+<p>Acceptance: tiket idempoten, SLA business-hours jelas, komitmen biaya perlu approval, closure menyimpan bukti.</p>
+<h3>4.6 RAB / Tender</h3>
+<p>Entitas: tender opportunity, source document version, eligibility evidence, BoQ, AHSP ruleset, price source date/location, estimates, exclusions, contingency, bid package dan handover baseline.</p>
+<p>Kontrol: decimal arithmetic, unit conversion, rounding, koefisien/satuan divalidasi; no-price = missing bukan angka karangan; rumus transparan; HPS resmi tidak digantikan estimasi kontraktor.</p>
+<p>Acceptance: setiap subtotal dapat direproduksi; sumber volume/harga tersedia; perubahan input menciptakan revision dan approval baru; tidak unggah/tanda tangan otomatis.</p>
+<h2>5. Pembangunan dan deployment</h2>
+<p>Gunakan stack/proses proyek yang sudah ada; jangan menjadikan React/Fastify atau DB baru sebagai migrasi wajib tanpa kebutuhan. Pada Gustafta, pertahankan modular monolith; aplikasi sektoral yang sudah terpisah dihubungkan melalui adapter.</p>
+<p>UI/API stateless dapat memakai deployment Autoscale. Worker terjadwal harus memiliki runtime yang benar-benar berjalan atau penjadwal eksternal; jangan mengandalkan interval in-memory pada service yang dapat tidur. Pemilihan runtime dilakukan setelah mengukur volume/latensi dan biaya. Tidak mewajibkan satu Reserved VM per aplikasi.</p>
+<p>Database queue/outbox dapat cukup untuk pilot. NATS/RabbitMQ/Redis bukan tiga komponen yang harus dipasang bersamaan. Tambah broker jika kebutuhan throughput/routing terukur membuktikannya.</p>
+<h2>6. Urutan yang disepakati</h2>
+<p>Ikuti fase pada blueprint utama: governance + inventory -&gt; read pilot -&gt; draft + gate -&gt; event/reconciliation -&gt; modul lanjutan. Gudang dan tenaga paralel hanya jika pemilik dan tim independen siap.</p>
+<p>Jangan membangun aplikasi baru sebelum capability audit memastikan fungsi tidak tersedia atau tidak dapat diperluas pada aplikasi yang ada.</p>
+<hr>
+<h1>Kontrak Integrasi SIGAP — Usulan yang Dapat Diuji</h1>
+<p>Status: kontrak target. Contoh endpoint/schema bukan klaim route live.</p>
+<h2>1. Compatibility dan registry</h2>
+<p>Endpoint baru direkomendasikan <code>/api/v1/...</code>; adapter mencatat base URL dan path aktual aplikasi lama yang memakai <code>/v1</code>. Jangan mengganti route publik atau format error aplikasi yang sudah ada tanpa versi dan migrasi konsumen.</p>
+<p>Kontrak Ruang Simpan saat ini terpisah dari kontrak SIGAP target:</p>
+<p class='list-item'>- Profil: <code>/api/v1/ruang-simpan/company-profile</code>.</p>
+<p class='list-item'>- Scope <code>profile:read</code> hanya membaca profil pemilik koneksi.</p>
+<p class='list-item'>- Header respons privat: <code>Cache-Control: private, no-store</code> dan <code>X-Gustafta-RS-Contract: rs-app-v1-private-no-store</code>.</p>
+<p class='list-item'>- Token/scope yang ada tidak otomatis dimigrasikan ke OAuth/JWT hanya karena spesifikasi SIGAP mengusulkannya.</p>
+<p class='list-item'>- Auth SBU lokal harus membatasi pengguna yang boleh membaca profil perusahaan terkonfigurasi. Keberhasilan token server tidak membuktikan izin semua pengguna SBU.</p>
+<p>Registry capability menyimpan implemented/tested status per route/tool/event, tanggal tes, evidence_ref, auth method, compatibility version dan owner. URL contoh <code>lsbu.co.id</code> pada sumber tidak dianggap domain operasional yang telah tersedia.</p>
+<h2>2. Autentikasi dan otorisasi</h2>
+<p>Client credentials/OAuth2 adalah pilihan target untuk app-to-app setelah identity authority disepakati. Jangan membuat issuer berbeda pada setiap aplikasi tanpa trust model.</p>
+<p>Jika JWT digunakan, verifikasi signature, algoritma allowlist, issuer, audience, expiry/not-before, key ID, client status, revocation policy dan clock skew. Token audience terikat aplikasi; service identity terikat tenant/project grant. Kredensial per role-app-environment, bukan satu token semua tenant.</p>
+<p>Otorisasi wajib memeriksa:</p>
+<pre><code>client/user aktif
+AND koneksi aktif
+AND audience/app benar
+AND tenant diizinkan
+AND project membership/grant sesuai
+AND action scope eksplisit
+AND field/document grant sesuai
+AND policy bisnis dan status objek mengizinkan</code></pre>
+<p>Scope <code>read</code> tidak mencakup semua field, dokumen atau tenant. Hindari wildcard produksi seperti <code>*:read</code> dan <code>smap.*:read</code>; enumerate resource/field yang diberikan. Whistleblowing content dilarang bagi agen umum, termasuk dashboard agregasi, vector index, log dan event payload.</p>
+<p><code>X-Actor</code> atau field <code>by</code> tidak menentukan identitas. Server mendapatkan pelaku dari token/sesi. Jika on-behalf-of diperlukan, gunakan delegated proof terverifikasi, grant terbatas dan audit actor+delegator; header plaintext tidak cukup.</p>
+<h2>3. Data dan HTTP</h2>
+<p class='list-item'>- Internal ID opaque stabil (misalnya UUID); kode <code>PRJ-YYYY-NNN</code> untuk tampilan dan mapping, bukan pembatas kapasitas atau sumber hak akses.</p>
+<p class='list-item'>- Tenant/project context wajib dan dicek server, tidak dipercaya dari body saja.</p>
+<p class='list-item'>- Waktu timestamp UTC atau ISO-8601 ber-offset; simpan timezone proyek untuk deadline/cutoff. Date-only digunakan untuk tanggal bisnis.</p>
+<p class='list-item'>- Kuantitas/koefisien/tarif memakai decimal string atau numeric decimal, unit dan precision eksplisit. Nilai final rupiah mengikuti rounding rule versi; no JavaScript float untuk kalkulasi finansial.</p>
+<p class='list-item'>- Optimistic concurrency memakai integer <code>revision</code> dan atomic conditional update. Revision berubah setiap mutasi material.</p>
+<p class='list-item'>- Body limit pra-parse, input schema strict, pagination bounded, timeouts dan rate limits per principal/tenant sesuai beban.</p>
+<p class='list-item'>- Status: 401 identitas tidak valid; 403 tidak berizin; 404 sesuai policy concealment; 409 revision/idempotency conflict; 422 aturan bisnis; 429 rate limit; 503 dependency tidak tersedia.</p>
+<p class='list-item'>- <code>application/problem+json</code> untuk kontrak baru; route legacy boleh mempertahankan JSON existing melalui adapter.</p>
+<p class='list-item'>- Semua respons privat termasuk penolakan, unduhan dan error: <code>Cache-Control: private, no-store</code> sebelum auth/rate limiting.</p>
+<p>Contoh error target:</p>
+<pre><code>{
+  &quot;type&quot;: &quot;urn:sigap:error:revision-conflict&quot;,
+  &quot;title&quot;: &quot;Objek berubah sejak ditinjau&quot;,
+  &quot;status&quot;: 409,
+  &quot;detail&quot;: &quot;Muat ulang objek dan ajukan persetujuan untuk revisi terbaru.&quot;,
+  &quot;trace_id&quot;: &quot;trace-opaque&quot;,
+  &quot;retryable&quot;: false
+}</code></pre>
+<p>Jangan memasukkan token, isi dokumen privat atau detail internal SQL dalam error.</p>
+<h2>4. Draf dan approval state machine</h2>
+<pre><code>draft -&gt; pending_approval -&gt; approved -&gt; execution_pending -&gt; executed
+                           -&gt; rejected
+                           -&gt; expired
+                           -&gt; superseded (revision/bukti/policy berubah)
+execution_pending -&gt; failed_retryable / failed_manual_review</code></pre>
+<p>Approval harus mengikat:</p>
+<pre><code>{
+  &quot;approval_id&quot;: &quot;opaque&quot;,
+  &quot;tenant_id&quot;: &quot;tenant-opaque&quot;,
+  &quot;project_id&quot;: &quot;project-opaque&quot;,
+  &quot;object&quot;: {
+    &quot;app_id&quot;: &quot;procure&quot;,
+    &quot;type&quot;: &quot;purchase_order&quot;,
+    &quot;id&quot;: &quot;po-opaque&quot;,
+    &quot;revision&quot;: 3,
+    &quot;payload_hash&quot;: &quot;sha256-of-canonical-approved-fields&quot;
+  },
+  &quot;evidence_refs&quot;: [
+    {&quot;id&quot;: &quot;quote-opaque&quot;, &quot;revision&quot;: 2, &quot;checksum&quot;: &quot;sha256&quot;}
+  ],
+  &quot;policy_id&quot;: &quot;procurement-policy&quot;,
+  &quot;policy_version&quot;: 2,
+  &quot;required_roles&quot;: [&quot;project_manager&quot;],
+  &quot;expires_at&quot;: &quot;2026-10-10T10:00:00Z&quot;,
+  &quot;state&quot;: &quot;pending_approval&quot;
+}</code></pre>
+<p>Canonical payload hashing harus memiliki field list dan normalization/version yang ditentukan. Perubahan harga/item/penerima, bukti terkait atau policy yang memengaruhi keputusan meng-invalidasi approval.</p>
+<p>Keputusan manusia lewat sesi terverifikasi:</p>
+<pre><code>POST /api/v1/approvals/{id}/decision
+Idempotency-Key: opaque-client-generated-key</code></pre>
+<pre><code>{&quot;decision&quot;:&quot;approved&quot;,&quot;expected_revision&quot;:3,&quot;note&quot;:&quot;Sesuai hasil review.&quot;}</code></pre>
+<p>Server menetapkan approved_by dan waktu; memeriksa entitlement saat keputusan serta saat execution. Agen tidak memiliki decision scope. Tombol WA/Telegram membawa deep link/login atau challenge sekali pakai terikat approver/objek/action/expiry; bukan persetujuan siapa saja yang menerima forwarded message.</p>
+<p>Segregasi tugas: maker tidak mengesahkan transaksi sendiri pada domain yang memerlukan checker. Approval nilai menggunakan nilai kumulatif dan transaksi terkait untuk mencegah split PO. Timeout atau approver tidak tersedia tidak berarti approved.</p>
+<p>Eksekusi otomatis hanya boleh dilakukan executor aplikasi terhadap aksi yang memang disahkan policy, setelah approval valid dan kondisi terakhir diperiksa ulang. Transfer dana, tanda tangan, atau keputusan keselamatan tidak menjadi hak agen generik.</p>
+<h2>5. Idempotensi dan simulasi</h2>
+<p>Untuk mutasi agen (POST/PUT/PATCH dan DELETE jika tersedia), key disimpan dengan tenant, client, route, normalized-request hash, state, response reference, expiry dan business operation ID.</p>
+<p class='list-item'>- Key sama + payload sama: hasil operasi yang sama, tidak efek kedua.</p>
+<p class='list-item'>- Key sama + payload berbeda: 409.</p>
+<p class='list-item'>- Concurrent same key: unique constraint/lock; hanya satu efek bisnis.</p>
+<p class='list-item'>- Ambiguous timeout: query operation status atau retry key yang sama, bukan membuat key baru.</p>
+<p class='list-item'>- TTL harus mencakup retry/offline window; aturan unik business operation tetap mencegah duplikasi setelah key record expired.</p>
+<p class='list-item'>- Reauthorization tetap dilakukan saat replay; jangan replay response privat setelah akses dicabut.</p>
+<p><code>dry_run=true</code> menjalankan auth dan validasi tanpa commit, outbox, email, WA, debit, reservation, file persistence atau efek eksternal lain. Simulasi tidak memberikan jaminan kapasitas/budget masih tersedia saat execution; validasi ulang dalam transaksi.</p>
+<h2>6. Event CloudEvents, HMAC dan reliability</h2>
+<pre><code>{
+  &quot;specversion&quot;: &quot;1.0&quot;,
+  &quot;id&quot;: &quot;event-opaque&quot;,
+  &quot;source&quot;: &quot;urn:sigap:app:procure&quot;,
+  &quot;type&quot;: &quot;id.sigap.procure.goods.accepted.v1&quot;,
+  &quot;subject&quot;: &quot;receipt/receipt-opaque&quot;,
+  &quot;time&quot;: &quot;2026-10-09T03:00:00Z&quot;,
+  &quot;datacontenttype&quot;: &quot;application/json&quot;,
+  &quot;tenantid&quot;: &quot;tenant-opaque&quot;,
+  &quot;projectid&quot;: &quot;project-opaque&quot;,
+  &quot;traceid&quot;: &quot;trace-opaque&quot;,
+  &quot;data&quot;: {
+    &quot;receipt_id&quot;: &quot;receipt-opaque&quot;,
+    &quot;revision&quot;: 4,
+    &quot;acceptance_ref&quot;: &quot;qc-opaque&quot;
+  }
+}</code></pre>
+<p>Gunakan satu namespace registry. Event observation/proposed berbeda dari accepted/issued/posted. <code>progress.accepted</code>, bukan <code>progress.updated</code> yang ambigu; <code>qaqc.ncr.opened</code>, bukan Project sebagai penerbit NCR final. Event tender won membuat <strong>draf</strong> dependency, bukan mengesahkan kontrak/jaminan.</p>
+<p>Pengirim webhook:</p>
+<pre><code>X-Sigap-Key-Id: key-version
+X-Sigap-Timestamp: unix-seconds
+X-Sigap-Delivery: delivery-uuid
+X-Sigap-Signature: sha256=&lt;hex&gt;
+signature = HMAC_SHA256(key, timestamp + &quot;.&quot; + delivery_id + &quot;.&quot; + raw_body)</code></pre>
+<p>Penerima memakai raw bytes sebelum parsing, constant-time comparison, timestamp window contoh ±5 menit sesuai policy, unique <code>(source,event_id)</code> dan delivery record. Delivery replay ditolak; pengiriman ulang sah membuat delivery ID/timestamp baru dengan event ID tetap. Auth producer diperiksa against tenant/source allowlist, bukan percaya tenantid dari payload.</p>
+<p>Alur durable:</p>
+<p class='list-item'>1. Transaksi domain + outbox ditulis atomik.</p>
+<p class='list-item'>2. Worker claim dengan lease, retry/backoff/jitter dan attempt count.</p>
+<p class='list-item'>3. Penerima verifikasi lalu menyimpan inbox sebelum acknowledge.</p>
+<p class='list-item'>4. Consumer menerapkan efek dan menandai processed secara atomik/idempoten.</p>
+<p class='list-item'>5. Poison event -&gt; DLQ; schema mismatch tidak dibuang diam-diam.</p>
+<p class='list-item'>6. Replay dilakukan operator dengan izin, alasan dan audit; rekonsiliasi membandingkan revision/domain state.</p>
+<p>Urutan tidak dijamin global. Gunakan object revision/sequence untuk mendeteksi event tua atau gap; fetch state resmi bila perlu. Outbox mengurangi risiko kehilangan, tidak menghapus kemungkinan kegagalan permanen. Monitor backlog age, failed deliveries, DLQ dan reconciliation drift.</p>
+<p>429/5xx/network transient dapat retry bounded; 401/403 berhenti sampai konfigurasi/izin diperbaiki; 409 perlu rekonsiliasi; 422 perlu keputusan proses. Side effect eksternal yang hasilnya ambigu masuk manual review jika provider tidak memiliki idempotency/status proof.</p>
+<h2>7. MCP bukan pengganti otorisasi</h2>
+<p>REST adapter diprioritaskan; MCP opsional untuk runtime yang membutuhkannya. Tool mengikuti auth API yang sama, bukan jalur privileged kedua.</p>
+<p>Contoh metadata:</p>
+<pre><code>{
+  &quot;name&quot;: &quot;procure_create_purchase_request_draft&quot;,
+  &quot;description&quot;: &quot;Membuat draf MR; tidak menyetujui atau menerbitkan PO.&quot;,
+  &quot;inputSchema&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;additionalProperties&quot;: false,
+    &quot;required&quot;: [&quot;project_id&quot;, &quot;items&quot;],
+    &quot;properties&quot;: {
+      &quot;project_id&quot;: {&quot;type&quot;: &quot;string&quot;},
+      &quot;items&quot;: {
+        &quot;type&quot;: &quot;array&quot;,
+        &quot;minItems&quot;: 1,
+        &quot;maxItems&quot;: 100,
+        &quot;items&quot;: {
+          &quot;type&quot;: &quot;object&quot;,
+          &quot;additionalProperties&quot;: false,
+          &quot;required&quot;: [&quot;material_id&quot;, &quot;quantity&quot;, &quot;uom&quot;],
+          &quot;properties&quot;: {
+            &quot;material_id&quot;: {&quot;type&quot;: &quot;string&quot;},
+            &quot;quantity&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;pattern&quot;: &quot;^[0-9]+([.][0-9]+)?$&quot;},
+            &quot;uom&quot;: {&quot;type&quot;: &quot;string&quot;}
+          }
+        }
+      }
+    }
+  },
+  &quot;annotations&quot;: {
+    &quot;readOnlyHint&quot;: false,
+    &quot;destructiveHint&quot;: false,
+    &quot;idempotentHint&quot;: false,
+    &quot;openWorldHint&quot;: false
+  }
+}</code></pre>
+<p>Validasi bisnis tetap mensyaratkan quantity &gt;0, satuan valid, precision dan batas nilai. Hint idempotent false di contoh karena input tidak mendefinisikan operation key; adapter harus menyediakan idempotency key stabil untuk retry. Hint hanyalah metadata, bukan proof keamanan. Approval requirement tercatat dalam policy registry/extension vendor, lalu ditegakkan server.</p>
+<p>Metadata/output tool dan dokumen eksternal tidak dipercaya sebagai instruksi. Prompt injection tidak boleh menambah grant, memilih arbitrary URL, membaca secret, atau membuat aksi final.</p>
+<h2>8. Offline, dokumen dan privasi</h2>
+<p class='list-item'>- Offline boleh capture observation/draft; approval, accepted stock/progress/payroll tidak final sebelum server menerima.</p>
+<p class='list-item'>- Queue lokal menyimpan operation ID/revision; reauth dan recheck izin sebelum sync; konflik masuk review, bukan last-write-wins pada uang/stok.</p>
+<p class='list-item'>- PWA service worker tidak men-cache API privat; browser lokal hanya menyimpan data minimal dengan TTL/clear-on-logout, revoked-state handling dan shared-device policy.</p>
+<p class='list-item'>- File upload memiliki limit, allowlist type, malware checks bila diperlukan, checksum dan tenant isolation.</p>
+<p class='list-item'>- Presigned URL pendek, operation/resource-bound, tidak dicatat ke analytics/log; server memeriksa grant sebelum menerbitkan. Folder grant mengikuti policy aktual, bukan snapshot izin seumur hidup.</p>
+<p class='list-item'>- Memori/vector retrieval menerapkan filter izin sebelum pengambilan konteks; log prompt tidak otomatis menyimpan dokumen mentah/PII.</p>
+<p class='list-item'>- Audit append-only untuk role aplikasi, akses operator terbatas, backup/protected export dan pemeriksaan integritas. “Tidak bisa dihapus” bukan klaim absolut terhadap DB administrator.</p>
+<p class='list-item'>- Retensi/tombstone/redaction mengikuti kebijakan dan kewajiban hukum; audit tidak menjadi alasan menyimpan seluruh PII tanpa batas.</p>
+<h2>9. Skenario penerimaan integrasi</h2>
+<div class='table-scroll'><table><thead><tr><th>Uji</th><th>Hasil wajib</th></tr></thead><tbody>
+<tr><td>Tanpa token/malformed/expired/revoked</td><td>401 JSON; private no-store</td></tr>
+<tr><td>Token tanpa action scope</td><td>403; tidak ada efek</td></tr>
+<tr><td>Tenant A menebak objek/proyek B</td><td>Ditolak; metadata, dokumen, event, memory tidak bocor</td></tr>
+<tr><td>Pengguna SBU tanpa explicit company permission</td><td>Ditolak di SBU sebelum fetch profil perusahaan</td></tr>
+<tr><td>Header X-Actor/body by dipalsukan</td><td>Tidak mengubah actor server; approval ditolak bila unauthorized</td></tr>
+<tr><td>Approval revision 3, objek berubah revision 4</td><td>409/superseded; tidak execution</td></tr>
+<tr><td>Dua keputusan/dua execution serentak</td><td>Satu hasil legal; audit lengkap; tidak efek ganda</td></tr>
+<tr><td>Key sama, request berbeda</td><td>409</td></tr>
+<tr><td>Webhook bad signature/stale/delivery replay</td><td>Ditolak sebelum business processing</td></tr>
+<tr><td>Event duplikat/out-of-order</td><td>Tidak saldo ganda; revision reconcile</td></tr>
+<tr><td>Worker mati setelah external call</td><td>Retry/status check atau manual review; bukan aksi ganda diam-diam</td></tr>
+<tr><td>Dry-run</td><td>Tidak data/outbox/file/email/WA/reservation berubah</td></tr>
+<tr><td>Offline sync setelah revoke</td><td>Ditolak; data lokal tidak menjadi final</td></tr>
+<tr><td>AI/HUB down</td><td>Aplikasi domain tetap berjalan; jalur manual dan alarm darurat tersedia</td></tr>
+<tr><td>Restore</td><td>RPO/RTO yang disetujui terbukti lewat drill, bukan sekadar backup tersedia</td></tr>
+</tbody></table></div>
+<p>Paket dokumen tidak menjalankan skenario tersebut terhadap semua aplikasi. Bukti test harus ditambahkan per capability sebelum status “pilot diterima”.</p>
+<hr>
+<h1>Revisi SOP dan Kriteria Penerimaan</h1>
+<h2>1. Struktur katalog</h2>
+<p>Nomor 1–29 tetap SOP proses. Nomor 30–39 tetap SOP jabatan, bukan workflow agen pengganti jabatan. Tambahan 40–46 menutup pra-kontrak dan governance:</p>
+<p class='list-item'>40. Pencarian Tender dan Go/No-Go.</p>
+<p class='list-item'>41. Estimasi dan Penyusunan RAB.</p>
+<p class='list-item'>42. Penyusunan Dokumen Penawaran.</p>
+<p class='list-item'>43. Review Kontrak dan Adendum.</p>
+<p class='list-item'>44. Change Order.</p>
+<p class='list-item'>45. Tata Kelola Agen AI / AgentOps.</p>
+<p class='list-item'>46. Keamanan dan Privasi Data.</p>
+<p>Alur A–G dipertahankan; H = Pra-kontrak &amp; Perubahan; I = Governance. H/I merupakan pengelompokan tambahan, bukan klaim bahwa sumber awal memiliki sembilan alur.</p>
+<p>Matriks CSV memuat 46 baris. Semua berstatus <strong>Usulan revisi - belum disahkan</strong>, bukan Aktif. Field kebijakan lokal seperti nama pejabat, limit, jam kerja, nomor formulir dan aturan hukum tetap harus dilengkapi process owner.</p>
+<h2>2. Level otomasi yang diperjelas</h2>
+<div class='table-scroll'><table><thead><tr><th>Level</th><th>Batas yang diizinkan</th></tr></thead><tbody>
+<tr><td>L1 Asisten</td><td>Checklist, penjelasan dan dukungan dokumentasi; manusia menjalankan keputusan/aksi</td></tr>
+<tr><td>L2 Kolaboratif</td><td>AI mengolah kandidat fakta; manusia verifikasi fisik/teknis sebelum acceptance</td></tr>
+<tr><td>L3 Draf/Propose + Approval</td><td>AI menyiapkan paket proses; aksi final mengikuti gate dan executor aplikasi</td></tr>
+<tr><td>L4 Administratif berisiko rendah</td><td>Read, rekap, reminder terkonfigurasi; tidak mengesahkan angka/izin/komitmen baru</td></tr>
+</tbody></table></div>
+<p>Level ditentukan <strong>per langkah</strong>, bukan otomatis semua langkah satu SOP. Rekap lembur boleh L4; izin lembur tetap manusia. Pengingat servis boleh L4; pekerjaan servis dan kelayakan alat tidak.</p>
+<h2>3. Template wajib SOP operasional</h2>
+<p>Setiap SOP disahkan setelah memiliki:</p>
+<p class='list-item'>1. ID, judul, revisi, effective date, reviewer dan pejabat pengesah.</p>
+<p class='list-item'>2. Tujuan, applicability proyek/kontrak dan exclusions.</p>
+<p class='list-item'>3. Trigger yang membedakan observation, proposed dan accepted.</p>
+<p class='list-item'>4. Input resmi, source owner, revision, freshness dan bukti.</p>
+<p class='list-item'>5. <strong>RACI manusia:</strong> satu accountable owner; responsible/checker/consulted/informed jelas. Agen selalu copilot, bukan legal accountable.</p>
+<p class='list-item'>6. Langkah AI vs manusia dan precondition/postcondition.</p>
+<p class='list-item'>7. Gate bernama, approver, revision/hash bukti, expiry dan kebijakan eskalasi.</p>
+<p class='list-item'>8. Output, status, formulir, audit dan siapa yang dapat membaca.</p>
+<p class='list-item'>9. SLA: business/calendar time, start/stop clock, timezone, exception, escalation.</p>
+<p class='list-item'>10. KPI: numerator/denominator, sumber, baseline, target dan frekuensi.</p>
+<p class='list-item'>11. Guardrail: larangan, confidentiality, value cap, unknown/error path.</p>
+<p class='list-item'>12. Jalur manual saat dependency gagal dan rekonsiliasi setelah pulih.</p>
+<p class='list-item'>13. Acceptance test termasuk negatif, concurrent, replay dan stale evidence.</p>
+<p>Bila gate melewati SLA, eskalasi ke pejabat pengganti sesuai delegasi tercatat; tidak auto-approve. Prioritas darurat menggunakan SOP keselamatan manusia, bukan timer approval administrasi.</p>
+<h2>4. Langkah minimum per keluarga proses</h2>
+<h3>A — Material &amp; Logistik (1, 2, 3, 21; dukungan jabatan34/36)</h3>
+<p>Input: jadwal/BoQ accepted, stok by status, reservation, vendor quotation, budget. MR -&gt; review kebutuhan -&gt; draf pengadaan -&gt; gate PO -&gt; bukti fisik receipt -&gt; gate QC -&gt; stock ledger -&gt; issuance per cost/WBS -&gt; opname -&gt; adjustment proposal.</p>
+<p>KPI: kebutuhan terpenuhi tepat waktu, receipt verified, mismatch opname, stockout dan supplier defect. Tidak menghitung barang quarantine sebagai stok tersedia.</p>
+<h3>B — Alat (4, 5, 22, 23; jabatan39)</h3>
+<p>Input: register, manual pabrikan, jam operasi accepted, inspection dan booking. Operator checklist -&gt; hold bila gagal -&gt; review Kepala Alat -&gt; maintenance/repair work order -&gt; teknisi melakukan -&gt; bukti uji -&gt; release manusia.</p>
+<p>KPI: availability, downtime, overdue maintenance, confirmed fuel anomaly. Log AI tidak membuktikan servis terlaksana.</p>
+<h3>C — Pelaksanaan &amp; Mutu (6, 7, 12, 24, 25; jabatan30–33/35/37)</h3>
+<p>Input: kontrak/baseline, drawing versi berlaku, field measurement, test results. Observasi -&gt; verifikasi volume/teknis -&gt; acceptance mutu -&gt; progres deterministik -&gt; deviasi -&gt; recovery proposal -&gt; gate PM -&gt; laporan eksternal.</p>
+<p>KPI: bukti diterima, laporan tepat waktu, rework, variation tanpa approval. Quantity measurement dan QC acceptance tidak digabung menjadi keputusan satu agen.</p>
+<h3>D — Keuangan &amp; Pajak (8, 9, 10, 11, 14; jabatan38)</h3>
+<p>Input: ERP, BA accepted, kontrak, payroll accepted, ruleset pajak. Draft -&gt; validasi angka/sumber -&gt; maker-checker -&gt; issued/posted manusia/aplikasi terotorisasi -&gt; reconcile source proof.</p>
+<p>KPI: close timeliness, invoice lead time, unresolved reconciliation, payroll disputes. Pengajuan upah cross-reference HR; tidak ada duplikasi employee master di ERP.</p>
+<h3>E — SDM (15, 16, 17; handoff10)</h3>
+<p>Input: resource need, kontrak kerja, attendance accepted, sertifikat. HR validasi kebutuhan -&gt; review kandidat -&gt; keputusan manusia -&gt; kontrak -&gt; izin lembur -&gt; rekap accepted -&gt; payroll draft.</p>
+<p>KPI: kebutuhan personel terpenuhi, sertifikat diverifikasi, dispute selesai. SKK/SKKNI/SIO tidak diperlakukan sebagai sertifikat identik.</p>
+<h3>F — K3 &amp; Keamanan (18, 19, 20)</h3>
+<p>Input: izin akses, prosedur darurat, CCTV/foto berizin, laporan manusia. Deteksi -&gt; alarm -&gt; tindakan petugas -&gt; amankan bukti -&gt; verifikasi/investigasi manusia -&gt; tindakan korektif -&gt; izin lanjut/closure berwenang.</p>
+<p>KPI: alarm ter-deliver, response manusia, closure berbukti, false alarms. Tidak ada tuduhan pencurian, sanksi atau penentuan kondisi medis otomatis.</p>
+<h3>G — Serah Terima &amp; Purnajual (13, 26, 27, 28, 29)</h3>
+<p>Input: kontrak, acceptance, punch list, as-built, warranty. Checklist -&gt; inspeksi pihak berwenang -&gt; BA sah -&gt; maintenance obligation -&gt; ticket -&gt; scope decision -&gt; work order -&gt; evidence closure.</p>
+<p>KPI: handover completeness, complaint lead time, repeat defect, accepted closure. PHO, FHO dan consumer BAST dipisah.</p>
+<h2>5. Tujuh SOP baru — minimum langkah dan gate</h2>
+<h3>SOP40 — Tender dan Go/No-Go</h3>
+<p class='list-item'>1. AI mengumpulkan peluang dari sumber sah dan bertimestamp.</p>
+<p class='list-item'>2. AI mengekstrak persyaratan paket, sumber/halaman dan deadline.</p>
+<p class='list-item'>3. Server mencocokkan bukti legalitas/kualifikasi perusahaan; unknown -&gt; review.</p>
+<p class='list-item'>4. Manajer tender meninjau eligibility dan kapasitas.</p>
+<p class='list-item'>5. Direktur memutuskan Go/No-Go dengan alasan.</p>
+<p class='list-item'>6. Catat keputusan, versi sumber, reviewer, deadline dan tindak lanjut.</p>
+<p>Output: opportunity review dan decision record. Larangan: login portal pakai kredensial bebas, bypass CAPTCHA/access control, atau final rejection dari tebakan.</p>
+<h3>SOP41 — Estimasi dan RAB</h3>
+<p class='list-item'>1. Terima BoQ/gambar revision sah; deteksi unit/volume missing.</p>
+<p class='list-item'>2. Tentukan ruleset AHSP applicable dan sumber harga date/location.</p>
+<p class='list-item'>3. Engine menghitung subtotal, overhead/risiko/margin sesuai policy versi.</p>
+<p class='list-item'>4. Estimator memverifikasi volume/koefisien/asumsi dan sensitivity.</p>
+<p class='list-item'>5. Gate Estimator Senior; perubahan input mengganti revision.</p>
+<p class='list-item'>6. Ekspor RAB immutable revision dan handover reference.</p>
+<p>Output: RAB draf/accepted, assumptions, source evidence, rounding record. Larangan: mengarang harga, mengklaim estimasi internal sebagai HPS resmi.</p>
+<h3>SOP42 — Dokumen Penawaran</h3>
+<p class='list-item'>1. AI membuat compliance checklist dari dokumen pemilihan revision terbaru.</p>
+<p class='list-item'>2. AI merakit draf dari bukti legalitas, RAB accepted dan metode/jadwal.</p>
+<p class='list-item'>3. Cross-check angka, tanggal, tenaga dan dokumen.</p>
+<p class='list-item'>4. Manajer tender/legal mereview.</p>
+<p class='list-item'>5. Gate pejabat penandatangan; upload manusia ke kanal resmi.</p>
+<p class='list-item'>6. Simpan checksum paket dan bukti submission; status submitted berdasarkan bukti.</p>
+<p>Output: paket dan submission reference; bukan jaminan menang.</p>
+<h3>SOP43 — Kontrak dan Adendum</h3>
+<p class='list-item'>1. AI menerima versi kontrak dan memetakan klausul/risiko.</p>
+<p class='list-item'>2. Legal menilai kewenangan, obligations, jaminan, pembayaran, perubahan dan sengketa.</p>
+<p class='list-item'>3. AI menyiapkan redline/draf.</p>
+<p class='list-item'>4. Negosiasi/review manusia.</p>
+<p class='list-item'>5. Gate pejabat berwenang; signature bukan tanda “approved” chat.</p>
+<p class='list-item'>6. Aplikasi menyimpan signed version dan menyerahkan revision ke Project/ERP.</p>
+<p>Output: signed contract reference hanya setelah bukti sah; legal memo terpisah.</p>
+<h3>SOP44 — Change Order</h3>
+<p class='list-item'>1. Catat permintaan, originator, sumber dan konteks kontrak.</p>
+<p class='list-item'>2. Quantity/Estimator, Scheduler dan Legal menghitung dampak.</p>
+<p class='list-item'>3. AI merakit opsi/risk package.</p>
+<p class='list-item'>4. PM meninjau; otoritas kontrak dan counterpart mengesahkan bila diperlukan.</p>
+<p class='list-item'>5. Update baseline hanya berdasarkan adendum/keputusan sah.</p>
+<p class='list-item'>6. Simpan histori baseline lama, delta dan audit.</p>
+<p>Larangan: chat klien menjadi instruksi pekerjaan tambah berbayar final tanpa kewenangan sah.</p>
+<h3>SOP45 — AgentOps</h3>
+<p class='list-item'>1. Registrasi role/model/skill/tools, izin, budget, owner dan versi.</p>
+<p class='list-item'>2. Perubahan diajukan sebagai proposal; dilarang self-promote.</p>
+<p class='list-item'>3. Jalankan evaluasi sumber/angka, injection, auth, scope, timeout, loops dan biaya.</p>
+<p class='list-item'>4. Gate Process Owner + AgentOps; sandbox dan canary.</p>
+<p class='list-item'>5. Monitor accepted/rejected outputs, cost, error, latency dan incident.</p>
+<p class='list-item'>6. Kill switch, credential revoke, rollback versi dan root-cause review.</p>
+<p>Output: release evidence dan incident record; governance aktif sebelum pilot.</p>
+<h3>SOP46 — Keamanan dan Privasi</h3>
+<p class='list-item'>1. Klasifikasikan data, dasar penggunaan, retensi, pihak yang dapat mengakses.</p>
+<p class='list-item'>2. Berikan grant minimal terikat tenant/project/resource/field.</p>
+<p class='list-item'>3. Review provider/model transfer policy dan logging/redaction.</p>
+<p class='list-item'>4. Uji negative access, token revoke, file grants, backup dan restore.</p>
+<p class='list-item'>5. Security owner/pemilik data menyetujui penggunaan.</p>
+<p class='list-item'>6. Review akses berkala; penanganan insiden mengikuti prosedur dan kewajiban applicable.</p>
+<p>Output: access registry, review evidence, retention schedule, restore report. Larangan: token dalam chat/CSV/Notion; wildcard seluruh dokumen.</p>
+<h2>6. Migrasi dan penerimaan</h2>
+<p class='list-item'>- Original SOP tetap referensi sampai revisi disahkan. Jika ada konflik, satu SOP berlaku resmi; jangan dua proses transaksi berjalan paralel tanpa rekonsiliasi.</p>
+<p class='list-item'>- Shadow mode membandingkan hasil AI terhadap proses resmi, bukan membuat pembayaran/stock posting kedua.</p>
+<p class='list-item'>- UAT harus mencakup contoh benar/salah, pengguna tanpa izin, perubahan revision setelah approval, concurrency, outage dan jalur manual.</p>
+<p class='list-item'>- Keberhasilan empat minggu tanpa insiden hanya salah satu bukti, bukan syarat tunggal.</p>
+<p class='list-item'>- Setiap SOP jabatan disahkan bersama batas delegasi manusia; AI tidak “mengambil alih” jabatan.</p>
+<p class='list-item'>- Perlu ekspor naskah asli SOP konvensional dan child blueprint untuk audit per langkah yang lengkap. Ketiadaan itu dicatat sebagai evidence gap, bukan dianggap sudah ditutup.</p>
+<hr>
+<h1>Lampiran: Ringkasan Matriks 46 SOP</h1>
+<p>CSV lengkap memuat trigger, langkah, SLA usulan, gate, guardrail, eskalasi dan uji penerimaan per SOP.</p>
+<div class='table-scroll'><table><thead><tr><th>No</th><th>SOP</th><th>Accountable manusia</th><th>Level revisi</th><th>Output</th></tr></thead><tbody>
+<tr><td>1</td><td>SOP Order Permintaan Material</td><td>Site Manager</td><td>L3 Draf/Propose + Approval</td><td>MR draf -&gt; MR approved; PO draf terpisah</td></tr>
+<tr><td>2</td><td>SOP Penerimaan Material Proyek</td><td>Kepala Gudang</td><td>L2 Kolaboratif</td><td>Receipt kandidat; GRN accepted atau rejected</td></tr>
+<tr><td>3</td><td>SOP Penyimpanan &amp; Pengelolaan Material</td><td>Kepala Gudang</td><td>L2 + L3 untuk adjustment</td><td>Ledger mutasi; reservation; adjustment proposal</td></tr>
+<tr><td>4</td><td>SOP Pemakaian Alat Proyek</td><td>Kepala Alat</td><td>L2 Kolaboratif</td><td>Checklist terverifikasi; izin administratif pakai/hold</td></tr>
+<tr><td>5</td><td>SOP Penyimpanan Alat Proyek</td><td>Kepala Alat</td><td>L2 fisik; L4 rekap</td><td>Register lokasi/kondisi alat terverifikasi</td></tr>
+<tr><td>6</td><td>SOP Opname Pekerjaan Proyek</td><td>Quantity Control / Site Engineer</td><td>L2 Kolaboratif</td><td>Opname draf; BA accepted terikat versi</td></tr>
+<tr><td>7</td><td>SOP Laporan Prestasi Pekerjaan Proyek</td><td>Site Manager</td><td>L4 rekap accepted; L3 penerbitan eksternal</td><td>Rekap internal; laporan eksternal approved</td></tr>
+<tr><td>8</td><td>SOP Penyusunan Laporan Keuangan Konstruksi</td><td>Finance Manager</td><td>L3 Draf/Propose + Approval</td><td>Laporan keuangan draf/approved; close reference</td></tr>
+<tr><td>9</td><td>SOP Petty Cash Proyek (Kas Kecil)</td><td>Kepala Bagian Keuangan</td><td>L3 Draf/Propose + Approval</td><td>Petty cash request; settlement terverifikasi</td></tr>
+<tr><td>10</td><td>SOP Pembayaran Upah Tenaga Kerja Proyek</td><td>HR Manager</td><td>L3 Draf/Propose + Approval</td><td>Payroll input accepted; batch payroll draf; payment reference</td></tr>
+<tr><td>11</td><td>SOP Penagihan Pembayaran Proyek</td><td>Finance Manager</td><td>L3 Draf/Propose + Approval</td><td>Invoice draf -&gt; issued; aging resmi</td></tr>
+<tr><td>12</td><td>SOP Pengukuran Ulang Lapangan</td><td>Site Engineer / Surveyor</td><td>L2 Kolaboratif</td><td>Measurement report accepted; kandidat perubahan baseline</td></tr>
+<tr><td>13</td><td>SOP Serah Terima Pekerjaan</td><td>Project Manager</td><td>L2 Kolaboratif</td><td>Paket final handover/FHO sesuai applicability</td></tr>
+<tr><td>14</td><td>SOP Laporan Pajak Jasa Konstruksi</td><td>Tax Officer / Finance Manager</td><td>L3 Draf/Propose + Approval</td><td>Rekap pajak/SPT draf; bukti lapor/setor resmi</td></tr>
+<tr><td>15</td><td>SOP Perencanaan Tenaga Kerja</td><td>HR Manager</td><td>L3 Draf/Propose + Approval</td><td>Resource plan draf/approved</td></tr>
+<tr><td>16</td><td>SOP Kebutuhan Tenaga Kerja</td><td>HR Manager</td><td>L3 Draf/Propose + Approval</td><td>Permintaan tenaga; kandidat; keputusan HR; kontrak draf</td></tr>
+<tr><td>17</td><td>SOP Lembur Karyawan</td><td>HR Manager / Atasan Langsung</td><td>L4 rekap; L3 izin lembur</td><td>Permintaan lembur approved; rekap accepted</td></tr>
+<tr><td>18</td><td>SOP Control Area</td><td>Site Supervisor / Kepala Keamanan</td><td>L2 kontrol fisik; L4 alarm</td><td>Access log; alert; izin akses berwenang</td></tr>
+<tr><td>19</td><td>SOP Penanganan Pencurian</td><td>Kepala Keamanan / Manajemen</td><td>L2 Kolaboratif</td><td>Laporan indikasi; investigation record; tindakan manusia</td></tr>
+<tr><td>20</td><td>SOP Penanganan Kecelakaan Kerja</td><td>HSE Officer</td><td>L1 Asisten</td><td>Alarm; respons manusia; incident record; izin lanjut</td></tr>
+<tr><td>21</td><td>SOP Penghitungan Fisik Persediaan</td><td>Kepala Gudang</td><td>L2 hitung; L3 adjustment</td><td>Count sheet; variance; adjustment approved</td></tr>
+<tr><td>22</td><td>SOP Perbaikan Alat atau Mesin</td><td>Kepala Alat</td><td>L2 servis; L3 biaya/WO</td><td>Repair work order; inspeksi release</td></tr>
+<tr><td>23</td><td>SOP Pemeliharaan Alat atau Mesin</td><td>Kepala Alat</td><td>L4 jadwal; L2 servis/release</td><td>Jadwal/reminder; maintenance work order; bukti servis</td></tr>
+<tr><td>24</td><td>SOP Pengawasan Progres Bangunan</td><td>Project Manager</td><td>L4 monitoring; L3 recovery</td><td>Deviasi; recovery proposal; baseline revision approved</td></tr>
+<tr><td>25</td><td>SOP Prosedur Teknis &amp; Spesifikasi Bangunan</td><td>Site Engineer</td><td>L2 Kolaboratif</td><td>Matriks spesifikasi dan checklist versi berlaku</td></tr>
+<tr><td>26</td><td>SOP Serah Terima Konsumen</td><td>Manajer Aftersales</td><td>L2 Kolaboratif</td><td>Checklist per unit; consumer BAST sah</td></tr>
+<tr><td>27</td><td>SOP Serah Terima Sementara (PHO)</td><td>Project Manager</td><td>L2 Kolaboratif</td><td>Permohonan PHO; BA; punch list</td></tr>
+<tr><td>28</td><td>SOP Layanan Garansi Bangunan</td><td>Manajer Aftersales</td><td>L4 acknowledgment; L3 komitmen</td><td>Warranty ticket; scope decision; repair/closure evidence</td></tr>
+<tr><td>29</td><td>SOP Komplain / Perbaikan Rumah</td><td>Manajer Aftersales</td><td>L4 acknowledgment; L3 komitmen</td><td>Complaint case; opsi perbaikan; closure</td></tr>
+<tr><td>30</td><td>SOP Jabatan Project Manager</td><td>Project Manager</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Decision log PM; delegasi dan action plan</td></tr>
+<tr><td>31</td><td>SOP Jabatan Site Manager</td><td>Site Manager</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Rencana lapangan; validasi laporan; koordinasi</td></tr>
+<tr><td>32</td><td>SOP Jabatan Site Engineer</td><td>Site Engineer</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Review teknis; solusi terverifikasi</td></tr>
+<tr><td>33</td><td>SOP Jabatan Quality Control</td><td>QC Engineer</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Acceptance mutu; NCR; bukti uji</td></tr>
+<tr><td>34</td><td>SOP Jabatan Quantity Control</td><td>Quantity Control</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Measurement accepted; quantity reconciliation</td></tr>
+<tr><td>35</td><td>SOP Jabatan Site Supervisor</td><td>Site Supervisor</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Pengawasan mandor; laporan terverifikasi</td></tr>
+<tr><td>36</td><td>SOP Jabatan Logistik-Purchasing</td><td>Pejabat Logistik-Purchasing</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Vendor evaluation; negosiasi; PO draf/issued berwenang</td></tr>
+<tr><td>37</td><td>SOP Jabatan Staff Admin</td><td>Staff Admin / Document Controller</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Dokumen terkendali; notulen dan distribusi</td></tr>
+<tr><td>38</td><td>SOP Jabatan Staff Keuangan</td><td>Staff Keuangan</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Input/reconcile draf; exception list</td></tr>
+<tr><td>39</td><td>SOP Jabatan Bagian Alat Proyek</td><td>Kepala/Bagian Alat Proyek</td><td>Copilot jabatan; level mengikuti langkah SOP proses</td><td>Keputusan mobilisasi/servis/sewa manusia</td></tr>
+<tr><td>40</td><td>SOP Pencarian Tender dan Go/No-Go</td><td>Manajer Tender</td><td>L3 Draf/Propose + Approval</td><td>Eligibility review; Go/No-Go decision</td></tr>
+<tr><td>41</td><td>SOP Estimasi dan Penyusunan RAB</td><td>Estimator Senior</td><td>L3 Draf/Propose + Approval</td><td>RAB revision accepted; source/assumption list</td></tr>
+<tr><td>42</td><td>SOP Penyusunan Dokumen Penawaran</td><td>Manajer Tender</td><td>L3 Draf/Propose + Approval</td><td>Bid package reviewed; submission proof</td></tr>
+<tr><td>43</td><td>SOP Review Kontrak dan Adendum</td><td>Legal / Contract Manager</td><td>L3 Draf/Propose + Approval</td><td>Risk memo; contract/addendum draft; signed reference</td></tr>
+<tr><td>44</td><td>SOP Change Order</td><td>Project Manager / Contract Manager</td><td>L3 Draf/Propose + Approval</td><td>CR; impact package; approved baseline delta</td></tr>
+<tr><td>45</td><td>SOP Tata Kelola Agen AI / AgentOps</td><td>AgentOps Lead</td><td>L3 Draf/Propose + Approval</td><td>Release evidence; model/skill version; rollback/incident record</td></tr>
+<tr><td>46</td><td>SOP Keamanan dan Privasi Data</td><td>Security &amp; Privacy Owner</td><td>L2 review; L3 perubahan akses/policy</td><td>Grant review; privacy policy; restore evidence</td></tr>
+</tbody></table></div></main><footer>Disusun dari lima lampiran ekspor Notion. Rincian tautan turunan dan naskah SOP asli belum tersedia. Tidak ada aplikasi atau data perusahaan yang diubah.</footer></body></html>

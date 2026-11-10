@@ -1,0 +1,497 @@
+uploads = []
+
+[[generated]]
+id = "o56wVie7ExZegkonwZIv5"
+uri = "file://attached_assets/generated_images/a_modern_flat_illustration_8705.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "WZNcNhHcDu48Mgxkv1sfu"
+uri = "file://attached_assets/generated_images/a_vibrant_modern_illustration_f634.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "sqz0Gz20YkWV5BhGycXfJ"
+uri = "file://attached_assets/generated_images/six_floating_3d_cards_48e2.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "BOJn6v6h35Os54_CB5ALy"
+uri = "file://attached_assets/generated_images/modern_futuristic_illustration_of_e5a3.png"
+type = "image"
+title = "generated_image"
+
+[[outputs]]
+id = "jJ7MXrCMvntrSqUlRzf9w"
+uri = "file://attached_assets/generated_videos/gustafta-hero-ai-network.mp4"
+type = "video"
+title = "Clip 1 — Hero: Jaringan AI Neural (8 dtk)"
+logical_id = "f7b421dd-b0fe-4ef6-9ae7-9f25c1974dea"
+
+[[outputs]]
+id = "ceWdmiUsWcIZp0Z723TGb"
+uri = "file://attached_assets/generated_videos/gustafta-multiclaw-agents.mp4"
+type = "video"
+title = "Clip 2 — MultiClaw: Agen Paralel (8 dtk)"
+logical_id = "42c00bbc-98ce-444d-80a9-90796924b5bd"
+
+[[outputs]]
+id = "POrRDXEiBs6LH2n-IVi8X"
+uri = "file://attached_assets/generated_videos/gustafta-business-results.mp4"
+type = "video"
+title = "Clip 3 — Bisnis: Dashboard AI (8 dtk)"
+logical_id = "2ca3bc4d-3473-43a9-91a7-31e9c22ca1a9"
+
+[[outputs]]
+id = "BtQsCy2brkqaLG3hPLIn6"
+uri = "file://attached_assets/generated_videos/gustafta-logo-cta.mp4"
+type = "video"
+title = "Clip 4 — Logo/CTA: Brand Reveal (6 dtk)"
+logical_id = "720ad40e-7f4a-4dde-bc6b-bac89e645280"
+
+[[outputs]]
+id = "yE8sBaI4jnuRFvI8277j3"
+uri = "file://attached_assets/generated_videos/gustafta-promo-combined.mp4"
+type = "video"
+title = "🎬 Gustafta Promo — Video Gabungan (30 detik)"
+logical_id = "cd34ddd1-be23-4c74-8a08-43a5826af96f"
+
+[[outputs]]
+id = "_-Vpd_nJwOhPuBivD-GK3"
+uri = "file://attached_assets/generated_videos/gustafta-promo-problem.mp4"
+type = "video"
+title = "Video 1 — Masalah (flat design desk, malam, no people)"
+logical_id = "5047b2b0-6597-489b-bb9c-43297ffdc971"
+
+[[outputs]]
+id = "OMFjOVmczWl6jSRsStB3T"
+uri = "file://attached_assets/generated_videos/gustafta-promo-monolog-to-dialog.mp4"
+type = "video"
+title = "Video 2 — Monolog → Dialog (animated infographic)"
+logical_id = "88220336-1075-4849-a4ed-a3f8e85fcff1"
+
+[[outputs]]
+id = "znDxQ7U75LMTJgcQy-EPh"
+uri = "file://attached_assets/generated_videos/gustafta-promo-solution.mp4"
+type = "video"
+title = "Video 3 — Solusi (AI brain + orbiting agents)"
+logical_id = "2e8ff7f7-bcc7-403d-9872-0b11dee93593"
+
+[[outputs]]
+id = "U1OF9xP-63QOjSeozVx5n"
+uri = "file://attached_assets/generated_videos/gustafta-platform-overview.mp4"
+type = "video"
+title = "1 — Platform Gustafta (Overview)"
+logical_id = "f77970e6-1ebe-48ae-9f97-beb896e2fba8"
+
+[[outputs]]
+id = "knNASafWor4VgRP25Bcyf"
+uri = "file://attached_assets/generated_videos/gustafta-monolog-to-dialog.mp4"
+type = "video"
+title = "2 — Monolog → Dialog"
+logical_id = "76c92271-3018-4f65-8d8b-dbfd97fb7f34"
+
+[[outputs]]
+id = "fpBCQWpkW2QxSwCJGf0Iy"
+uri = "file://attached_assets/generated_videos/gustafta-multiclaw-suite.mp4"
+type = "video"
+title = "3 — MultiClaw Suite"
+logical_id = "4c87fe24-e4e1-4e65-86c7-ee60b3709f5c"
+
+[[outputs]]
+id = "FfDV2MjVlQeYN7leS1sRb"
+uri = "file://attached_assets/generated_videos/gustafta-business-opportunity.mp4"
+type = "video"
+title = "4 — Peluang Usaha"
+logical_id = "ee9d0a47-51fd-4ea9-aa4c-011d56c34a58"
+
+[[outputs]]
+id = "X3ENhs6ugzciyFtzupxjd"
+uri = "file://client/public/images/g04.png"
+type = "image"
+title = "g04 — AI Builder Studio (PALING builder: tampilan dashboard merakit chatbot)"
+logical_id = "dfe3d65e-1a99-47b7-b4e1-734d5a64c860"
+
+[[outputs]]
+id = "v1NF5XozXfrT8TZJrXZXP"
+uri = "file://client/public/images/g18.png"
+type = "image"
+title = "g18 — No Code Build Anything (builder + orang merakit + knowledge base)"
+logical_id = "721904e0-498a-4413-b600-5652e23e9d9a"
+
+[[outputs]]
+id = "5d8Ipm0v1eeG3KuTOmIXA"
+uri = "file://client/public/images/g19.png"
+type = "image"
+title = "g19 — No-Code Platform (blok modular builder, tanpa orang)"
+logical_id = "679c85bf-7c67-4bf3-983a-5b923551ee1f"
+
+[[outputs]]
+id = "ucp-xq8rSTv9rsZyq2AZF"
+uri = "file://client/public/images/g15.png"
+type = "image"
+title = "g15 — Trilogi: orang ngomong dengan AI (Dialog-Kolaborasi-Kreasi)"
+logical_id = "1e786ad6-34a4-4c91-8da8-01a73a9a1463"
+
+[[outputs]]
+id = "H6s9mO3CQXuHjM9fuzkeD"
+uri = "file://client/public/images/g14.png"
+type = "image"
+title = "g14 — Dialog/Kolaborasi/Kreasi (yang sekarang dipakai di Creator Personas)"
+logical_id = "0b793016-7dbf-45bf-ba47-0885c6c5dccd"
+
+[[outputs]]
+id = "3yRMtr3EJtoaD5E-szv24"
+uri = "file://client/public/images/g20.png"
+type = "image"
+title = "g20 — AI Orchestration Hub (diagram agen, teknis)"
+logical_id = "3bde048d-75cf-463d-9557-2f5a752d36b9"
+
+[[outputs]]
+id = "avdoSkRuZV8INWyFSVZG3"
+uri = "file://docs/blueprint-engine/01-builder-audit.md"
+type = "text"
+title = "Tahap 1 — Audit Builder Gustafta"
+logical_id = "f02e02b5-676d-4e06-b56e-a8e3f19ef785"
+
+[[outputs]]
+id = "LM5YlEmwsrV3FbXRKUTxn"
+uri = "file://docs/blueprint-engine/00-roadmap.md"
+type = "text"
+title = "Roadmap — AI Organization Builder (9 tahap)"
+logical_id = "2e8be992-c737-415a-a174-408f63cf0ca4"
+
+[[outputs]]
+id = "o0JpwS_kzLOv7COw4IAWQ"
+uri = "file://attached_assets/generated_audio/music_gustafta_explainer_bed.mp3"
+type = "audio"
+title = "gustafta_explainer_bed"
+logical_id = "12b4b605-be19-4f30-a79e-14b5e0ec5edb"
+
+[[outputs]]
+id = "YDGbRlaDcaCXailVQgdks"
+uri = "file://attached_assets/generated_videos/gustafta_explainer.mp4"
+type = "video"
+title = "Gustafta — Versi Landscape 16:9 (sudah dipakai di landing)"
+logical_id = "4130c88b-4f6f-4c93-8f82-07598d652569"
+
+[[outputs]]
+id = "5KM3CUnZesClaCHsgdw2v"
+uri = "file://attached_assets/generated_videos/gustafta_explainer_vertical.mp4"
+type = "video"
+title = "Gustafta — Versi Vertikal 9:16 (Reels/TikTok/Shorts)"
+logical_id = "aa037ad1-eed9-4126-80ec-b5596b9355b4"
+
+[[outputs]]
+id = "jZwL43rttnfugjoKIRovS"
+uri = "file://attached_assets/generated_videos/gustafta_promo_24s.mp4"
+type = "video"
+title = "Gustafta — Animated Promo (24s)"
+logical_id = "09429a01-6f99-4876-9339-e6c1fbc30142"
+
+[[outputs]]
+id = "-ynuz4e2XKfw1raHzpwS6"
+uri = "file://backups/gustafta-db-backup.sql.gz"
+type = "unspecified"
+title = "Cadangan Database Gustafta (SQL, terkompres)"
+logical_id = "09a6203d-4482-49e7-aad8-79a6a856087c"
+
+[[outputs]]
+id = "K6d863wlL-3awNnmJ0MiK"
+uri = "file://backups/gustafta-db-backup-20260707-0023.sql.gz"
+type = "unspecified"
+title = "Cadangan Database Gustafta (lengkap — 7 Juli 2026)"
+logical_id = "5ba5da43-80f0-4ed4-92a0-b1fbc2a69bb0"
+
+[[outputs]]
+id = "LaVTdo-TPsT4EDu7AolXX"
+uri = "file://backup/gustafta-migration-20260707-1347.zip"
+type = "unspecified"
+title = "Backup Migrasi Gustafta (Database + Uploads + Panduan)"
+logical_id = "f278648f-5596-441c-870a-99923de670d3"
+
+[[outputs]]
+id = "cDUVmfarQ38CNLWtFFM0S"
+uri = "file://backup/percakapan-gustafta.md"
+type = "text"
+title = "Transkrip Lengkap Percakapan Gustafta (Markdown)"
+logical_id = "ce6d6b52-3a34-4233-a8dd-3003c0b03def"
+
+[[outputs]]
+id = "BvmdtQU_Est44Icq0oGW4"
+uri = "file://backup/gustafta-paket-pindahan-20260707.zip"
+type = "unspecified"
+title = "Paket Pindahan Gustafta (backup DB + panduan)"
+logical_id = "4ba0efcf-5fd5-4cc0-a60a-47c62c2a93e3"
+
+[[outputs]]
+id = "kjPCv7HzTltbtZb33-OJz"
+uri = "file://backup/migrasi/PANDUAN-PINDAH-AKUN.md"
+type = "text"
+title = "Panduan Pindah Akun (bisa dibaca langsung)"
+logical_id = "3024112b-0791-4d2e-8684-e49de24a8e15"
+
+[[outputs]]
+id = "EyJJXmKRcvcT1xFPx5yrU"
+uri = "file://daftar-link-chatbot-gustafta.md"
+type = "text"
+title = "Daftar Link Chatbot Gustafta — 380 chatbot publik"
+logical_id = "132d9438-0ee0-40c7-9182-cc5adaaf8900"
+
+[[outputs]]
+id = "84FxjyZ1id2IYxM-sgrKM"
+uri = "file://daftar-312-chatbot-gustafta.md"
+type = "text"
+title = "Daftar Lengkap 312 Chatbot AI Gustafta — Juli 2026"
+logical_id = "81cec361-edb7-4857-96f9-15abb1b78a5f"
+
+[[outputs]]
+id = "5hzNfb5laYXRmsFxi9fSv"
+uri = "file://attached_assets/ebook/kas-merah-mini-ebook.pdf"
+type = "pdf"
+title = "Mini Ebook Pancingan — KAS MERAH, RAB HIJAU (14 halaman, A5)"
+description = "PDF pancingan gratis: cover ilustrasi, tabel Pak R, 5 akar masalah, 3 kesalahan fatal, halaman CTA oranye, sesuai catatan desain naskah (navy/merah/oranye)."
+logical_id = "c3e8c94d-ffa8-43b2-a719-0a68234e2620"
+
+[[outputs]]
+id = "F-cIz2ch8EC0VFWBgdNrk"
+uri = "file://attached_assets/ebook/kas-merah-premium.pdf"
+type = "pdf"
+title = "EBOOK PREMIUM (revisi) — KAS MERAH, RAB HIJAU, 98 hal."
+description = "Lampiran A1–A6 lengkap; kotak warna kuadran & simbol status kini tampil benar. Password: GUSTAFTA2026"
+logical_id = "92b89204-c391-4b33-a672-828013d74be5"
+
+[[outputs]]
+id = "D1wq1PXazD3QUGXyouRld"
+uri = "file://client/public/og-gustafta-platform.png"
+type = "image"
+title = "Social Preview Gustafta — Spasi Final"
+description = "Label Workroom diperbesar, jarak vertikal diperjelas, dan teks Kontraktor digeser agar terpisah dari label Untuk."
+logical_id = "3416e722-fd4e-4180-a39f-0da6d77bf340"
+
+[[outputs]]
+id = "LQgqysn-BXHtmEkFV-1p8"
+uri = "file://attached_assets/generated_videos/exum-pkb-project-animation-720p.mp4"
+type = "video"
+title = "Video Animasi Proyek EXUM-PKB"
+description = "Video animasi 32 detik, format 16:9 dan resolusi 720p, tentang alur dokumen proyek, Executive Summary, dan layanan EXUM-PKB."
+logical_id = "91c957b8-4650-4cc1-a308-ec8b670dd21d"
+content_hash = "sha256:fd80daa0a4fc0e785afd8bb9142ff442bcc02267be2c5d82d3ffe590e6865634"
+size = 34592101
+mtime_ms = 1789062928418
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/91c957b8-4650-4cc1-a308-ec8b670dd21d/f407f75a-a87f-4484-ba42-6c1c90be3e11"
+storage_version_token = "1789062938178753"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "uHnIvobZhxeuZebpZ4JLw"
+uri = "file://docs/gaia-siap-ai-api.md"
+type = "text"
+title = "Dokumentasi API AI Gustafta untuk SIAP (V1)"
+description = "Dokumentasi request/response lengkap, autentikasi, batas penggunaan, kode kesalahan, dan contoh pemanggilan. Tidak berisi nilai kunci API."
+logical_id = "286db956-f462-4cb0-a1b9-b12e3fc726d2"
+content_hash = "sha256:439f21d258cf148045bbdbf4417ec51ec9d8f72073799a1fc3c5b1149d87d890"
+size = 4199
+mtime_ms = 1788238658944
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/286db956-f462-4cb0-a1b9-b12e3fc726d2/a76508ca-1eef-4210-b2a2-8289b5d960af"
+storage_version_token = "1790287195259124"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "M5YMcazjmUw4bAzdKonOY"
+uri = "file://docs/ruang-simpan-app-integration.md"
+type = "text"
+title = "Spesifikasi API Ruang Simpan"
+description = "Berkas Markdown asli dari workspace Gustafta untuk diunduh dan diunggah ke SBU Accelerator. Memuat kontrak profil dan dokumen; hanya memakai placeholder token, bukan kredensial nyata."
+logical_id = "93a7f208-2c1e-4b4e-90e9-30d729d11241"
+content_hash = "sha256:2e7995e814fcc1c000eee11e202d551f9b3a4a8b9fa094635b503eaac102b473"
+size = 4277
+mtime_ms = 1790784058925
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/93a7f208-2c1e-4b4e-90e9-30d729d11241/a4affd7d-d5ff-4be5-9845-7af40bcfb30b"
+storage_version_token = "1790802217421741"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "Ez2ULBMF6600WpYo5h3c7"
+uri = "file://deliverables/revisi-blueprint-notion/BLUEPRINT_REVISI_LENGKAP.html"
+type = "html"
+title = "Evaluasi dan Blueprint Revisi — Gustafta × SIGAP"
+description = "Dokumen gabungan yang mudah dibaca: 24 temuan, blueprint yang diselaraskan, kontrak integrasi, dan panduan SOP. Usulan revisi, belum disahkan untuk produksi."
+logical_id = "4c845c4a-b990-4301-889c-06130d9ef72a"
+content_hash = "sha256:e924b513d9e793010d3d66bbeeac78b3b0869697f29ca819aa9a70bd2287fc66"
+size = 81295
+mtime_ms = 1791517011242
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/4c845c4a-b990-4301-889c-06130d9ef72a/de0fcd9c-ec4c-47d1-9e24-85c905692e62"
+storage_version_token = "1791517055794236"
+content_type = "text/html"
+
+[[outputs]]
+id = "UhanXNBCLvLjPVNYBc0pb"
+uri = "file://deliverables/Paket_Revisi_Blueprint_Gustafta_SIGAP.zip"
+type = "unspecified"
+title = "Paket Revisi untuk Dikembalikan ke Notion"
+description = "Lima dokumen Markdown, matriks 46 SOP, dokumen gabungan HTML/Markdown, serta inventaris dan hash sumber."
+logical_id = "c654e002-36b5-482d-92c6-3e82107ed361"
+content_hash = "sha256:91ca8392cf4c98cfb1b0c57effab3a03d952cfe2dcc6830b76cb13e8a8c7fb89"
+size = 91934
+mtime_ms = 1791517011249
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/c654e002-36b5-482d-92c6-3e82107ed361/28bb7e5d-012b-40f7-9bda-9da6e11fc632"
+storage_version_token = "1791517057040402"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "TwNodOKL9DT-Ss3jviu0a"
+uri = "file://deliverables/revisi-blueprint-notion/06-matriks-sop-revisi.csv"
+type = "table"
+title = "Matriks Revisi 46 SOP"
+description = "39 nomor SOP lama dipertahankan dan tujuh SOP baru dilengkapi: accountable manusia, langkah, gate, guardrail, eskalasi dan kriteria penerimaan."
+logical_id = "28bafbb1-b99b-48aa-853a-c4c63a07df77"
+content_hash = "sha256:90b6ade98a93140d60c4202bc34119242d535de312e2c831a0998505881f3f35"
+size = 56121
+mtime_ms = 1791517011233
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/28bafbb1-b99b-48aa-853a-c4c63a07df77/6e6ff54e-943a-4a93-9408-242d4f553dc6"
+storage_version_token = "1791517058316369"
+content_type = "text/csv"
+
+[[outputs]]
+id = "DKR9vhcesoVThszANGNVc"
+uri = "file://deliverables/gustafta-feature-kit/GUSTAFTA_FEATURE_KIT_UPLOAD.md"
+type = "text"
+title = "Gustafta Feature Kit — File Utama untuk Diunggah"
+description = "Spesifikasi mandiri 22 modul: pilih fitur, terapkan di aplikasi tujuan, lalu uji. Tidak membutuhkan koneksi Gustafta kecuali akses data pusat dipilih secara eksplisit."
+logical_id = "12fcddae-b203-4207-8f3b-501187f891df"
+content_hash = "sha256:47fe601c04f6b4d7731bce84d5ce7780d8ea1dceddc6c272d839765ed9cb56f7"
+size = 47360
+mtime_ms = 1791612351745
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/12fcddae-b203-4207-8f3b-501187f891df/c3ae3a6c-1f70-4cc4-9a36-7445e5dc0114"
+storage_version_token = "1791612392339458"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "TjPkhHbV41bnH7LWiLT4J"
+uri = "file://deliverables/GUSTAFTA_FEATURE_KIT_v1.zip"
+type = "unspecified"
+title = "Paket Lengkap Gustafta Feature Kit"
+description = "File utama, katalog JSON/CSV, template pilihan fitur, lima preset, instruksi untuk agen dan manifest integritas. Tanpa token, data pelanggan atau konfigurasi privat."
+logical_id = "676fd31b-c981-4c0e-b43d-98c2a8443b1f"
+content_hash = "sha256:5ea5f9c68aa4cd578a864c30474f72af825f46099d91faa1fb98403feacffae0"
+size = 30419
+mtime_ms = 1791612351749
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/676fd31b-c981-4c0e-b43d-98c2a8443b1f/31ac3ab0-7aa6-4721-92c8-3922305ce168"
+storage_version_token = "1791612393650572"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "uGYrMTztoc_r2z6xdsCPZ"
+uri = "file://docs/ecosystem-isolated-alarm-test.md"
+type = "text"
+title = "Panduan draf monitoring dan uji alarm terisolasi"
+description = "Instruksi secret status GitHub, setup fixture Healthchecks, workflow manual, dan pembuktian Email/Telegram tanpa mengganggu produksi."
+logical_id = "7c35d26b-6a93-484c-8c30-c6cd9aafe1a1"
+content_hash = "sha256:2204c6ed39803c3bab4cfb5cd176de35f7c55adb5f295217aa204edf24eef8eb"
+size = 7771
+mtime_ms = 1791820017961
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/7c35d26b-6a93-484c-8c30-c6cd9aafe1a1/5b598c08-214e-4558-a088-3bd613d072a2"
+storage_version_token = "1791820120925036"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "pmNHM-b6DywgRoP7ljIEU"
+uri = "file://docs/ecosystem-monitoring-pr-description.md"
+type = "text"
+title = "Deskripsi draft PR monitoring — siap disalin"
+description = "Monitoring manual-only, nama secret tanpa nilai, persyaratan pengujian Email/Telegram terisolasi, dan larangan merge atau aktivasi jadwal."
+logical_id = "482946fe-da0a-4e3d-9123-0f7fac7cc39c"
+content_hash = "sha256:52d53d8f1f191d9e513c3935209f9f5f992bf18d79f0e90922de637247b0bdcf"
+size = 3823
+mtime_ms = 1791820432149
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/482946fe-da0a-4e3d-9123-0f7fac7cc39c/3cfca8bc-cdfa-408c-ba62-4d8cfb63c0d2"
+storage_version_token = "1791820508148576"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "ELIM8E6gkWrdqGYizuHzF"
+uri = "file://generated-artifacts/monitoring-pr/ISOLATED-BOOTSTRAP-MANUAL.md"
+type = "text"
+title = "Panduan penerapan PR kecil uji alarm"
+description = "Lokasi unduhan patch, checksum, perintah Git aman, dan deskripsi Draft PR siap salin. Tidak mengaktifkan jadwal atau mengirim heartbeat."
+logical_id = "4db7b5de-24d3-4746-8a05-9a79170fd4c4"
+content_hash = "sha256:86973ae8f71d676a346203e058937ce7c6decc4202dc4fcaa01ef044bd546eaa"
+size = 3037
+mtime_ms = 1791822235781
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/4db7b5de-24d3-4746-8a05-9a79170fd4c4/91f10366-32cf-4bf9-8e99-a3aba8038abf"
+storage_version_token = "1791822246080927"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "r8RoL42gLynkbNs5Y216v"
+uri = "file://generated-artifacts/GUSTAFTA_BLUEPRINT_NOTION_REVISI_2026-10-13.zip"
+type = "unspecified"
+title = "Paket blueprint Notion — evaluasi dan revisi"
+description = "Blueprint revisi, 46 draf SOP, register Notion, formulir pilot, kontrak target SIGAP, sumber dan panduan penggunaan. Status draf; bukan implementasi live."
+logical_id = "0cff37d9-8e7a-41e0-a2e7-b18534806fa5"
+content_hash = "sha256:4593f835ce5a444cc1b892ceab3c9f9207b4045fca4443a209abf8da586840ee"
+size = 182013
+mtime_ms = 1791876547919
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/0cff37d9-8e7a-41e0-a2e7-b18534806fa5/04a6cdb2-bc65-40f0-96ba-886f81e4b4f2"
+storage_version_token = "1791876604352103"
+content_type = "application/octet-stream"
+
+[[outputs]]
+id = "hwHZRSpgGjUz018Ae1t6O"
+uri = "file://generated-artifacts/blueprint-notion-review/01_EVALUASI_DAN_PERUBAHAN.md"
+type = "text"
+title = "Laporan evaluasi — 32 temuan dan koreksi"
+description = "Temuan silang beserta lokasi sumber, koreksi, prioritas, dan batas bukti."
+logical_id = "c22a5c26-59ce-46e4-a6d1-7022791df5e0"
+content_hash = "sha256:f6e08201906578bdbf1ab2bed6beb0b8183201fb76f9ca8f051abe3e24d9e700"
+size = 7286
+mtime_ms = 1791875799703
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/c22a5c26-59ce-46e4-a6d1-7022791df5e0/2d0a3dbb-93e5-40ce-9d46-16a489e31206"
+storage_version_token = "1791876605743484"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "f0qjbZRTnGSD6yEXYlAuk"
+uri = "file://generated-artifacts/blueprint-notion-review/REGISTER_SOP_REVISI.csv"
+type = "table"
+title = "Register 46 SOP untuk impor Notion"
+description = "39 nomor SOP lama dipertahankan, tujuh usulan ditambahkan; memuat pemilik proses, gate manusia, output, guardrail, fase dan status Draft."
+logical_id = "898a8e36-61e9-4fc6-bafb-54afb1aaea7e"
+content_hash = "sha256:b600842408c4854cad3390170552948fc5ab169db356227d44bc24448d17a223"
+size = 36639
+mtime_ms = 1791876547889
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/898a8e36-61e9-4fc6-bafb-54afb1aaea7e/b3902910-8de8-42a6-9260-3282d8bb8af5"
+storage_version_token = "1791876607206630"
+content_type = "text/csv"
+
+[[outputs]]
+id = "2PyXVSb6rEwF5tI-olAfi"
+uri = "file://generated-artifacts/blueprint-sbu-review/LAPORAN_PEMERIKSAAN_BLUEPRINT_SBU.html"
+type = "html"
+title = "Laporan pemeriksaan blueprint SBU"
+description = "Memo koreksi, sumber resmi, cuplikan bukti, katalog 77 kode, dan register 257 klaim. Memuat unduhan CSV serta batas pemeriksaan."
+logical_id = "1828606c-4595-4bbc-8535-4db2608e3615"
+content_hash = "sha256:904e5a1e9e366421290ef068c64e38cfecfcb43e5adc0c1ef9c38ec4c64271f9"
+size = 331712
+mtime_ms = 1792293676220
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/1828606c-4595-4bbc-8535-4db2608e3615/d3bc4afc-dd2e-4bad-89d3-402710f588ea"
+storage_version_token = "1792293714199408"
+content_type = "text/html"
+
+[[outputs]]
+id = "nlXPeDFO6B5158JrNflpI"
+uri = "file://docs/blueprint-sbu-review/REGISTER_KLAIM.csv"
+type = "table"
+title = "Register 257 klaim blueprint"
+description = "136 verified, 103 corrected, 18 unresolved; status diberikan per klaim, bukan pengesahan perusahaan."
+logical_id = "c90801a3-981d-442d-932f-6aae82d0cbee"
+content_hash = "sha256:10fd7dc1a76a248c21dc760e1d53e0795ad944184abdf969dfc28dfbf7c0993e"
+size = 43564
+mtime_ms = 1792293563589
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/c90801a3-981d-442d-932f-6aae82d0cbee/c7bd9917-3f59-402a-97a6-3e2867f6f7e9"
+storage_version_token = "1792293715522060"
+content_type = "text/csv"

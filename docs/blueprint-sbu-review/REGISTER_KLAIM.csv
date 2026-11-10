@@ -1,0 +1,258 @@
+﻿id,sumber_klaim,dimensi,status,hasil_dan_koreksi,rujukan
+BG001-KODE,K:52,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG001-NAMA,K:52,nama,verified,Konstruksi Gedung Hunian,SP6 Lampiran I A.1; kode BG001; segmen ekstraksi 15 (bukan nomor halaman); lihat R-PAGINASI
+BG001-KUALIFIKASI,K:52,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG002-KODE,K:53,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG002-NAMA,K:53,nama,verified,Konstruksi Gedung Perkantoran,SP6 Lampiran I A.1; kode BG002; segmen ekstraksi 19 (bukan nomor halaman); lihat R-PAGINASI
+BG002-KUALIFIKASI,K:53,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG003-KODE,K:54,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG003-NAMA,K:54,nama,verified,Konstruksi Gedung Industri,SP6 Lampiran I A.1; kode BG003; segmen ekstraksi 23 (bukan nomor halaman); lihat R-PAGINASI
+BG003-KUALIFIKASI,K:54,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 18; lampiran hlm 9
+BG004-KODE,K:55,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG004-NAMA,K:55,nama,verified,Konstruksi Gedung Perbelanjaan,SP6 Lampiran I A.1; kode BG004; segmen ekstraksi 27 (bukan nomor halaman); lihat R-PAGINASI
+BG004-KUALIFIKASI,K:55,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG005-KODE,K:56,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG005-NAMA,K:56,nama,verified,Konstruksi Gedung Kesehatan,SP6 Lampiran I A.1; kode BG005; segmen ekstraksi 31 (bukan nomor halaman); lihat R-PAGINASI
+BG005-KUALIFIKASI,K:56,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG006-KODE,K:57,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG006-NAMA,K:57,nama,verified,Konstruksi Gedung Pendidikan,SP6 Lampiran I A.1; kode BG006; segmen ekstraksi 35 (bukan nomor halaman); lihat R-PAGINASI
+BG006-KUALIFIKASI,K:57,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG007-KODE,K:58,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG007-NAMA,K:58,nama,verified,Konstruksi Gedung Penginapan,SP6 Lampiran I A.1; kode BG007; segmen ekstraksi 39 (bukan nomor halaman); lihat R-PAGINASI
+BG007-KUALIFIKASI,K:58,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG008-KODE,K:59,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG008-NAMA,K:59,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BG008; segmen ekstraksi 43 (bukan nomor halaman); lihat R-PAGINASI
+BG008-KUALIFIKASI,K:59,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG009-KODE,K:60,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BG009-NAMA,K:60,nama,verified,Konstruksi Gedung Lainnya,SP6 Lampiran I A.1; kode BG009; segmen ekstraksi 47 (bukan nomor halaman); lihat R-PAGINASI
+BG009-KUALIFIKASI,K:60,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS001-KODE,K:66,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS001-NAMA,K:66,nama,verified,Konstruksi Bangunan Sipil Jalan,SP6 Lampiran I A.1; kode BS001; segmen ekstraksi 53 (bukan nomor halaman); lihat R-PAGINASI
+BS001-KUALIFIKASI,K:66,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS002-KODE,K:67,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS002-NAMA,K:67,nama,verified,"Bangunan Sipil Jembatan, Jalan Layang, Fly Over, dan Underpass",SP6 Lampiran I A.1; kode BS002; segmen ekstraksi 57 (bukan nomor halaman); lihat R-PAGINASI
+BS002-KUALIFIKASI,K:67,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS003-KODE,K:68,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS003-NAMA,K:68,nama,verified,Konstruksi Jalan Rel,SP6 Lampiran I A.1; kode BS003; segmen ekstraksi 61 (bukan nomor halaman); lihat R-PAGINASI
+BS003-KUALIFIKASI,K:68,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS004-KODE,K:69,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS004-NAMA,K:69,nama,verified,Konstruksi Jaringan Irigasi dan Drainase,SP6 Lampiran I A.1; kode BS004; segmen ekstraksi 67 (bukan nomor halaman); lihat R-PAGINASI
+BS004-KUALIFIKASI,K:69,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS005-KODE,K:70,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS005-NAMA,K:70,nama,verified,Konstruksi Bangunan Sipil Pengolahan Air Bersih,SP6 Lampiran I A.1; kode BS005; segmen ekstraksi 70 (bukan nomor halaman); lihat R-PAGINASI
+BS005-KUALIFIKASI,K:70,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS006-KODE,K:71,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS006-NAMA,K:71,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BS006; segmen ekstraksi 75 (bukan nomor halaman); lihat R-PAGINASI
+BS006-KUALIFIKASI,K:71,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS007-KODE,K:72,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS007-NAMA,K:72,nama,verified,Konstruksi Bangunan Sipil Elektrikal,SP6 Lampiran I A.1; kode BS007; segmen ekstraksi 79 (bukan nomor halaman); lihat R-PAGINASI
+BS007-KUALIFIKASI,K:72,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS008-KODE,K:73,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS008-NAMA,K:73,nama,verified,Konstruksi Bangunan Sipil Telekomunikasi untuk Prasarana Transportasi,SP6 Lampiran I A.1; kode BS008; segmen ekstraksi 83 (bukan nomor halaman); lihat R-PAGINASI
+BS008-KUALIFIKASI,K:73,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19; lampiran hlm 10
+BS009-KODE,K:74,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 19–20; lampiran hlm 10–11
+BS009-NAMA,K:74,nama,verified,Konstruksi Sentral Telekomunikasi,SP6 Lampiran I A.1; kode BS009; segmen ekstraksi 86 (bukan nomor halaman); lihat R-PAGINASI
+BS009-KUALIFIKASI,K:74,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 19–20; lampiran hlm 10–11
+BS010-KODE,K:75,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS010-NAMA,K:75,nama,verified,Konstruksi Bangunan Prasarana Sumber Daya Air,SP6 Lampiran I A.1; kode BS010; segmen ekstraksi 95 (bukan nomor halaman); lihat R-PAGINASI
+BS010-KUALIFIKASI,K:75,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS011-KODE,K:76,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS011-NAMA,K:76,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BS011; segmen ekstraksi 101 (bukan nomor halaman); lihat R-PAGINASI
+BS011-KUALIFIKASI,K:76,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS012-KODE,K:77,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS012-NAMA,K:77,nama,verified,Konstruksi Bangunan Pelabuhan Perikanan,SP6 Lampiran I A.1; kode BS012; segmen ekstraksi 105 (bukan nomor halaman); lihat R-PAGINASI
+BS012-KUALIFIKASI,K:77,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS013-KODE,K:78,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS013-NAMA,K:78,nama,verified,Konstruksi Bangunan Sipil Minyak dan Gas Bumi,SP6 Lampiran I A.1; kode BS013; segmen ekstraksi 111 (bukan nomor halaman); lihat R-PAGINASI
+BS013-KUALIFIKASI,K:78,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS014-KODE,K:79,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS014-NAMA,K:79,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BS014; segmen ekstraksi 115 (bukan nomor halaman); lihat R-PAGINASI
+BS014-KUALIFIKASI,K:79,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS015-KODE,K:80,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS015-NAMA,K:80,nama,verified,Konstruksi Bangunan Sipil Panas Bumi,SP6 Lampiran I A.1; kode BS015; segmen ekstraksi 119 (bukan nomor halaman); lihat R-PAGINASI
+BS015-KUALIFIKASI,K:80,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS016-KODE,K:81,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS016-NAMA,K:81,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BS016; segmen ekstraksi 123 (bukan nomor halaman); lihat R-PAGINASI
+BS016-KUALIFIKASI,K:81,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS017-KODE,K:82,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS017-NAMA,K:82,nama,verified,Konstruksi Bangunan Sipil Lainnya Ytdl,SP6 Lampiran I A.1; kode BS017; segmen ekstraksi 127 (bukan nomor halaman); lihat R-PAGINASI
+BS017-KUALIFIKASI,K:82,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS018-KODE,K:83,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS018-NAMA,K:83,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode BS018; segmen ekstraksi 137 (bukan nomor halaman); lihat R-PAGINASI
+BS018-KUALIFIKASI,K:83,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS019-KODE,K:84,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS019-NAMA,K:84,nama,verified,Konstruksi Bangunan Sipil Fasilitas Militer dan Peluncuran Satelit,SP6 Lampiran I A.1; kode BS019; segmen ekstraksi 141 (bukan nomor halaman); lihat R-PAGINASI
+BS019-KUALIFIKASI,K:84,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS020-KODE,K:85,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+BS020-NAMA,K:85,nama,verified,"Konstruksi Jaringan Irigasi, Komunikasi, dan Limbah Lainnya",SP6 Lampiran I A.1; kode BS020; segmen ekstraksi 92 (bukan nomor halaman); lihat R-PAGINASI
+BS020-KUALIFIKASI,K:85,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN001-KODE,K:91,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN001-NAMA,K:91,nama,verified,Instalasi Mekanikal,SP6 Lampiran I A.1; kode IN001; segmen ekstraksi 182 (bukan nomor halaman); lihat R-PAGINASI
+IN001-KUALIFIKASI,K:91,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN002-KODE,K:92,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN002-NAMA,K:92,nama,verified,Instalasi Telekomunikasi,SP6 Lampiran I A.1; kode IN002; segmen ekstraksi 155 (bukan nomor halaman); lihat R-PAGINASI
+IN002-KUALIFIKASI,K:92,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN003-KODE,K:93,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN003-NAMA,K:93,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode IN003; segmen ekstraksi 188 (bukan nomor halaman); lihat R-PAGINASI
+IN003-KUALIFIKASI,K:93,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN004-KODE,K:94,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN004-NAMA,K:94,nama,verified,Instalasi Minyak dan Gas,SP6 Lampiran I A.1; kode IN004; segmen ekstraksi 176 (bukan nomor halaman); lihat R-PAGINASI
+IN004-KUALIFIKASI,K:94,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 20; lampiran hlm 11
+IN005-KODE,K:95,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN005-NAMA,K:95,nama,verified,"Instalasi Konstruksi Navigasi Laut, Sungai, dan Udara",SP6 Lampiran I A.1; kode IN005; segmen ekstraksi 161 (bukan nomor halaman); lihat R-PAGINASI
+IN005-KUALIFIKASI,K:95,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN006-KODE,K:96,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN006-NAMA,K:96,nama,verified,Instalasi Elektronika,SP6 Lampiran I A.1; kode IN006; segmen ekstraksi 158 (bukan nomor halaman); lihat R-PAGINASI
+IN006-KUALIFIKASI,K:96,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN007-KODE,K:97,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN007-NAMA,K:97,nama,verified,Instalasi Saluran Air (Plambing),SP6 Lampiran I A.1; kode IN007; segmen ekstraksi 170 (bukan nomor halaman); lihat R-PAGINASI
+IN007-KUALIFIKASI,K:97,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN008-KODE,K:98,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN008-NAMA,K:98,nama,verified,Instalasi Pendingin dan Ventilasi Udara,SP6 Lampiran I A.1; kode IN008; segmen ekstraksi 179 (bukan nomor halaman); lihat R-PAGINASI
+IN008-KUALIFIKASI,K:98,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN010-KODE,K:99,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN010-NAMA,K:99,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode IN010; segmen ekstraksi 188 (bukan nomor halaman); lihat R-PAGINASI
+IN010-KUALIFIKASI,K:99,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN011-KODE,"K:41,91–99 (belum memuat kode ini)",kode,corrected,Tambahkan bila mengklaim cakupan lengkap; jangan klaim dimiliki tenant,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN011-NAMA,"K:41,91–99 (belum memuat kode ini)",nama,corrected,Instalasi Sinyal dan Rambu-Rambu Jalan Raya,SP6 Lampiran I A.1; kode IN011; segmen ekstraksi 167 (bukan nomor halaman); lihat R-PAGINASI
+IN011-KUALIFIKASI,"K:41,91–99 (belum memuat kode ini)",kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN012-KODE,"K:41,91–99 (belum memuat kode ini)",kode,corrected,Tambahkan bila mengklaim cakupan lengkap; jangan klaim dimiliki tenant,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN012-NAMA,"K:41,91–99 (belum memuat kode ini)",nama,corrected,Instalasi Sinyal dan Telekomunikasi Kereta Api,SP6 Lampiran I A.1; kode IN012; segmen ekstraksi 164 (bukan nomor halaman); lihat R-PAGINASI
+IN012-KUALIFIKASI,"K:41,91–99 (belum memuat kode ini)",kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN013-KODE,"K:41,91–99 (belum memuat kode ini)",kode,corrected,Tambahkan bila mengklaim cakupan lengkap; jangan klaim dimiliki tenant,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN013-NAMA,"K:41,91–99 (belum memuat kode ini)",nama,corrected,Instalasi Pemanas dan Geotermal,SP6 Lampiran I A.1; kode IN013; segmen ekstraksi 173 (bukan nomor halaman); lihat R-PAGINASI
+IN013-KUALIFIKASI,"K:41,91–99 (belum memuat kode ini)",kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN014-KODE,"K:41,91–99 (belum memuat kode ini)",kode,corrected,Tambahkan bila mengklaim cakupan lengkap; jangan klaim dimiliki tenant,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+IN014-NAMA,"K:41,91–99 (belum memuat kode ini)",nama,corrected,"Instalasi Meteorologi, Klimatologi dan Geofisika",SP6 Lampiran I A.1; kode IN014; segmen ekstraksi 185 (bukan nomor halaman); lihat R-PAGINASI
+IN014-KUALIFIKASI,"K:41,91–99 (belum memuat kode ini)",kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK001-KODE,K:100,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK001-NAMA,K:100,nama,verified,Pondasi Konstruksi,SP6 Lampiran I A.1; kode KK001; segmen ekstraksi 210 (bukan nomor halaman); lihat R-PAGINASI
+KK001-KUALIFIKASI,K:100,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK002-KODE,K:101,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK002-NAMA,K:101,nama,verified,Konstruksi Reservoir Pembangkit Listrik Tenaga Air,SP6 Lampiran I A.1; kode KK002; segmen ekstraksi 130 (bukan nomor halaman); lihat R-PAGINASI
+KK002-KUALIFIKASI,K:101,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK003-KODE,K:102,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK003-NAMA,K:102,nama,corrected,"Konstruksi Intake, Control Gate, Penstock dan Outflow Pembangkit Listrik Tenaga Air",SP6 Lampiran I A.1; kode KK003; segmen ekstraksi 130 (bukan nomor halaman); lihat R-PAGINASI
+KK003-KUALIFIKASI,K:102,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK004-KODE,K:103,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK004-NAMA,K:103,nama,verified,Konstruksi Pelindung Pantai,SP6 Lampiran I A.1; kode KK004; segmen ekstraksi 134 (bukan nomor halaman); lihat R-PAGINASI
+KK004-KUALIFIKASI,K:103,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK005-KODE,K:104,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK005-NAMA,K:104,nama,verified,Pekerjaan Lapis Perkerasan Beton (Rigid Pavement),SP6 Lampiran I A.1; kode KK005; segmen ekstraksi 224 (bukan nomor halaman); lihat R-PAGINASI
+KK005-KUALIFIKASI,K:104,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK006-KODE,K:105,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK006-NAMA,K:105,nama,verified,"Pekerjaan Konstruksi Kedap Air, Minyak, dan Gas",SP6 Lampiran I A.1; kode KK006; segmen ekstraksi 224 (bukan nomor halaman); lihat R-PAGINASI
+KK006-KUALIFIKASI,K:105,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 21; lampiran hlm 12
+KK007-KODE,K:106,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK007-NAMA,K:106,nama,verified,Pekerjaan Konstruksi Kedap Suara,SP6 Lampiran I A.1; kode KK007; segmen ekstraksi 195 (bukan nomor halaman); lihat R-PAGINASI
+KK007-KUALIFIKASI,K:106,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK008-KODE,K:107,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK008-NAMA,K:107,nama,verified,Perkerasan Aspal,SP6 Lampiran I A.1; kode KK008; segmen ekstraksi 224 (bukan nomor halaman); lihat R-PAGINASI
+KK008-KUALIFIKASI,K:107,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK009-KODE,K:108,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK009-NAMA,K:108,nama,verified,Perkerasan Berbutir,SP6 Lampiran I A.1; kode KK009; segmen ekstraksi 224 (bukan nomor halaman); lihat R-PAGINASI
+KK009-KUALIFIKASI,K:108,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK010-KODE,K:109,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK010-NAMA,K:109,nama,verified,Pengeboran dan Injeksi Semen Bertekanan (Drilling and Grouting),SP6 Lampiran I A.1; kode KK010; segmen ekstraksi 224 (bukan nomor halaman); lihat R-PAGINASI
+KK010-KUALIFIKASI,K:109,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK011-KODE,K:110,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK011-NAMA,K:110,nama,verified,Pemasangan Rangka dan Atap/Roofcovering,SP6 Lampiran I A.1; kode KK011; segmen ekstraksi 216 (bukan nomor halaman); lihat R-PAGINASI
+KK011-KUALIFIKASI,K:110,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK012-KODE,K:111,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK012-NAMA,K:111,nama,verified,Pekerjaan Struktur Beton,SP6 Lampiran I A.1; kode KK012; segmen ekstraksi 225 (bukan nomor halaman); lihat R-PAGINASI
+KK012-KUALIFIKASI,K:111,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK013-KODE,K:112,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK013-NAMA,K:112,nama,verified,Konstruksi Struktur Beton Pascatarik (Post Tensioned),SP6 Lampiran I A.1; kode KK013; segmen ekstraksi 225 (bukan nomor halaman); lihat R-PAGINASI
+KK013-KUALIFIKASI,K:112,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK014-KODE,K:113,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK014-NAMA,K:113,nama,verified,Konstruksi Terowongan,SP6 Lampiran I A.1; kode KK014; segmen ekstraksi 64 (bukan nomor halaman); lihat R-PAGINASI
+KK014-KUALIFIKASI,K:113,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK015-KODE,K:114,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK015-NAMA,K:114,nama,verified,"Pekerjaan Konstruksi Tahan Api (Tanur, Anneling, Flare, atau Incenerator)",SP6 Lampiran I A.1; kode KK015; segmen ekstraksi 225 (bukan nomor halaman); lihat R-PAGINASI
+KK015-KUALIFIKASI,K:114,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK016-KODE,K:115,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KK016-NAMA,K:115,nama,verified,Pemasangan Kerangka Baja,SP6 Lampiran I A.1; kode KK016; segmen ekstraksi 218 (bukan nomor halaman); lihat R-PAGINASI
+KK016-KUALIFIKASI,K:115,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KP001-KODE,K:116,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KP001-NAMA,K:116,nama,verified,Pekerjaan Konstruksi Prapabrikasi Bangunan Gedung,SP6 Lampiran I A.1; kode KP001; segmen ekstraksi 50 (bukan nomor halaman); lihat R-PAGINASI
+KP001-KUALIFIKASI,K:116,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KP002-KODE,K:117,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+KP002-NAMA,K:117,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode KP002; segmen ekstraksi 144 (bukan nomor halaman); lihat R-PAGINASI
+KP002-KUALIFIKASI,K:117,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+PB001-KODE,K:119,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+PB001-NAMA,K:119,nama,corrected,Pengerjaan Pemasangan Kaca dan Alumunium,SP6 Lampiran I A.1; kode PB001; segmen ekstraksi 192 (bukan nomor halaman); lihat R-PAGINASI
+PB001-KUALIFIKASI,K:119,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+PB003-KODE,K:120,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+PB003-NAMA,K:120,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode PB003; segmen ekstraksi 195 (bukan nomor halaman); lihat R-PAGINASI
+PB003-KUALIFIKASI,K:120,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 22; lampiran hlm 13
+PB004-KODE,K:121,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB004-NAMA,K:121,nama,verified,Dekorasi Interior,SP6 Lampiran I A.1; kode PB004; segmen ekstraksi 201 (bukan nomor halaman); lihat R-PAGINASI
+PB004-KUALIFIKASI,K:121,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB005-KODE,K:122,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB005-NAMA,K:122,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode PB005; segmen ekstraksi 203 (bukan nomor halaman); lihat R-PAGINASI
+PB005-KUALIFIKASI,K:122,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB007-KODE,K:123,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB007-NAMA,K:123,nama,verified,Pengecatan,SP6 Lampiran I A.1; kode PB007; segmen ekstraksi 198 (bukan nomor halaman); lihat R-PAGINASI
+PB007-KUALIFIKASI,K:123,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB009-KODE,K:124,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB009-NAMA,K:124,nama,verified,Pembersihan dan Perapihan Bangunan Gedung dan/atau Bangunan Sipil,SP6 Lampiran I A.1; kode PB009; segmen ekstraksi 207 (bukan nomor halaman); lihat R-PAGINASI
+PB009-KUALIFIKASI,K:124,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB010-KODE,K:125,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB010-NAMA,K:125,nama,corrected,"Pekerjaan Lansekap, Pertamanan, dan Penanaman Vegetasi",SP6 Lampiran I A.1; kode PB010; segmen ekstraksi 205 (bukan nomor halaman); lihat R-PAGINASI
+PB010-KUALIFIKASI,K:125,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB011-KODE,K:126,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PB011-NAMA,K:126,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode PB011; segmen ekstraksi 229 (bukan nomor halaman); lihat R-PAGINASI
+PB011-KUALIFIKASI,K:126,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PA001-KODE,K:118,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PA001-NAMA,K:118,nama,corrected,Penyewaan Peralatan,SP6 Lampiran I A.1; kode PA001; segmen ekstraksi 221 (bukan nomor halaman); lihat R-PAGINASI
+PA001-KUALIFIKASI,K:118,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL001-KODE,K:127,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL001-NAMA,K:127,nama,verified,Pembongkaran Bangunan,SP6 Lampiran I A.1; kode PL001; segmen ekstraksi 147 (bukan nomor halaman); lihat R-PAGINASI
+PL001-KUALIFIKASI,K:127,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL002-KODE,K:128,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL002-NAMA,K:128,nama,verified,Pengerukan,SP6 Lampiran I A.1; kode PL002; segmen ekstraksi 108 (bukan nomor halaman); lihat R-PAGINASI
+PL002-KUALIFIKASI,K:128,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL003-KODE,K:129,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL003-NAMA,K:129,nama,verified,Penyiapan Lahan Konstruksi,SP6 Lampiran I A.1; kode PL003; segmen ekstraksi 150 (bukan nomor halaman); lihat R-PAGINASI
+PL003-KUALIFIKASI,K:129,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL004-KODE,K:130,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL004-NAMA,K:130,nama,verified,Pekerjaan Tanah,SP6 Lampiran I A.1; kode PL004; segmen ekstraksi 151 (bukan nomor halaman); lihat R-PAGINASI
+PL004-KUALIFIKASI,K:130,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL005-KODE,K:131,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL005-NAMA,K:131,nama,unresolved,(belum dipastikan; jangan substitusi judul KBLI),SP6 Lampiran I A.1; kode PL005; segmen ekstraksi 89 (bukan nomor halaman); lihat R-PAGINASI
+PL005-KUALIFIKASI,K:131,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL006-KODE,K:132,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL006-NAMA,K:132,nama,verified,Pelaksanaan Pekerjaan Utilitas,SP6 Lampiran I A.1; kode PL006; segmen ekstraksi 151 (bukan nomor halaman); lihat R-PAGINASI
+PL006-KUALIFIKASI,K:132,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23; lampiran hlm 14
+PL007-KODE,K:133,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 23–24; lampiran hlm 14–15
+PL007-NAMA,K:133,nama,verified,Survei Penyelidikan Lapangan,SP6 Lampiran I A.1; kode PL007; segmen ekstraksi 151 (bukan nomor halaman); lihat R-PAGINASI
+PL007-KUALIFIKASI,K:133,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 23–24; lampiran hlm 14–15
+PL008-KODE,K:134,kode,verified,Kode ada dalam tabel resmi,S281 Lampiran 2.1.5.b; PDF 24; lampiran hlm 15
+PL008-NAMA,K:134,nama,verified,Pemasangan Perancah (Steiger),SP6 Lampiran I A.1; kode PL008; segmen ekstraksi 213 (bukan nomor halaman); lihat R-PAGINASI
+PL008-KUALIFIKASI,K:134,kualifikasi,corrected,"Lengkapi rincian, bukan otomatis semua dimiliki: BUJKN: Kecil 1, Kecil 2, Kecil 3, Menengah, Besar; BUJK PMA: Besar; KPBUJKA: Besar",S281 Lampiran 2.1.5.b; PDF 24; lampiran hlm 15
+R-JUMLAH-SUMBER,"K:39–46,52–149",jumlah,verified,"73 kode unik adalah jumlah daftar sumber, bukan jumlah keseluruhan norma atau SBU tenant","ZIP K, tabel rincian; MANIFEST_SUMBER.csv"
+R-JUMLAH-NORMA,K:35–46; S:459,kelengkapan,corrected,"Tabel 8 kelompok memuat 77 kode: IN 13, bukan 9; empat tambahan IN011–IN014",S281 PDF 18–24; Lampiran 2.1.5.b hlm 9–15
+R-PA-SIGAP,S:459,kelompok,corrected,Tambahkan PA dalam kelompok; kekurangan PA tidak menghapus PA001 dari sumber K,"K:44, PA001; S281 PDF 23, Lampiran 14"
+R-UU-PAYUNG,"K:19,30",dasar hukum,verified,UU 2/2017 berjudul Jasa Konstruksi; awal berlaku 12 Januari 2017,SUU2 metadata resmi; PDF 1; definisi PDF 3
+R-UU-PERUBAHAN,K:30,hubungan perubahan,corrected,Tulis sebagaimana diubah UU 6/2023; naskah 2017 tidak otomatis naskah konsolidasi terbaru,SUU2 metadata status; S281 PDF 3/Mengingat; SP6 Mengingat angka 4
+R-PP-JUDUL,"K:19,31",dasar hukum,verified,PP 28/2025 = Penyelenggaraan Perizinan Berusaha Berbasis Risiko,SPP28 PDF awal 1; Pasal 5
+R-PP-CABUT,K:31,hubungan perubahan,verified,"PP 28/2025 mencabut PP 5/2021, berlaku 5 Juni 2025","SPP28 Pasal 550 b dan 552, hlm cetak 309; pengundangan hlm 310"
+R-PERMEN-JUDUL,K:32,judul,corrected,Gunakan judul lengkap termasuk Pelaksanaan Pengawasan dan Pengenaan Sanksi,SP6 halaman judul; SUMBER_DAN_BATAS_BUKTI.md
+R-PERMEN-CABUT,K:32,hubungan perubahan,verified,Permen PU 6/2025 mencabut Permen PUPR 6/2021; 8/2022 tetap sepanjang tidak bertentangan,SP6 Pasal 23 b dan 24
+R-PERMEN-EFEKTIF,K:28–33,tanggal efektif,corrected,Penetapan 22 Desember 2025; berlaku/pengundangan 30 Desember 2025,SP6 Pasal 25 dan metadata JDIH BPK; tanggal OCR rusak tidak digunakan
+R-281-IDENTITAS,K:33,dasar hukum,verified,"281/KPTS/DK/2026 tentang Penetapan Standar Skema Sertifikasi BUJK, bukan skema SKK",S281 PDF 3–4; Diktum KESATU–KETIGA
+R-281-CABUT,K:33,hubungan perubahan,verified,Mencabut 37/KPTS/DK/2025,"S281 PDF 4, Diktum KELIMA"
+R-281-EFEKTIF,K:28–33,tanggal efektif,corrected,Berlaku 26 Agustus 2026 sejak ditetapkan; beda dari dimulainya layanan SIJK,"S281 PDF 5 (visual), Diktum KEENAM; PDF 1 surat pengantar"
+R-LSBU-TRANSISI,K:28–33,transisi,corrected,Penyesuaian skema/implementasi LSBU paling lambat 6 bulan sejak penetapan; bukan pemicu tenggat konversi SBU tenant,S281 PDF 4 Diktum KEEMPAT; SP6 Pasal 21(2)
+R-SIJK-SURAT,"K:8,28–35",operasional,unresolved,Belum memperoleh surat pemicu Pasal 20(2); tidak menyatakan surat itu tidak ada dan tidak menetapkan tanggal operasional,SP6 Pasal 20–21; S281 PDF 1 angka 2
+R-KONVERSI,K:28–35,transisi,corrected,"Konversi 6 bulan sejak surat Pasal 20(2), tanpa asesmen; masa berlaku mengikuti SBU lama; ada ketentuan pemilihan/kontrak berjalan",SP6 Pasal 21(2)–(7)
+R-SPESIALIS,"K:41–46,87–149",kualifikasi,corrected,"Spesialis tetap berkualifikasi; PMA/KPBUJKA besar, satu BUJK satu kualifikasi/subkualifikasi","S281 PDF 15, Lampiran 2.1.3 hlm 6; PDF 18–24"
+R-NAMA-VS-KBLI,K:50–149,nomenklatur,corrected,Pisahkan nama subklasifikasi SP6 dari JUDUL KBLI S281; kesamaan kode tidak membenarkan substitusi nama,"S281 PDF 16, 18–24; SP6 Lampiran I A.1"
+R-PA-OPERATOR,"K:44,PA001",ruang lingkup,corrected,PA001 = Penyewaan Peralatan dengan operator; tanpa operator disebut kelompok 77393 dalam SP6,SP6 Lampiran I A.1 KBLI 43905; S281 PDF 23/lampiran 14
+R-NIB-SBU,K:20,perizinan,corrected,"Pisahkan NIB, Sertifikat Standar dan SBU; daftar kebutuhan bukan bukti pemenuhan",S281 PDF 10/Lampiran 1; SP6 Pasal 5
+R-SKK,K:20,kompetensi,corrected,"SKK adalah bukti kompetensi tenaga kerja, bukan izin usaha atau kepemilikan seluruh kode SBU; 281 tidak langsung mengatur semua penerbitan SKK/SKKNI",SUU2 PDF 3 Pasal 1 angka 11–13 (historis); SP6 Pasal 5(8)–(9); S281 PDF 4
+R-PBJ,"K:22,28–33",pengadaan,corrected,"Pisahkan PBJP: Perpres 16/2018 sebagaimana diubah 12/2021 dan 46/2025 (perubahan kedua, bukan pencabutan seluruh 16/2018)","SPBJ metadata LKPP, Riwayat perubahan; 30 April 2025"
+R-TENANT,"K:8,16–20,35; S:373",kepemilikan,unresolved,Tidak ada pemeriksaan dokumen perusahaan; katalog bukan SBU tenant; kategori BUJKN/PMA/KPBUJKA aktual tidak ditetapkan,"K dan S adalah rancangan; S281 membatasi norma, bukan data tenant"
+R-ISO-SMKK,K:20,pemenuhan,unresolved,SMKK dan ISO 9001/14001/45001 tidak diverifikasi; jangan tampilkan sebagai sertifikat yang telah dimiliki atau syarat identik semua paket,Tidak ada bukti perusahaan/paket yang diperiksa
+R-PAGINASI,Seluruh kutipan nama SP6,halaman,unresolved,Nomor segmen ekstraksi bukan nomor halaman PDF/cetak. Paginasi tepat dan nama tabel rusak memerlukan salinan yang dapat dirender; jangan mengarang,SP6 segmen 43 menunjukkan cetak 45; segmen 123 menunjukkan cetak 125
+R-AUTENTIKASI,Salinan S281,asal-usul,unresolved,"Isi salinan diperiksa, tetapi kesamaan byte unduhan instansi dan validitas tanda tangan elektronik belum dibuktikan",S281 lokal dengan hash; tautan s.pu.go.id menolak akses

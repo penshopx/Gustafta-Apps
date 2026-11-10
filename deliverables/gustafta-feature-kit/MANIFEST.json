@@ -1,0 +1,38 @@
+{
+  "kit_version": "1.0.0",
+  "artifacts": [
+    {
+      "path": "GUSTAFTA_FEATURE_KIT_UPLOAD.md",
+      "bytes": 47360,
+      "sha256": "47fe601c04f6b4d7731bce84d5ce7780d8ea1dceddc6c272d839765ed9cb56f7"
+    },
+    {
+      "path": "PILIHAN_FITUR_TEMPLATE.json",
+      "bytes": 1032,
+      "sha256": "7030e55c91a69b7abfd09e20a563d46c37dd4b787f403b84d9c59bc5c977fa87"
+    },
+    {
+      "path": "KATALOG_FITUR.json",
+      "bytes": 34420,
+      "sha256": "437982d5a59e3a605e276a568ced1f4d914269d1e89d4a5bce69d68e6bf81018"
+    },
+    {
+      "path": "KATALOG_FITUR.csv",
+      "bytes": 5971,
+      "sha256": "afca92a9c5efb250660b2d5e6794d5a7da694f2c711c9fe2c4f7a963d2a814e2"
+    },
+    {
+      "path": "PROMPT_UNTUK_AGEN.txt",
+      "bytes": 971,
+      "sha256": "2e7c25c1884db9fa69d98baf052a8abee86264ed47466dd5fa6b212009cb73fa"
+    },
+    {
+      "path": "README_MULAI_DI_SINI.md",
+      "bytes": 1399,
+      "sha256": "b0ad338ec08b2dfc016dff290d4194d5ae5e6237a832de140a9047c731748692"
+    }
+  ],
+  "evidence": "Static source references checked; runtime and live integration not tested",
+  "module_count": 22,
+  "preset_count": 5
+}

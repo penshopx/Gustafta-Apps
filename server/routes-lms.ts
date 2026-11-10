@@ -1,0 +1,1730 @@
+import type { Express } from "express";
+import { db } from "./db";
+import { lmsCourses, lmsLessons, lmsEnrollments, lmsLessonProgress, lmsCertificates } from "@shared/schema";
+import { eq, and, asc, desc, sql, count, inArray } from "drizzle-orm";
+import { sendEmail } from "./lib/email";
+
+function generateCertCode(): string {
+  const year = new Date().getFullYear();
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return `GUSTAFTA-${year}-${code}`;
+}
+
+/**
+ * Mask a phone number for public display on certificates:
+ * keep the first 4 and last 3 digits, mask the middle.
+ * Returns "" when the phone is missing or too short to mask meaningfully.
+ */
+export function maskPhone(phone: unknown): string {
+  const digits = String(phone ?? "").replace(/\D/g, "");
+  if (digits.length < 8) return "";
+  return `${digits.slice(0, 4)}****${digits.slice(-3)}`;
+}
+
+/**
+ * Resolve the student's display name used on the certificate verify page AND
+ * the congratulations email, with the fallback chain:
+ *   first_name+last_name → display_name → email prefix → masked phone → "Peserta"
+ * Exported so tests can assert the ordering without hitting the DB/email path.
+ */
+export function resolveStudentName(row: {
+  first_name?: unknown;
+  last_name?: unknown;
+  display_name?: unknown;
+  email?: unknown;
+  phone?: unknown;
+} | undefined | null): string {
+  const fullName = [row?.first_name, row?.last_name].filter(Boolean).join(" ").trim();
+  const emailPrefix = String(row?.email ?? "").split("@")[0] ?? "";
+  return (
+    fullName ||
+    (row?.display_name ? String(row.display_name) : "") ||
+    emailPrefix ||
+    maskPhone(row?.phone) ||
+    "Peserta"
+  );
+}
+
+function isAuthenticated(req: any, res: any, next: any) {
+  if (req.isAuthenticated?.() || req.user) return next();
+  return res.status(401).json({ error: "Unauthorized" });
+}
+
+function parsePositiveInteger(value: unknown): number | null {
+  if (typeof value !== "number" && typeof value !== "string") return null;
+  const text = String(value);
+  if (!/^[1-9]\d*$/.test(text)) return null;
+  const parsed = Number(text);
+  return Number.isSafeInteger(parsed) ? parsed : null;
+}
+
+function getLmsUserId(req: any): string | null {
+  const id = req.user?.claims?.sub ?? req.user?.id;
+  return typeof id === "string" && id.length > 0 ? id : null;
+}
+
+async function lockLmsStudentCourse(tx: any, userId: string, courseId: number): Promise<void> {
+  // A row lock cannot protect the "not enrolled yet" case. A transaction-scoped
+  // advisory lock serializes mutations for this student/course without requiring
+  // destructive cleanup or a new unique index on legacy enrollment rows.
+  const lockKey = `lms:${userId}:${courseId}`;
+  await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${lockKey}, 0))`);
+}
+
+async function getDbRoleLms(req: any): Promise<string> {
+  try {
+    const userId = req.user?.claims?.sub || req.user?.id;
+    if (!userId) return "";
+    const rows = await db.execute(sql.raw(`SELECT role FROM users WHERE id = '${userId.replace(/'/g, "''")}'`));
+    const r = (rows.rows ?? rows) as any[];
+    return r[0]?.role ?? "";
+  } catch { return ""; }
+}
+
+async function requireAdminLms(req: any, res: any, next: any) {
+  if (!req.user) return res.status(401).json({ error: "Tidak terautentikasi" });
+  const role = await getDbRoleLms(req);
+  const adminIds = (process.env.ADMIN_USER_IDS || "").split(",").map((s: string) => s.trim()).filter(Boolean);
+  const userId = req.user?.claims?.sub || req.user?.id || "";
+  if (role === "admin" || role === "superadmin" || adminIds.includes(userId)) return next();
+  return res.status(403).json({ error: "Akses ditolak. Hanya admin." });
+}
+
+// ─── Seed data ────────────────────────────────────────────────────────────────
+const SEED_COURSES = [
+  // === ONBOARDING GUSTAFTA ===
+  {
+    title: "Mulai dengan Gustafta",
+    slug: "mulai-gustafta",
+    shortDesc: "Pelajari cara membuat chatbot AI pertama Anda dalam 30 menit.",
+    description: "Kursus onboarding resmi Gustafta. Anda akan belajar membuat chatbot, mengisi knowledge base, mengatur persona, dan mempublish chatbot ke publik — langkah demi langkah.",
+    category: "onboarding",
+    subcategory: "Dasar",
+    color: "#6366f1",
+    emoji: "🚀",
+    instructor: "Tim Gustafta",
+    durationMinutes: 35,
+    price: 0,
+    level: "beginner",
+    isFeatured: true,
+    sortOrder: 1,
+    lessons: [
+      { title: "Apa itu Gustafta?", slug: "apa-itu-gustafta", type: "article", durationMinutes: 5, isPreview: true, content: `# Apa itu Gustafta?\n\nGustafta adalah platform **AI Chatbot Builder** yang memungkinkan Anda membuat, mengkonfigurasi, dan men-deploy asisten percakapan cerdas — tanpa coding.\n\n## Mengapa Gustafta?\n\n- **5-Level Modular Hierarchy** — Agen dari Master hingga Spesialis\n- **Multi-Agent Orchestration** — Beberapa agen bekerja paralel\n- **ABD v1.1 (Anti-Blocking Doctrine)** — Chatbot selalu jawab dari informasi minimal\n- **Widget Embed** — Pasang di website mana saja dengan 1 baris kode\n- **Knowledge Base** — Upload dokumen, chatbot otomatis belajar\n\n## Siapa yang cocok menggunakan Gustafta?\n\n- Konsultan konstruksi (SKK, SBU, K3, ISO)\n- Lembaga sertifikasi (LSP, BNSP)\n- Tim legal dan kepatuhan\n- Bisnis yang butuh customer service AI 24/7` },
+      { title: "Buat Chatbot Pertama", slug: "buat-chatbot-pertama", type: "article", durationMinutes: 8, isPreview: true, content: `# Buat Chatbot Pertama Anda\n\n## Langkah 1: Login dan Buka Dashboard\n\nMasuk ke dashboard Gustafta. Di panel kiri, klik **+ New Agent**.\n\n## Langkah 2: Isi Informasi Dasar\n\n- **Nama**: Nama chatbot Anda (contoh: "Asisten SBU Konstruksi")\n- **Deskripsi**: Jelaskan keahlian chatbot secara singkat\n- **Persona**: Karakter chatbot (ramah, profesional, tegas, dll)\n- **Tagline**: Kalimat singkat yang muncul di widget\n\n## Langkah 3: Tulis System Prompt\n\nSystem prompt adalah instruksi utama yang mendefinisikan perilaku chatbot. Gunakan template dari Gustafta atau tulis sendiri.\n\n## Langkah 4: Simpan dan Test\n\nKlik **Simpan**, lalu buka tab **Chat** untuk test chatbot Anda langsung.` },
+      { title: "Mengisi Knowledge Base", slug: "mengisi-knowledge-base", type: "article", durationMinutes: 7, content: `# Mengisi Knowledge Base\n\nKnowledge Base adalah "otak" chatbot Anda — kumpulan informasi yang digunakan untuk menjawab pertanyaan.\n\n## Cara Upload Konten\n\n### 1. Upload File\nDukung PDF, DOCX, TXT. Klik **Upload File** di tab Knowledge Base.\n\n### 2. Paste Teks\nCopy-paste konten langsung ke editor teks.\n\n### 3. Input URL\nMasukkan URL website — Gustafta akan crawl kontennya otomatis.\n\n## Tips Mengisi KB yang Baik\n\n- Gunakan judul dan subjudul yang jelas\n- Pecah konten panjang menjadi topik-topik spesifik\n- Pastikan konten up-to-date\n- Tambahkan FAQ yang sering ditanyakan user\n\n## Hierarki Konten\n\nGustafta mendukung hierarki: **Series → Big Idea → Toolbox → Agent → Knowledge Base**. Susun konten sesuai hierarki untuk navigasi yang lebih baik.` },
+      { title: "Mengatur Widget & Embed", slug: "mengatur-widget-embed", type: "article", durationMinutes: 8, content: `# Mengatur Widget & Embed\n\n## Apa itu Widget?\n\nWidget adalah tombol chat mengambang yang bisa dipasang di website mana saja. Pengunjung klik tombol → chat langsung dengan chatbot Anda.\n\n## Kustomisasi Widget\n\nBuka tab **Widget** di chatbot Anda:\n\n- **Warna** — Sesuaikan dengan brand Anda\n- **Posisi** — Kanan bawah, kiri bawah, kanan atas, kiri atas\n- **Ukuran** — Kecil, Sedang, Besar\n- **Ikon** — Chat, Message, Bot, atau Help\n- **Pesan Sambutan** — Teks yang muncul saat widget dibuka\n\n## Cara Embed ke Website\n\n1. Buka tab **Widget** → scroll ke **Kode Embed**\n2. Copy 1 baris kode ini:\n\n\`\`\`html\n<script src="https://gustafta.my.id/widget/loader.js" data-agent-id="ID_CHATBOT_ANDA"></script>\n\`\`\`\n\n3. Paste sebelum tag \`</body>\` di website Anda\n4. Selesai! Widget langsung aktif.\n\n## Demo Page untuk Customer\n\nGunakan link \`/demo/[ID]\` untuk mengirim halaman demo siap pakai ke calon customer — mereka bisa langsung test chatbot dan salin kode embed sendiri.` },
+      { title: "Publish dan Share Chatbot", slug: "publish-share-chatbot", type: "article", durationMinutes: 7, content: `# Publish dan Share Chatbot\n\n## Mengaktifkan Akses Publik\n\n1. Buka chatbot di dashboard\n2. Di panel atas, aktifkan toggle **"Publik"**\n3. Chatbot kini bisa diakses siapa saja via link\n\n## Link yang Bisa Dibagikan\n\n### 1. Link Chat Publik\n\`/bot/[ID]\` — Halaman chat minimal, langsung bisa ngobrol.\n\n### 2. Demo Page\n\`/demo/[ID]\` — Halaman showcase lengkap dengan embed code. Cocok untuk pitch ke customer.\n\n### 3. Kode Embed Widget\nSatu script tag untuk pasang di website manapun.\n\n## Mengontrol Akses\n\n- **Guest Message Limit** — Batasi berapa pesan yang bisa dikirim tanpa login\n- **Require Registration** — Wajib daftar sebelum bisa chat\n- **Trial Days** — Berikan trial gratis N hari\n\n## Monitoring\n\nPantau percakapan user di tab **Pesan** dashboard Anda.` },
+    ],
+  },
+  {
+    title: "Multi-Agent & Agentic AI",
+    slug: "multi-agent-agentic-ai",
+    shortDesc: "Kuasai sistem multi-agen — orchestrator, sub-agen, dan paralel dispatch.",
+    description: "Pelajari cara membangun sistem AI agentic dengan beberapa agen yang bekerja secara paralel. Dari konfigurasi orchestrator hingga ABD v1.1 Anti-Blocking Doctrine.",
+    category: "onboarding",
+    subcategory: "Lanjutan",
+    color: "#8b5cf6",
+    emoji: "🕸️",
+    instructor: "Tim Gustafta",
+    durationMinutes: 45,
+    price: 0,
+    level: "intermediate",
+    isFeatured: true,
+    sortOrder: 2,
+    lessons: [
+      { title: "Konsep Agentic AI", slug: "konsep-agentic-ai", type: "article", durationMinutes: 8, isPreview: true, content: `# Konsep Agentic AI\n\nAgentic AI adalah sistem di mana beberapa agen AI bekerja bersama — satu agen mengkoordinasi (orchestrator), lainnya berspesialisasi (sub-agent).\n\n## Mengapa Agentic?\n\n- **Lebih akurat** — Setiap agen fokus pada domain spesifiknya\n- **Lebih lengkap** — Laporan dari banyak perspektif sekaligus\n- **Lebih cepat** — Sub-agen berjalan paralel, bukan satu per satu\n\n## Hierarki 5-Level Gustafta\n\n1. **Master** — Koordinator tertinggi\n2. **Series HUB** — Koordinator tema besar\n3. **Sub-HUB** — Koordinator subtema\n4. **Specialist** — Agen ahli domain\n5. **Deep Specialist** — Agen ultra-spesifik\n\n## Inter-Agent API v2\n\nGustafta menggunakan sistem orchestration internal: orchestrator memanggil sub-agen secara paralel, mengumpulkan hasilnya, lalu mensintesis jawaban komprehensif.` },
+      { title: "Membuat Orchestrator", slug: "membuat-orchestrator", type: "article", durationMinutes: 10, content: `# Membuat Orchestrator\n\nOrchestrator adalah "manajer" yang mengkoordinasi sub-agen.\n\n## Konfigurasi Orchestrator\n\n1. Buat agen baru\n2. Di tab **Agentic AI**, aktifkan mode Orchestrator\n3. Tambahkan sub-agen yang akan dipanggil\n4. Atur timeout dan max tokens per sub-agen\n\n## System Prompt Orchestrator\n\nOrchestrator perlu instruksi khusus untuk:\n- Menentukan kapan memanggil sub-agen mana\n- Cara mensintesis hasil dari beberapa sub-agen\n- Fallback jika sub-agen tidak tersedia\n\n## SYNTHESIS ORCHESTRATOR Marker\n\nGunakan marker \`// SYNTHESIS ORCHESTRATOR\` di system prompt untuk menandai agen sebagai orchestrator aktif. Ini memicu Inter-Agent API v2.` },
+      { title: "ABD v1.1 Anti-Blocking Doctrine", slug: "abd-anti-blocking", type: "article", durationMinutes: 12, content: `# ABD v1.1 — Anti-Blocking Doctrine\n\nABD adalah aturan utama yang memastikan chatbot **selalu memberikan jawaban substantif** — tidak pernah blok atau tanya-tanya berlebihan.\n\n## 7 Prinsip ABD\n\n1. **ABD-1 Jawab dengan minimum input** — Dari info sedikit, hasilkan output maksimal\n2. **ABD-2 Heuristik default** — Gunakan asumsi wajar jika data tidak lengkap\n3. **ABD-3 Nyatakan asumsi** — Tandai asumsi dengan \`[ASUMSI: ...]\`\n4. **ABD-4 Anti interrogasi** — Maksimal 1 putaran klarifikasi\n5. **ABD-5 Reflect sebelum deliver** — Review output sebelum kirim\n6. **ABD-6 Anti human-as-API** — Jangan minta user jadi input machine\n7. **ABD-7 Output terstruktur** — Gunakan tabel, poin, dan format jelas\n\n## State Machine 7-Langkah\n\n\`INIT → ELICIT → PLAN → DISPATCH → AGGREGATE → REFLECT → DELIVER\`\n\nSetiap siklus tanya-jawab mengikuti state machine ini untuk output yang konsisten dan berkualitas tinggi.` },
+      { title: "Fallback Mode & Handover", slug: "fallback-handover", type: "article", durationMinutes: 10, content: `# Fallback Mode & Handover\n\n## Fallback Mode\n\nKetika sub-agen tidak tersedia, orchestrator masuk **FALLBACK MODE** — menjawab secara mandiri menggunakan domain knowledge dan menandai asumsi.\n\nFormat fallback:\n\`\`\`\n[FALLBACK MODE] Sub-agen tidak tersedia. Menjawab berdasarkan pengetahuan domain:\n[ASUMSI: nilai | basis: regulasi | verifikasi-ke: pihak]\n\`\`\`\n\n## T5-Handover\n\nKetika user bertanya di luar domain chatbot, gunakan **HANDOVER** — bot mengakui keterbatasannya, menyebutkan resource yang tepat, dan kembali ke topik utama.\n\nContoh handover:\n> "Pertanyaan ini berada di luar domain SKK yang saya layani. Untuk topik SBU, Anda bisa menghubungi [SBU Advisor Bot]. Kembali ke topik SKK, ada yang bisa saya bantu?"` },
+    ],
+  },
+
+  // === KONSTRUKSI ===
+  {
+    title: "Panduan SBU Konstruksi Lengkap",
+    slug: "panduan-sbu-konstruksi",
+    shortDesc: "Semua yang perlu Anda tahu tentang Sertifikasi Badan Usaha Jasa Konstruksi.",
+    description: "Kursus komprehensif tentang SBU Konstruksi berdasarkan Permen PU No. 6 Tahun 2025. Meliputi persyaratan, dokumen, proses OSS-RBA, biaya, dan tips lolos sertifikasi.",
+    category: "konstruksi",
+    subcategory: "SBU",
+    color: "#f97316",
+    emoji: "🏗️",
+    instructor: "SBUClaw AI + Tim Konstruksi",
+    durationMinutes: 90,
+    price: 0,
+    level: "intermediate",
+    isFeatured: true,
+    sortOrder: 3,
+    lessons: [
+      { title: "Apa itu SBU Konstruksi?", slug: "apa-itu-sbu", type: "article", durationMinutes: 8, isPreview: true, content: `# Apa itu SBU Konstruksi?\n\nSertifikat Badan Usaha (SBU) adalah bukti kemampuan dan kompetensi Badan Usaha Jasa Konstruksi (BUJK) dalam melaksanakan pekerjaan konstruksi.\n\n## Dasar Hukum\n\n- **Permen PU No. 6 Tahun 2025** — Regulasi utama SBU saat ini\n- **Keputusan Direktur Jenderal Bina Konstruksi Kementerian Pekerjaan Umum Nomor 281/KPTS/DK/2026 tentang Penetapan Standar Skema Sertifikasi Badan Usaha Jasa Konstruksi** — petunjuk pelaksanaan Permen PU No. 6 Tahun 2025 untuk skema sertifikasi BUJK/SBU\n- **UU No. 2 Tahun 2017** — Undang-Undang Jasa Konstruksi\n- **PP No. 14 Tahun 2021** — Peraturan turunan UU Jasa Konstruksi\n\n> **Kepdirjen PU No. 281/KPTS/DK/2026** mengatur standar skema sertifikasi badan usaha, bukan sertifikasi SKK secara langsung. SKK dibahas di sini hanya sebagai bukti personel bersertifikat/PJ yang mendukung pemenuhan persyaratan BUJK/SBU. Konfirmasi rincian teknis pada lampiran resmi keputusan tersebut dan kanal LPJK/LSBU terkini.\n\n## Jenis SBU\n\n| Jenis | Keterangan |\n|-------|------------|\n| **SBU PK** | Pelaksana Konstruksi (kontraktor) |\n| **SBU KK** | Konsultansi Konstruksi |\n| **SBU AIO** | All-In-One (gabungan) |\n| **SBU Terintegrasi** | Untuk BUJK terintegrasi |\n| **SBU JPTL** | Jasa Penunjang Tenaga Listrik |\n| **SBU Migas/EBT** | Minyak, gas, energi terbarukan |` },
+      { title: "Kualifikasi BUJK", slug: "kualifikasi-bujk", type: "article", durationMinutes: 10, content: `# Kualifikasi BUJK\n\nKualifikasi menentukan nilai pekerjaan yang boleh dikerjakan.\n\n> Angka, jenjang, dan pemetaan teknis berikut adalah panduan awal. Konfirmasikan terhadap lampiran resmi **Kepdirjen PU No. 281/KPTS/DK/2026** serta kanal LPJK/LSBU terkini sebelum pengajuan.\n\n## Kualifikasi Pelaksana Konstruksi\n\n| Kualifikasi | Nilai Pekerjaan |\n|-------------|------------------|\n| Kecil (K) | s.d. Rp 2,5 miliar |\n| Menengah (M) | Rp 2,5 M — Rp 50 M |\n| Besar (B) | > Rp 50 miliar |\n\n## Persyaratan Kualifikasi Kecil\n\n- Modal disetor minimal Rp 500 juta\n- Tenaga ahli bersertifikat (SKK minimal KKNI L4)\n- Peralatan konstruksi sesuai subklasifikasi\n\n## Subklasifikasi\n\nSubklasifikasi menentukan jenis pekerjaan yang boleh diambil:\n- **BS** — Bangunan Sipil\n- **BG** — Bangunan Gedung\n- **IL** — Instalasi Mekanikal & Elektrikal\n- **IM** — Instalasi Manufaktur\n- **KO** — Konstruksi Khusus` },
+      { title: "Dokumen Persyaratan SBU", slug: "dokumen-sbu", type: "article", durationMinutes: 12, content: `# Dokumen Persyaratan SBU\n\n> Gunakan daftar ini sebagai checklist persiapan. Persyaratan final harus dikonfirmasi terhadap lampiran resmi **Kepdirjen PU No. 281/KPTS/DK/2026** dan kanal LPJK/LSBU terkini.\n\n## Dokumen Perusahaan\n\n1. Akta Pendirian + SK Kemenkumham\n2. NPWP Perusahaan\n3. NIB (Nomor Induk Berusaha) dari OSS\n4. Laporan Keuangan 2 tahun terakhir (audited untuk Menengah/Besar)\n5. Rekening Koran 3 bulan terakhir\n\n## Dokumen Personel Bersertifikat/PJ\n\n1. **SKK (Sertifikat Kompetensi Kerja)** — bukti kompetensi personel/PJ pendukung BUJK/SBU, sesuai kebutuhan subklasifikasi\n2. KTP dan NPWP tenaga ahli\n3. Ijazah pendidikan formal\n4. Foto formal\n\n**Kepdirjen PU No. 281/KPTS/DK/2026 tidak mengatur proses sertifikasi SKK secara langsung.**\n\n## Dokumen Peralatan\n\n1. Bukti kepemilikan/sewa peralatan\n2. STNK/faktur peralatan\n3. Foto peralatan\n\n## Tips Persiapan Dokumen\n\n- Mulai dari kesiapan bukti personel bersertifikat/PJ\n- Pastikan nama di semua dokumen konsisten\n- Konfirmasikan kebutuhan audit dan penandatangan laporan keuangan kepada LSBU yang memproses permohonan` },
+      { title: "Proses Pengajuan via OSS-RBA", slug: "proses-oss-rba", type: "article", durationMinutes: 15, content: `# Proses Pengajuan SBU via OSS-RBA\n\n## Apa itu OSS-RBA?\n\nOSS (Online Single Submission) adalah sistem perizinan berusaha terintegrasi. SBU diajukan melalui OSS dengan mekanisme Risk-Based Approach (RBA).\n\n> Alur, durasi, masa berlaku, dan biaya dapat berubah. Verifikasi tahapan aktif pada OSS serta kanal LPJK/LSBU terkini dan lampiran resmi **Kepdirjen PU No. 281/KPTS/DK/2026**.\n\n## Langkah-Langkah\n\n### 1. Siapkan Akun OSS\n- Daftar/login di oss.go.id\n- Pastikan NIB sudah aktif\n\n### 2. Pilih KBLI yang Tepat\n- KBLI menentukan jenis usaha dan subklasifikasi SBU\n- Contoh: KBLI 41011 = Konstruksi Gedung Hunian\n\n### 3. Upload Dokumen\n- Upload semua dokumen persyaratan\n- Ikuti mekanisme verifikasi pada sistem aktif\n\n### 4. Verifikasi melalui Kanal Resmi\n- Ikuti proses LSBU/LPJK yang ditampilkan pada kanal resmi\n- Durasi aktual mengikuti kelengkapan dan hasil verifikasi\n\n### 5. Terbit SBU\n- SBU digital diterbitkan melalui kanal resmi setelah persyaratan terpenuhi\n- Cek masa berlaku dan kewajiban pemeliharaan pada sertifikat serta kanal resmi\n\n## Biaya\n\nBiaya bervariasi menurut kualifikasi, subklasifikasi, dan LSBU. Minta rincian biaya resmi sebelum pengajuan.` },
+      { title: "Pertanyaan Umum SBU", slug: "faq-sbu", type: "article", durationMinutes: 10, content: `# FAQ — Pertanyaan Umum SBU\n\n> Jawaban teknis perlu dikonfirmasi pada lampiran resmi **Kepdirjen PU No. 281/KPTS/DK/2026** serta kanal LPJK/LSBU terkini.\n\n## Berapa lama proses SBU?\nDurasi bergantung pada kelengkapan dokumen dan verifikasi kanal resmi. Kesiapan bukti personel bersertifikat/PJ dapat memengaruhi proses.\n\n## Apakah bisa mengurus SBU tanpa personel bersertifikat?\nPemenuhan personel/PJ dengan SKK yang relevan merupakan bagian dukungan persyaratan BUJK/SBU sesuai skema yang diajukan. Konfirmasikan jumlah, jenjang, dan kesesuaiannya kepada LSBU. Keputusan ini tidak mengatur proses sertifikasi SKK secara langsung.\n\n## Apa bedanya SBU dan SIUJK lama?\nSIUJK sudah tidak berlaku sejak 2021. SBU adalah pengganti SIUJK yang terintegrasi dengan OSS.\n\n## Apakah SBU bisa dipakai lintas provinsi?\nSBU berlaku nasional sesuai ruang lingkup, kualifikasi, dan ketentuan penggunaannya.\n\n## Bagaimana jika SBU kedaluwarsa?\nIkuti prosedur perpanjangan atau permohonan yang tersedia pada kanal resmi sebelum masa berlaku berakhir.` },
+    ],
+  },
+  {
+    title: "Persiapan SKK & Sertifikasi Kompetensi",
+    slug: "persiapan-skk-sertifikasi",
+    shortDesc: "Panduan lengkap persiapan Sertifikat Kompetensi Kerja (SKK) konstruksi.",
+    description: "Pelajari cara mempersiapkan diri untuk uji kompetensi SKK — dari memahami SKKNI, menyiapkan portofolio, sampai proses asesmen di LSP.",
+    category: "konstruksi",
+    subcategory: "SKK",
+    color: "#22c55e",
+    emoji: "📋",
+    instructor: "SKK Coach AI",
+    durationMinutes: 60,
+    price: 0,
+    level: "beginner",
+    sortOrder: 4,
+    lessons: [
+      { title: "Apa itu SKK?", slug: "apa-itu-skk", type: "article", durationMinutes: 7, isPreview: true, content: `# Apa itu SKK?\n\nSertifikat Kompetensi Kerja (SKK) adalah bukti kompetensi seseorang di bidang jasa konstruksi. Diterbitkan oleh **LSP (Lembaga Sertifikasi Profesi)** yang telah diakreditasi BNSP.\n\n## Dasar Hukum\n\n- **Permen PUPR No. 9 Tahun 2023** — Pedoman utama SKK\n- **SK Dirjen No. 114/KPTS/DK/2024** — Acuan teknis jabatan kerja\n- **SKKNI** — Standar Kompetensi Kerja Nasional Indonesia\n\n## Jenjang KKNI\n\n| Level | Keterangan |\n|-------|------------|\n| KKNI L2-3 | Operator/Teknisi |\n| KKNI L4-5 | Teknisi Madya |\n| KKNI L6 | Ahli Muda |\n| KKNI L7 | Ahli Madya |\n| KKNI L8 | Ahli Utama |\n\n## Mengapa SKK Penting?\n\n1. Syarat wajib SBU\n2. Syarat mengikuti tender pemerintah\n3. Meningkatkan nilai jual sebagai profesional` },
+      { title: "Mengenal SKKNI", slug: "mengenal-skkni", type: "article", durationMinutes: 8, content: `# Mengenal SKKNI\n\nSKKNI (Standar Kompetensi Kerja Nasional Indonesia) adalah acuan standar kompetensi yang harus dikuasai untuk mendapatkan SKK.\n\n## Komponen SKKNI\n\n### Unit Kompetensi\nSetiap jabatan kerja terdiri dari beberapa unit kompetensi. Contoh untuk Ahli Muda Teknik Bangunan Gedung (KKNI L6):\n- Mengelola rencana kerja proyek\n- Mengendalikan mutu konstruksi\n- Mengelola keselamatan konstruksi\n\n### Elemen Kompetensi\nSetiap unit punya elemen-elemen spesifik yang harus bisa dilakukan.\n\n### Kriteria Unjuk Kerja (KUK)\nIndikator terukur bahwa elemen kompetensi dikuasai.\n\n## Cara Membaca SKKNI\n\nCari SKKNI jabatan Anda di website BNSP atau Kemen PUPR, lalu pelajari setiap unit kompetensi beserta KUK-nya.` },
+      { title: "Portofolio & Dokumen", slug: "portofolio-dokumen-skk", type: "article", durationMinutes: 10, content: `# Portofolio & Dokumen SKK\n\n## Dokumen Wajib\n\n1. KTP\n2. Ijazah pendidikan terakhir\n3. NPWP pribadi\n4. Foto 3x4 formal\n\n## Portofolio Pekerjaan\n\nKumpulkan bukti pengalaman kerja:\n- Surat keterangan kerja dari perusahaan\n- Kontrak proyek yang pernah dikerjakan\n- Foto-foto proyek\n- Laporan pekerjaan\n\n## Tips Portofolio yang Kuat\n\n- Minimal 2-3 proyek yang relevan\n- Cantumkan nilai proyek dan peran Anda\n- Sertakan foto sebelum/sesudah jika ada\n- Testimonial dari atasan atau klien\n\n## FR-APL-01 — Formulir Permohonan Asesmen\n\nFR-APL-01 adalah form standar BNSP untuk mengajukan asesmen kompetensi. Isi dengan jelas dan jujur — ini dasar asesor menilai kelayakan Anda.` },
+      { title: "Proses Asesmen LSP", slug: "proses-asesmen-lsp", type: "article", durationMinutes: 10, content: `# Proses Asesmen di LSP\n\n## Tahap Asesmen\n\n### 1. Pengajuan Permohonan\nSubmit FR-APL-01 + dokumen ke LSP pilihan Anda.\n\n### 2. Pra-Asesmen\nAsesor mereview portofolio Anda. Jika ada kekurangan, Anda diberi waktu melengkapi.\n\n### 3. Asesmen Kompetensi\nBisa berupa:\n- **Wawancara** — Asesor mengajukan pertanyaan teknis\n- **Observasi** — Asesor melihat Anda bekerja langsung\n- **Uji Tulis** — Soal tertulis berbasis SKKNI\n- **Portofolio Review** — Diskusi mendalam tentang proyek Anda\n\n### 4. Keputusan Asesmen\n- **Kompeten (K)** — SKK diterbitkan\n- **Belum Kompeten (BK)** — Bisa mengulang setelah remedial\n\n### 5. Penerbitan SKK\nSKK digital diterbitkan melalui sistem SIKI LPJK dalam 7-14 hari kerja.` },
+    ],
+  },
+  {
+    title: "Dasar-Dasar K3 Konstruksi",
+    slug: "dasar-k3-konstruksi",
+    shortDesc: "Keselamatan dan Kesehatan Kerja di proyek konstruksi — mulai dari SMK3 hingga CSMS.",
+    description: "Pelajari prinsip K3 konstruksi, penerapan SMK3, program CSMS untuk kontraktor, dan cara membangun budaya keselamatan di lapangan.",
+    category: "konstruksi",
+    subcategory: "K3",
+    color: "#ef4444",
+    emoji: "⛑️",
+    instructor: "AGENT-SAFIRA (K3 AI)",
+    durationMinutes: 50,
+    price: 0,
+    level: "beginner",
+    sortOrder: 5,
+    lessons: [
+      { title: "Mengapa K3 Itu Wajib?", slug: "mengapa-k3-wajib", type: "article", durationMinutes: 6, isPreview: true, content: `# Mengapa K3 Itu Wajib?\n\nKeselamatan dan Kesehatan Kerja (K3) bukan pilihan — ini kewajiban hukum dan etika profesional.\n\n## Dasar Hukum K3 Konstruksi\n\n- **UU No. 1 Tahun 1970** — UU Keselamatan Kerja\n- **PP No. 50 Tahun 2012** — SMK3 (Sistem Manajemen K3)\n- **Permen PUPR No. 10 Tahun 2021** — K3 Konstruksi\n- **ISO 45001:2018** — Standar internasional K3\n\n## Fakta K3 Konstruksi Indonesia\n\n- Konstruksi adalah salah satu sektor dengan angka kecelakaan kerja tertinggi\n- Biaya kecelakaan kerja jauh lebih besar dari biaya pencegahan\n- Pelanggaran K3 bisa berujung penghentian proyek dan sanksi pidana\n\n## Manfaat K3 yang Baik\n\n- Mengurangi kecelakaan kerja\n- Meningkatkan produktivitas\n- Memenuhi syarat tender (CSMS score)\n- Meningkatkan reputasi perusahaan` },
+      { title: "SMK3 — Sistem Manajemen K3", slug: "smk3-sistem-manajemen", type: "article", durationMinutes: 10, content: `# SMK3 — Sistem Manajemen Keselamatan dan Kesehatan Kerja\n\nSMK3 adalah sistem manajemen yang mengintegrasikan K3 ke dalam keseluruhan manajemen perusahaan.\n\n## Elemen SMK3 (PP 50/2012)\n\n1. **Penetapan Kebijakan K3** — Komitmen manajemen puncak\n2. **Perencanaan K3** — Identifikasi bahaya, penilaian risiko\n3. **Pelaksanaan K3** — Prosedur, pelatihan, komunikasi\n4. **Pemantauan & Evaluasi** — Audit, inspeksi, investigasi kecelakaan\n5. **Peninjauan Ulang** — Review manajemen berkala\n\n## Level SMK3\n\n| Level | Elemen | Pencapaian |\n|-------|--------|------------|\n| Tingkat Awal | 64 elemen | 64% |\n| Tingkat Transisi | 122 elemen | 85% |\n| Tingkat Lanjutan | 166 elemen | 100% |\n\n## Audit SMK3\n\nAudit SMK3 dilakukan oleh lembaga audit eksternal terakreditasi. Sertifikat berlaku 3 tahun dengan surveillance audit tahunan.` },
+      { title: "CSMS untuk Kontraktor", slug: "csms-kontraktor", type: "article", durationMinutes: 10, content: `# CSMS — Contractor Safety Management System\n\nCSMS adalah sistem penilaian K3 yang digunakan principal (pemilik proyek) untuk mengevaluasi kemampuan K3 kontraktor sebelum memberikan pekerjaan.\n\n## Tahap Penilaian CSMS\n\n### 1. Pra-Kualifikasi\nKontraktor mengisi kuesioner K3 dan menyerahkan dokumen:\n- Kebijakan K3\n- Statistik kecelakaan (LTIFR, TRIFR)\n- Sertifikat SMK3 (jika ada)\n- Daftar personel K3 bersertifikat\n\n### 2. Site Visit (untuk proyek besar)\nTim CSMS mengunjungi proyek yang sedang berjalan untuk verifikasi lapangan.\n\n### 3. Penilaian & Scoring\nSkor CSMS menentukan status kontraktor:\n- **Green** — Kontraktor pilihan utama\n- **Yellow** — Bisa bekerja dengan pengawasan ketat\n- **Red** — Tidak memenuhi syarat\n\n## Tips Meningkatkan CSMS Score\n\n- Investasi di pelatihan K3 personel\n- Maintain statistik kecelakaan yang baik (zero incident jika memungkinkan)\n- Dokumentasikan semua aktivitas K3 dengan baik` },
+    ],
+  },
+
+  // === TENDER & PENGADAAN ===
+  {
+    title: "Tender & Pengadaan Barang/Jasa Pemerintah",
+    slug: "tender-pbjp-dasar",
+    shortDesc: "Panduan lengkap mengikuti tender pemerintah — dari persiapan dokumen hingga menang lelang.",
+    description: "Kursus komprehensif tentang Pengadaan Barang/Jasa Pemerintah (PBJP) berdasarkan Perpres 46/2025. Meliputi jenis pengadaan, proses lelang di SPSE, strategi penawaran, dan manajemen kontrak.",
+    category: "tender",
+    subcategory: "PBJP",
+    color: "#0ea5e9",
+    emoji: "📑",
+    instructor: "Tender AI + Tim PBJP",
+    durationMinutes: 80,
+    price: 0,
+    level: "intermediate",
+    isFeatured: true,
+    sortOrder: 6,
+    lessons: [
+      { title: "Ekosistem Pengadaan Pemerintah", slug: "ekosistem-pengadaan-pemerintah", type: "article", durationMinutes: 8, isPreview: true, content: `# Ekosistem Pengadaan Barang/Jasa Pemerintah\n\nPengadaan Barang/Jasa Pemerintah (PBJP) adalah proses bagaimana pemerintah membeli barang, jasa, dan pekerjaan konstruksi menggunakan APBN/APBD.\n\n## Dasar Hukum\n\n- **Perpres 46/2025** — Regulasi utama PBJP saat ini (pengganti Perpres 16/2018)\n- **PerLKPP No. 12/2021** — Pedoman teknis pengadaan\n\n> ⚠️ Perpres 16/2018 sudah diganti. Gunakan **Perpres 46/2025** sebagai acuan utama.\n\n## Pelaku Pengadaan\n\n| Pelaku | Peran |\n|--------|-------|\n| **PA/KPA** | Pengguna Anggaran / Kuasa Pengguna Anggaran |\n| **PPK** | Pejabat Pembuat Komitmen — penandatangan kontrak |\n| **Pokja** | Kelompok Kerja — panitia lelang |\n| **UKPBJ** | Unit Kerja Pengadaan Barang/Jasa |\n| **Penyedia** | Kontraktor/vendor peserta lelang |\n\n## Jenis Pengadaan\n\n1. **Pengadaan Barang** — Peralatan, kendaraan, furnitur\n2. **Pekerjaan Konstruksi** — Gedung, jalan, jembatan, dll\n3. **Jasa Konsultansi** — Studi, desain, supervisi\n4. **Jasa Lainnya** — Kebersihan, keamanan, dll` },
+      { title: "Metode Pemilihan Penyedia", slug: "metode-pemilihan-penyedia", type: "article", durationMinutes: 10, content: `# Metode Pemilihan Penyedia\n\n## Metode Berdasarkan Nilai\n\n| Metode | Nilai Pekerjaan | Keterangan |\n|--------|-----------------|------------|\n| **Pengadaan Langsung** | ≤ Rp 200 juta | Tanpa proses lelang formal |\n| **Penunjukan Langsung** | Kondisi tertentu | Darurat, rahasia negara |\n| **Tender Cepat** | Spesifikasi standar | Via katalog elektronik |\n| **Tender** | > Rp 200 juta | Proses kompetitif penuh |\n| **Seleksi** | Jasa konsultansi | Evaluasi teknis dulu |\n\n## Katalog Elektronik (e-Katalog)\n\nProduk/jasa yang sudah terstandarisasi bisa dibeli langsung via e-Katalog LKPP tanpa lelang. Ini semakin populer untuk pengadaan rutin.\n\n## E-Purchasing\n\nPembelian langsung lewat e-Katalog menggunakan SPSE. Lebih cepat dari tender biasa.` },
+      { title: "Mendaftar & Menggunakan SPSE", slug: "mendaftar-spse", type: "article", durationMinutes: 12, content: `# Mendaftar & Menggunakan SPSE\n\nSPSE (Sistem Pengadaan Secara Elektronik) adalah platform resmi pengadaan pemerintah Indonesia.\n\n## Cara Mendaftar\n\n1. Buka **lpse.go.id** atau LPSE instansi target\n2. Klik **Pendaftaran Penyedia**\n3. Isi data perusahaan (NPWP, NIB, akta)\n4. Upload dokumen perusahaan\n5. Verifikasi oleh admin LPSE (1-3 hari)\n6. Aktivasi akun dan lengkapi profil\n\n## Melihat Tender Aktif\n\nSetelah login:\n- Dashboard → **Cari Paket** → Filter kategori, lokasi, nilai\n- Klik paket → Download dokumen pengadaan\n- Periksa jadwal: pendaftaran, aanwijzing, pemasukan penawaran\n\n## Aanwijzing (Rapat Penjelasan)\n\nAanwijzing adalah sesi tanya jawab resmi antara Pokja dan peserta. WAJIB dihadiri — pertanyaan yang diajukan di sini bisa mengubah dokumen pengadaan.` },
+      { title: "Menyusun Dokumen Penawaran", slug: "dokumen-penawaran", type: "article", durationMinutes: 15, content: `# Menyusun Dokumen Penawaran\n\n## Komponen Penawaran Teknis\n\n1. **Metode Pelaksanaan** — Bagaimana Anda akan mengerjakan proyek\n2. **Jadwal Pelaksanaan** — Timeline detail (bar chart)\n3. **Daftar Personel** — CV + SKK tenaga ahli yang ditugaskan\n4. **Daftar Peralatan** — Jenis, jumlah, kondisi alat\n5. **RK3K** — Rencana Keselamatan Konstruksi\n6. **Pengalaman Perusahaan** — Rekam jejak proyek sejenis\n\n## Komponen Penawaran Harga\n\n- **RAB (Rencana Anggaran Biaya)** — Perinci semua item pekerjaan\n- **Analisa Harga Satuan** — Dasar perhitungan harga\n- **Surat Penawaran** — Dokumen formal dengan harga total\n\n## Tips Penawaran yang Kompetitif\n\n- Pelajari HPS (Harga Perkiraan Sendiri) — penawaran di atas HPS gugur otomatis\n- Bandingkan dengan pasar: jangan terlalu rendah (rugi) atau tinggi (kalah)\n- Pastikan spesifikasi teknis 100% sesuai dokumen pengadaan\n- Cek lagi semua tanda tangan dan stempel\n\n## Evaluasi Penawaran\n\nUrutan evaluasi:\n1. Administrasi → 2. Teknis → 3. Harga → 4. Kualifikasi\n\nGugur di satu tahap = tidak lanjut ke tahap berikutnya.` },
+      { title: "Manajemen Kontrak Pengadaan", slug: "manajemen-kontrak-pengadaan", type: "article", durationMinutes: 12, content: `# Manajemen Kontrak Pengadaan\n\n## Jenis Kontrak\n\n| Jenis | Karakteristik |\n|-------|---------------|\n| **Lump Sum** | Harga tetap, volume tidak berubah |\n| **Harga Satuan** | Harga per unit tetap, volume bisa berubah |\n| **Terima Jadi** | Penyedia desain + bangun |\n| **Kontrak Payung** | Kontrak induk, order per kebutuhan |\n\n## Kewajiban Setelah Menang Tender\n\n1. **SPPBJ** — Surat Penunjukan Penyedia Barang/Jasa dalam 2 hari kerja\n2. **Jaminan Pelaksanaan** — 5% dari nilai kontrak\n3. **Penandatanganan Kontrak** — Dalam 14 hari kerja setelah SPPBJ\n4. **SPMK** — Surat Perintah Mulai Kerja\n\n## Klaim & Addendum\n\nJika ada perubahan lingkup pekerjaan:\n- Ajukan addendum kontrak sebelum pekerjaan dikerjakan\n- Dokumentasikan semua perubahan secara tertulis\n- Perubahan > 10% nilai kontrak perlu persetujuan PA/KPA` },
+    ],
+  },
+  {
+    title: "Legalitas Badan Usaha Jasa Konstruksi",
+    slug: "legalitas-bujk",
+    shortDesc: "Panduan perizinan lengkap BUJK — NIB, SBU, IUJK, dan perizinan sektor.",
+    description: "Pelajari seluruh ekosistem legalitas Badan Usaha Jasa Konstruksi (BUJK): dari NIB di OSS, SBU di LPJK, hingga perizinan sektor khusus. Berdasarkan PP 28/2025 dan regulasi terbaru.",
+    category: "legalitas",
+    subcategory: "Perizinan",
+    color: "#a855f7",
+    emoji: "⚖️",
+    instructor: "Legal AI Konstruksi",
+    durationMinutes: 65,
+    price: 0,
+    level: "beginner",
+    isFeatured: true,
+    sortOrder: 7,
+    lessons: [
+      { title: "Ekosistem Perizinan BUJK", slug: "ekosistem-perizinan-bujk", type: "article", durationMinutes: 8, isPreview: true, content: `# Ekosistem Perizinan Badan Usaha Jasa Konstruksi\n\nUntuk beroperasi secara legal di sektor konstruksi, sebuah badan usaha perlu beberapa lapisan perizinan yang saling melengkapi.\n\n## Dasar Hukum\n\n- **PP 28/2025** — Peraturan Pemerintah tentang Perizinan Berusaha Berbasis Risiko (PBBR)\n- **UU No. 2/2017** — Undang-Undang Jasa Konstruksi\n- **Permen PU No. 6/2025** — Sertifikasi Badan Usaha\n\n> ⚠️ PP 28/2025 adalah regulasi perizinan berusaha (PBBR). Jangan keliru dengan Perpres 46/2025 yang mengatur PBJP/pengadaan.\n\n## Tiga Lapisan Legalitas BUJK\n\n### 1. Legalitas Dasar\n- **NIB** (Nomor Induk Berusaha) — dari OSS, wajib semua usaha\n- **NPWP Perusahaan** — dari DJP\n- **Akta Pendirian** — dari Notaris + SK Kemenkumham\n\n### 2. Perizinan Usaha\n- **SBU** (Sertifikat Badan Usaha) — dari LPJK via OSS\n- Wajib untuk mengikuti tender pemerintah\n\n### 3. Perizinan Sektor (jika relevan)\n- **IUJPTL** — Instalasi listrik\n- **Izin Migas** — Pekerjaan migas\n- **Izin Lingkungan/AMDAL** — Proyek berdampak lingkungan` },
+      { title: "NIB dan OSS — Fondasi Perizinan", slug: "nib-oss-fondasi", type: "article", durationMinutes: 10, content: `# NIB dan OSS — Fondasi Semua Perizinan\n\n## Apa itu NIB?\n\nNomor Induk Berusaha (NIB) adalah identitas tunggal pelaku usaha yang dikeluarkan oleh sistem OSS. NIB sekaligus berfungsi sebagai:\n- Tanda Daftar Perusahaan (TDP)\n- Angka Pengenal Impor (API)\n- Akses kepabeanan\n\n## Mendapatkan NIB\n\n1. Buka **oss.go.id**\n2. Login dengan akun OSS (buat jika belum ada)\n3. Isi data dasar usaha:\n   - Nama badan usaha\n   - Bentuk badan usaha (PT, CV, Firma, dll)\n   - KBLI (Klasifikasi Baku Lapangan Usaha)\n4. Sistem otomatis menerbitkan NIB\n\n## KBLI untuk Konstruksi\n\n| KBLI | Kegiatan |\n|------|----------|\n| 41011 | Konstruksi Gedung Hunian |\n| 41012 | Konstruksi Gedung Non-Hunian |\n| 42101 | Konstruksi Jalan Raya |\n| 43211 | Instalasi Kelistrikan |\n| 71101 | Konsultansi Arsitektur |\n\n## Setelah NIB: Lanjut ke SBU\n\nNIB adalah prasyarat untuk mengajukan SBU. Pastikan KBLI di NIB sesuai dengan subklasifikasi SBU yang akan diajukan.` },
+      { title: "Akta Perusahaan & Korporasi", slug: "akta-perusahaan-korporasi", type: "article", durationMinutes: 10, content: `# Akta Perusahaan & Korporasi\n\n## Bentuk Badan Usaha di Konstruksi\n\n### PT (Perseroan Terbatas)\n- Paling umum untuk BUJK Menengah dan Besar\n- Modal disetor minimum sesuai ketentuan\n- Direktur bertanggung jawab atas operasional\n\n### CV (Commanditaire Vennootschap)\n- Untuk BUJK Kecil\n- Proses pendirian lebih sederhana dari PT\n- Sekutu aktif bertanggung jawab penuh\n\n### BUMN/BUMD\n- Badan Usaha Milik Negara/Daerah\n- Regulasi khusus, SBU tetap wajib\n\n## Mengurus Akta\n\n1. Pilih nama perusahaan — cek ketersediaan di sistem AHU Online\n2. Siapkan data pendiri dan pengurus\n3. Kunjungi Notaris → Akta Pendirian dibuat\n4. SK Kemenkumham — diterbitkan otomatis via AHU Online dalam 1-3 hari\n\n## Perubahan Akta\n\nPerubahan direksi, modal, atau nama harus segera diaktakan. Dokumen SBU harus diperbarui mengikuti perubahan akta.` },
+      { title: "Kepatuhan & Sanksi", slug: "kepatuhan-sanksi-bujk", type: "article", durationMinutes: 10, content: `# Kepatuhan & Sanksi BUJK\n\n## Kewajiban Kepatuhan Berkala\n\n| Kewajiban | Frekuensi | Sanksi Jika Tidak |\n|-----------|-----------|-------------------|\n| Registrasi ulang SBU | 3 tahun | SBU non-aktif |\n| Laporan pajak | Bulanan/Tahunan | Denda + bunga |\n| Update data OSS | Setiap perubahan | NIB tidak valid |\n| Laporan LPJK | Sesuai regulasi | Penangguhan SBU |\n\n## Sanksi Pelanggaran\n\n### Administratif\n- Teguran tertulis\n- Pembekuan SBU\n- Pencabutan SBU\n\n### Perdata\n- Ganti rugi akibat pelanggaran kontrak\n- Klaim jaminan pelaksanaan dicairkan\n\n### Pidana\n- UU Jasa Konstruksi mengatur sanksi pidana untuk pelanggaran berat\n- Kegagalan konstruksi yang menimbulkan korban jiwa: ancaman penjara\n\n## Tips Menjaga Kepatuhan\n\n- Set reminder 6 bulan sebelum SBU expired\n- Tunjuk penanggung jawab legal/compliance di perusahaan\n- Dokumentasikan semua perizinan dalam satu folder terorganisir` },
+    ],
+  },
+
+  // === ISO & STANDAR ===
+  {
+    title: "ISO 9001:2015 — Manajemen Mutu untuk Konstruksi",
+    slug: "iso-9001-manajemen-mutu",
+    shortDesc: "Terapkan sistem manajemen mutu ISO 9001 di perusahaan jasa konstruksi Anda.",
+    description: "Pelajari prinsip ISO 9001:2015, cara membangun Sistem Manajemen Mutu (SMM), persiapan audit sertifikasi, dan integrasi dengan sistem manajemen lainnya.",
+    category: "konstruksi",
+    subcategory: "ISO",
+    color: "#14b8a6",
+    emoji: "🏆",
+    instructor: "ISO Quality AI",
+    durationMinutes: 70,
+    price: 0,
+    level: "intermediate",
+    sortOrder: 8,
+    lessons: [
+      { title: "Prinsip Dasar ISO 9001", slug: "prinsip-iso-9001", type: "article", durationMinutes: 8, isPreview: true, content: `# Prinsip Dasar ISO 9001:2015\n\nISO 9001:2015 adalah standar internasional Sistem Manajemen Mutu (SMM) yang paling banyak digunakan di dunia.\n\n## 7 Prinsip Manajemen Mutu\n\n1. **Fokus pada Pelanggan** — Kepuasan pelanggan adalah tujuan utama\n2. **Kepemimpinan** — Pimpinan menetapkan arah dan menciptakan kondisi yang mendukung\n3. **Keterlibatan Orang** — Kompetensi dan pemberdayaan di semua level\n4. **Pendekatan Proses** — Aktivitas sebagai proses yang saling terhubung\n5. **Perbaikan Berkelanjutan** — Selalu mencari cara untuk lebih baik\n6. **Pengambilan Keputusan Berbasis Bukti** — Data dan analisis, bukan asumsi\n7. **Manajemen Hubungan** — Hubungan saling menguntungkan dengan pemasok\n\n## Mengapa ISO 9001 Penting untuk BUJK?\n\n- Syarat tender pemerintah untuk proyek besar\n- Meningkatkan kepercayaan klien swasta\n- Mengurangi cacat pekerjaan dan rework\n- Meningkatkan efisiensi operasional` },
+      { title: "Klausul-Klausul ISO 9001", slug: "klausul-iso-9001", type: "article", durationMinutes: 12, content: `# Klausul-Klausul ISO 9001:2015\n\nISO 9001:2015 menggunakan struktur High Level Structure (HLS) dengan 10 klausul.\n\n## Klausul Utama (4-10)\n\n### Klausul 4 — Konteks Organisasi\nPahami faktor internal/eksternal yang memengaruhi organisasi (analisis SWOT, PESTLE).\n\n### Klausul 5 — Kepemimpinan\nDirektur harus menunjukkan komitmen nyata terhadap SMM, bukan hanya di atas kertas.\n\n### Klausul 6 — Perencanaan\nIdentifikasi risiko dan peluang. Tetapkan sasaran mutu yang terukur.\n\n### Klausul 7 — Dukungan\nSumber daya, kompetensi, kesadaran, komunikasi, informasi terdokumentasi.\n\n### Klausul 8 — Operasi\nPengendalian proses operasional: desain, pengadaan, produksi/konstruksi, inspeksi.\n\n### Klausul 9 — Evaluasi Kinerja\nPemantauan, pengukuran, analisis, evaluasi kepuasan pelanggan, audit internal, tinjauan manajemen.\n\n### Klausul 10 — Perbaikan\nPenanganan ketidaksesuaian, tindakan korektif, dan perbaikan berkelanjutan.` },
+      { title: "Implementasi di Proyek Konstruksi", slug: "implementasi-iso-konstruksi", type: "article", durationMinutes: 12, content: `# Implementasi ISO 9001 di Proyek Konstruksi\n\n## Dokumen Wajib SMM Konstruksi\n\n### Prosedur\n- Prosedur Pengendalian Dokumen\n- Prosedur Audit Internal\n- Prosedur Tindakan Korektif\n- Prosedur Tinjauan Manajemen\n\n### Rekaman/Bukti\n- Hasil inspeksi dan pengujian\n- Laporan audit internal\n- Risalah tinjauan manajemen\n- Catatan pelatihan SDM\n\n## Quality Plan per Proyek\n\nSetiap proyek harus punya **Quality Plan** yang mendefinisikan:\n- Standar mutu yang berlaku\n- Titik-titik inspeksi (Inspection Test Plan / ITP)\n- Metode pengujian material\n- Personel yang bertanggung jawab\n\n## Pengendalian Mutu Konstruksi\n\n- **Pre-construction review** — Review gambar dan spesifikasi sebelum mulai\n- **In-process inspection** — Inspeksi selama pekerjaan berlangsung\n- **Material approval** — Persetujuan material sebelum dipasang\n- **As-built documentation** — Gambar dan dokumen akhir sesuai kondisi terpasang` },
+      { title: "Audit & Sertifikasi ISO 9001", slug: "audit-sertifikasi-iso-9001", type: "article", durationMinutes: 10, content: `# Audit & Sertifikasi ISO 9001\n\n## Jenis Audit\n\n### 1. Audit Internal\nDilakukan oleh tim internal yang telah dilatih sebagai auditor ISO. Wajib minimal 1x/tahun.\n\n### 2. Audit Sertifikasi (Eksternal)\nDilakukan oleh Lembaga Sertifikasi (LS) yang terakreditasi KAN.\n\n### 3. Surveillance Audit\nAudit tahunan setelah sertifikasi diterbitkan untuk memastikan konsistensi penerapan.\n\n## Proses Sertifikasi\n\n1. **Pilih Lembaga Sertifikasi** — Pastikan terakreditasi KAN\n2. **Gap Analysis** — Identifikasi kesenjangan terhadap standar\n3. **Implementasi** — Bangun dan jalankan SMM minimal 3 bulan\n4. **Audit Tahap 1** — Review kesiapan dokumentasi\n5. **Audit Tahap 2** — Audit implementasi di lapangan\n6. **Sertifikat Terbit** — Berlaku 3 tahun\n\n## Biaya Sertifikasi\n\nBervariasi berdasarkan ukuran perusahaan: Rp 20-80 juta untuk perusahaan konstruksi skala menengah.` },
+    ],
+  },
+
+  // === MANAJEMEN PROYEK ===
+  {
+    title: "Manajemen Proyek Konstruksi",
+    slug: "manajemen-proyek-konstruksi",
+    shortDesc: "Kuasai perencanaan, pengendalian, dan pelaporan proyek konstruksi dari awal hingga serah terima.",
+    description: "Kursus praktis manajemen proyek konstruksi: perencanaan biaya dan jadwal, pengendalian mutu lapangan, manajemen risiko, pelaporan progres, dan penanganan klaim kontrak.",
+    category: "konstruksi",
+    subcategory: "Manajemen Proyek",
+    color: "#f59e0b",
+    emoji: "📊",
+    instructor: "Project Management AI",
+    durationMinutes: 75,
+    price: 0,
+    level: "intermediate",
+    sortOrder: 9,
+    lessons: [
+      { title: "Siklus Hidup Proyek Konstruksi", slug: "siklus-hidup-proyek", type: "article", durationMinutes: 7, isPreview: true, content: `# Siklus Hidup Proyek Konstruksi\n\nSetiap proyek konstruksi melewati 5 fase utama:\n\n## Fase 1: Inisiasi\n- Identifikasi kebutuhan dan tujuan proyek\n- Studi kelayakan awal\n- Pembentukan tim inti\n\n## Fase 2: Perencanaan\n- Desain dan gambar teknis\n- RAB (Rencana Anggaran Biaya)\n- Jadwal Pelaksanaan (S-Curve, Gantt Chart)\n- RK3K (Rencana Keselamatan Konstruksi)\n\n## Fase 3: Pelaksanaan\n- Mobilisasi material dan alat\n- Konstruksi sesuai gambar dan spesifikasi\n- Pengawasan kualitas dan keselamatan\n\n## Fase 4: Pengendalian\n- Monitoring progres vs jadwal\n- Pengendalian biaya vs anggaran\n- Inspeksi mutu dan tindakan korektif\n\n## Fase 5: Penutupan\n- Uji fungsi dan commissioning\n- Serah terima (PHO dan FHO)\n- As-built documentation\n- Garansi dan masa pemeliharaan` },
+      { title: "Perencanaan Jadwal & S-Curve", slug: "jadwal-s-curve", type: "article", durationMinutes: 12, content: `# Perencanaan Jadwal & S-Curve\n\n## Master Schedule\n\nDokumen jadwal utama yang menampilkan semua pekerjaan dari awal hingga selesai.\n\n### Komponen Master Schedule\n- **Work Breakdown Structure (WBS)** — Daftar terstruktur semua pekerjaan\n- **Durasi setiap aktivitas** — Dalam hari atau minggu\n- **Ketergantungan antar aktivitas** — Mana yang harus selesai dulu\n- **Jalur Kritis (Critical Path)** — Rangkaian aktivitas yang menentukan durasi total\n\n## S-Curve (Kurva S)\n\nS-Curve menunjukkan akumulasi progres (%) terhadap waktu.\n\n### Cara Membaca S-Curve\n- Sumbu X = Waktu (minggu/bulan)\n- Sumbu Y = Progres kumulatif (%)\n- **Kurva Rencana** vs **Kurva Aktual** — Selisih = deviasi\n\n### Deviasi > 5%\n- Laporkan ke PPK\n- Analisis penyebab\n- Susun Rencana Percepatan (Recovery Plan)\n\n## Earned Value Management (EVM)\n\n| Indikator | Formula | Arti |\n|-----------|---------|------|\n| **SPI** | EV/PV | Schedule Performance Index |\n| **CPI** | EV/AC | Cost Performance Index |\n| SPI < 1 | — | Proyek terlambat |\n| CPI < 1 | — | Proyek over budget |` },
+      { title: "Pengendalian Mutu Lapangan", slug: "pengendalian-mutu-lapangan", type: "article", durationMinutes: 12, content: `# Pengendalian Mutu Lapangan\n\n## Inspection Test Plan (ITP)\n\nITP adalah dokumen yang menetapkan apa yang harus diinspeksi, kapan, oleh siapa, dan dengan standar apa.\n\n### Format ITP\n\n| No | Aktivitas | Standar | Metode | PIC | Frekuensi |\n|----|-----------|---------|--------|-----|----------|\n| 1 | Pekerjaan beton | SNI 03-2847 | Slump test + uji tekan | QC | Per batch |\n| 2 | Pekerjaan baja | AISC/SNI | Visual + NDT | QC | 100% |\n\n## Material Approval\n\nSebelum material dipasang:\n1. Submit material sample + data sheet\n2. Review oleh engineer\n3. Approval tertulis\n4. Simpan bukti approval sebagai rekaman\n\n## Non-Conformance Report (NCR)\n\nJika ditemukan pekerjaan tidak sesuai:\n1. Buat NCR — deskripsikan ketidaksesuaian\n2. Tentukan tindakan korektif\n3. Perbaiki dan verifikasi\n4. Tutup NCR setelah OK` },
+      { title: "Serah Terima Proyek (PHO & FHO)", slug: "serah-terima-pho-fho", type: "article", durationMinutes: 10, content: `# Serah Terima Proyek\n\n## PHO — Provisional Hand Over\n\nSerah terima pertama setelah konstruksi selesai secara fisik.\n\n### Persyaratan PHO\n- Progres fisik minimal 100%\n- Semua NCR sudah ditutup\n- Uji fungsi sistem MEP berhasil\n- As-built drawing sudah diserahkan\n- Manual O&M sudah diserahkan\n\n### Prosedur PHO\n1. Kontraktor mengajukan permohonan PHO tertulis\n2. PPK membentuk Panitia Serah Terima\n3. Pemeriksaan lapangan bersama\n4. Berita Acara PHO ditandatangani\n5. Masa Pemeliharaan dimulai\n\n## FHO — Final Hand Over\n\nSerah terima kedua setelah Masa Pemeliharaan selesai.\n\n### Masa Pemeliharaan\n- Umum: 6 bulan setelah PHO\n- Konstruksi besar: 12 bulan\n- Selama masa ini, kontraktor wajib perbaiki semua cacat\n\n### Retensi\n5% dari nilai kontrak ditahan sampai FHO. Bisa diganti dengan Jaminan Pemeliharaan.` },
+    ],
+  },
+
+  // === BIM ===
+  {
+    title: "Pengantar BIM — Building Information Modelling",
+    slug: "pengantar-bim-konstruksi",
+    shortDesc: "Kuasai dasar-dasar BIM dan transformasi digital di industri konstruksi Indonesia.",
+    description: "Kursus pengantar BIM: memahami konsep dan manfaat BIM, standar internasional (ISO 19650), BIM Execution Plan, peran tim BIM, dan roadmap adopsi BIM di perusahaan konstruksi.",
+    category: "konstruksi",
+    subcategory: "BIM",
+    color: "#3b82f6",
+    emoji: "🏛️",
+    instructor: "BIM AI Coach",
+    durationMinutes: 55,
+    price: 0,
+    level: "beginner",
+    sortOrder: 10,
+    lessons: [
+      { title: "Apa itu BIM?", slug: "apa-itu-bim", type: "article", durationMinutes: 8, isPreview: true, content: `# Apa itu BIM?\n\nBuilding Information Modelling (BIM) adalah pendekatan proses berbasis data digital untuk manajemen informasi bangunan sepanjang siklus hidupnya.\n\n## BIM Bukan Sekadar Software 3D\n\nBIM adalah:\n- **Proses** — Cara bekerja yang berbeda, kolaboratif\n- **Data** — Informasi terstruktur tentang setiap elemen bangunan\n- **Kolaborasi** — Semua pihak bekerja di model yang sama\n\nBIM **bukan** hanya software CAD 3D. Model BIM mengandung data (dimensi, material, biaya, jadwal, dll).\n\n## Level BIM\n\n| Level | Deskripsi |\n|-------|----------|\n| Level 0 | CAD 2D, tidak ada kolaborasi |\n| Level 1 | CAD 3D terisolasi |\n| Level 2 | Kolaborasi model terpisah per disiplin |\n| Level 3 | Model tunggal bersama (Open BIM) |\n\n## Manfaat BIM\n\n- Deteksi clash (benturan) antar disiplin sebelum konstruksi\n- Estimasi biaya otomatis dari model (5D BIM)\n- Simulasi jadwal (4D BIM)\n- Operasi dan pemeliharaan (6D BIM / Facility Management)\n- Reduksi rework hingga 30-40%` },
+      { title: "Dimensi BIM: 3D hingga 7D", slug: "dimensi-bim", type: "article", durationMinutes: 10, content: `# Dimensi BIM: 3D hingga 7D\n\nBIM tidak hanya tentang geometri 3D. Informasi tambahan ditambahkan sebagai "dimensi" ekstra.\n\n## 3D — Geometri & Visualisasi\nModel 3D dasar: dinding, kolom, balok, MEP, dll.\n\n## 4D — Jadwal (Schedule)\nModel + informasi waktu = simulasi proses konstruksi. Lihat urutan pembangunan secara visual.\n\n## 5D — Biaya (Cost)\nModel + schedule + biaya = estimasi otomatis dari quantity take-off.\n\n## 6D — Keberlanjutan (Sustainability)\nAnalisis energi, simulasi daylighting, LEED/Greenship scoring.\n\n## 7D — Facility Management\nInformasi aset untuk operasi dan pemeliharaan gedung sepanjang umur hidupnya.\n\n## Software BIM Populer\n\n| Software | Vendor | Keunggulan |\n|----------|--------|------------|\n| Revit | Autodesk | Arsitektur & Struktur |\n| ArchiCAD | Graphisoft | Desain arsitektur |\n| Tekla | Trimble | Struktur baja & beton |\n| Navisworks | Autodesk | Clash detection |\n| OpenBIM tools | berbagai | Interoperabilitas |` },
+      { title: "BIM di Proyek Konstruksi Indonesia", slug: "bim-indonesia", type: "article", durationMinutes: 12, content: `# BIM di Proyek Konstruksi Indonesia\n\n## Regulasi BIM di Indonesia\n\n- **Permen PUPR No. 22/2018** — Pembangunan Bangunan Gedung Negara, mewajibkan BIM untuk gedung negara > 2000 m²\n- **Surat Edaran PUPR** — Percepatan adopsi BIM di proyek infrastruktur\n- **SIBIMA** — Sistem Informasi Bangunan Indonesia berbasis BIM\n\n## Persyaratan BIM di Tender Pemerintah\n\nSemakin banyak tender pemerintah, terutama proyek infrastruktur besar, yang mensyaratkan:\n- BIM Execution Plan (BEP)\n- Personel bersertifikat BIM\n- Model BIM sebagai bagian deliverable\n\n## Roadmap Adopsi BIM di Perusahaan\n\n### Tahap 1: Edukasi (0-6 bulan)\n- Pelatihan tim inti (3-5 orang)\n- Pilih software dan standar\n\n### Tahap 2: Pilot Project (6-12 bulan)\n- Pilih 1 proyek sebagai pilot\n- Kembangkan template dan standar internal\n\n### Tahap 3: Scaling (12-24 bulan)\n- Roll-out ke seluruh proyek\n- Evaluasi dan penyesuaian\n\n## Sertifikasi BIM\n\nSKK BIM untuk tenaga ahli konstruksi tersedia di beberapa LSP terakreditasi BNSP.` },
+    ],
+  },
+
+  // === LEGALITAS TAMBAHAN ===
+  {
+    title: "Keuangan & Perpajakan untuk BUJK",
+    slug: "keuangan-perpajakan-bujk",
+    shortDesc: "Kelola keuangan proyek dan kewajiban pajak BUJK secara benar dan efisien.",
+    description: "Pelajari dasar-dasar manajemen keuangan proyek konstruksi: cash flow, retensi, jaminan, serta kewajiban perpajakan BUJK termasuk PPh 23, PPN jasa konstruksi, dan SPT tahunan.",
+    category: "legalitas",
+    subcategory: "Keuangan & Pajak",
+    color: "#84cc16",
+    emoji: "💰",
+    instructor: "Keuangan AI",
+    durationMinutes: 60,
+    price: 0,
+    level: "beginner",
+    sortOrder: 11,
+    lessons: [
+      { title: "Cash Flow Proyek Konstruksi", slug: "cashflow-proyek", type: "article", durationMinutes: 8, isPreview: true, content: `# Cash Flow Proyek Konstruksi\n\nCash flow adalah aliran masuk dan keluar uang dalam proyek. Mengelola cash flow yang buruk adalah penyebab utama kegagalan kontraktor.\n\n## Pola Cash Flow Konstruksi\n\nKonstruksi biasanya punya pola **negative cash flow** di awal:\n- Kontraktor bayar material, upah, dan alat dulu\n- Pembayaran dari owner baru datang setelah progres tertentu\n- Gap ini harus ditutup dengan modal kerja atau kredit\n\n## Sumber Pembiayaan Proyek\n\n1. **Uang Muka (DP)** — 10-20% dari nilai kontrak, dibayar di awal\n2. **Termin** — Pembayaran bertahap sesuai progres (biasanya per 25%)\n3. **Retensi** — 5% ditahan sampai FHO\n\n## Tips Mengelola Cash Flow\n\n- Negotiasi uang muka sebesar mungkin\n- Dorong pembayaran termin segera setelah progres tercapai\n- Jangan overstock material — beli sesuai kebutuhan mingguan\n- Siapkan fasilitas kredit modal kerja di bank` },
+      { title: "Perpajakan Jasa Konstruksi", slug: "perpajakan-jasa-konstruksi", type: "article", durationMinutes: 12, content: `# Perpajakan Jasa Konstruksi\n\n## Jenis Pajak BUJK\n\n### PPh Final Jasa Konstruksi\nBerdasarkan PP 9/2022, penghasilan dari jasa konstruksi dikenakan PPh Final:\n\n| Jenis Usaha | Tarif PPh Final |\n|-------------|------------------|\n| Pelaksana Konstruksi (kualifikasi kecil) | 1.75% |\n| Pelaksana Konstruksi (kualifikasi menengah/besar) | 2.65% |\n| Pelaksana Konstruksi (tidak bersertifikat) | 4% |\n| Perencana/Pengawas (bersertifikat) | 3.5% |\n| Perencana/Pengawas (tidak bersertifikat) | 6% |\n\n### PPN Jasa Konstruksi\n- PPN 11% berlaku untuk jasa konstruksi\n- Faktur Pajak harus diterbitkan saat penagihan\n\n### PPh 23 (jika menjadi subkontraktor)\n- 2% dari nilai bruto jika penerima ber-NPWP\n- 4% jika tidak ber-NPWP\n\n## Kewajiban Bulanan\n\n- SPT Masa PPN — setiap bulan\n- SPT Masa PPh — sesuai jenis PPh\n\n## Kewajiban Tahunan\n\n- SPT Tahunan PPh Badan — akhir April\n- Laporan Keuangan — untuk kebutuhan bank dan tender` },
+      { title: "Jaminan Kontrak Konstruksi", slug: "jaminan-kontrak-konstruksi", type: "article", durationMinutes: 10, content: `# Jaminan Kontrak Konstruksi\n\nJaminan (surety bond atau bank garansi) adalah instrumen keuangan yang melindungi pemilik proyek dari wanprestasi kontraktor.\n\n## Jenis Jaminan\n\n### 1. Jaminan Penawaran (Bid Bond)\n- Nilai: 1-3% dari nilai penawaran\n- Tujuan: Memastikan pemenang lelang tidak mengundurkan diri\n- Berlaku: Selama proses lelang\n\n### 2. Jaminan Pelaksanaan (Performance Bond)\n- Nilai: 5% dari nilai kontrak\n- Tujuan: Memastikan kontraktor selesaikan pekerjaan\n- Berlaku: Sampai PHO\n\n### 3. Jaminan Uang Muka\n- Nilai: Sama dengan uang muka yang diterima\n- Tujuan: Keamanan uang muka pemilik proyek\n- Berlaku: Sampai uang muka terpotong habis\n\n### 4. Jaminan Pemeliharaan\n- Nilai: 5% dari nilai kontrak\n- Tujuan: Jaminan perbaikan cacat selama masa pemeliharaan\n- Bisa mengganti retensi\n\n## Penerbit Jaminan\n- Bank Umum\n- Perusahaan Asuransi yang terdaftar di OJK\n- Perusahaan Surety Bond` },
+    ],
+  },
+
+  // === PENGAWASAN KONSTRUKSI ===
+  {
+    title: "Pengawasan Konstruksi Profesional",
+    slug: "pengawasan-konstruksi-profesional",
+    shortDesc: "Teknik pengawasan konstruksi yang efektif — lapangan, mutu, biaya, dan dokumentasi.",
+    description: "Kursus untuk konsultan pengawas dan owner representative: teknik inspeksi lapangan, pengendalian mutu pekerjaan, manajemen RFI, shop drawing review, dan pelaporan progres yang efektif.",
+    category: "konstruksi",
+    subcategory: "Pengawasan",
+    color: "#ec4899",
+    emoji: "🔍",
+    instructor: "Pengawas AI",
+    durationMinutes: 65,
+    price: 0,
+    level: "intermediate",
+    sortOrder: 12,
+    lessons: [
+      { title: "Peran dan Tanggung Jawab Pengawas", slug: "peran-pengawas-konstruksi", type: "article", durationMinutes: 7, isPreview: true, content: `# Peran dan Tanggung Jawab Pengawas Konstruksi\n\n## Siapa Pengawas Konstruksi?\n\nPengawas Konstruksi (Konsultan Pengawas / MK) adalah pihak yang bertindak atas nama pemilik proyek untuk memastikan pekerjaan dilaksanakan sesuai kontrak.\n\n## Jenis Pengawas\n\n| Jenis | Keterangan |\n|-------|------------|\n| **Konsultan Pengawas** | Perusahaan konsultansi pengawasan |\n| **Manajemen Konstruksi (MK)** | Lebih luas — dari desain sampai serah terima |\n| **Owner Representative** | Staf owner yang ditugaskan mengawasi |\n| **Pengawas Internal** | Kontraktor mengawasi sub-kontraktornya |\n\n## Tanggung Jawab Utama\n\n1. **Quality Control** — Memastikan pekerjaan sesuai spesifikasi\n2. **Schedule Monitoring** — Memantau progres vs jadwal\n3. **Cost Control** — Mengontrol biaya vs anggaran\n4. **Safety Oversight** — Memastikan K3 diterapkan\n5. **Documentation** — Merekam semua kejadian di lapangan\n6. **RFI Management** — Merespons permintaan informasi kontraktor` },
+      { title: "Inspeksi Lapangan & Dokumentasi", slug: "inspeksi-lapangan-dokumentasi", type: "article", durationMinutes: 12, content: `# Inspeksi Lapangan & Dokumentasi\n\n## Daily Site Inspection\n\nPengawas harus hadir setiap hari kerja dan mendokumentasikan:\n- Cuaca\n- Jumlah pekerja per disiplin\n- Alat berat beroperasi\n- Material yang datang\n- Pekerjaan yang dilaksanakan\n- Kejadian khusus (kecelakaan, keterlambatan material, dll)\n\n## Site Instruction (SI)\n\nPerintah tertulis pengawas kepada kontraktor untuk:\n- Melakukan pekerjaan tambah\n- Mengubah metode pelaksanaan\n- Menghentikan pekerjaan yang tidak sesuai\n\nSemua SI harus ditandatangani kedua pihak.\n\n## RFI — Request for Information\n\nKontraktor mengajukan RFI ketika ada ambiguitas di gambar atau spesifikasi.\n- Pengawas wajib merespons dalam 7-14 hari kerja\n- Jawaban RFI bisa mempengaruhi harga (klaim)\n- Catat semua RFI dalam RFI Log\n\n## Shop Drawing Review\n\nKontraktor submit shop drawing (gambar pelaksanaan detail) → Pengawas review → Approved/Rejected/Revise.\n\nJangan mulai pekerjaan sebelum shop drawing diapprove.` },
+      { title: "Laporan Progres & Pelaporan", slug: "laporan-progres-pelaporan", type: "article", durationMinutes: 10, content: `# Laporan Progres & Pelaporan\n\n## Jenis Laporan\n\n### Laporan Harian\n- Isi: Aktivitas, cuaca, personel, alat, material, kejadian\n- Frekuensi: Setiap hari kerja\n- Dibuat: Kontraktor + dikonfirmasi pengawas\n\n### Laporan Mingguan\n- Isi: Rangkuman kemajuan, deviasi jadwal, isu yang perlu diselesaikan\n- Frekuensi: Setiap minggu\n- Distribusi: Tim proyek + PPK\n\n### Laporan Bulanan\n- Isi: Progres kumulatif, S-curve aktual vs rencana, keuangan, foto progres\n- Frekuensi: Bulanan\n- Distribusi: Manajemen + PPK + owner\n\n## Foto Dokumentasi\n\nFoto adalah bukti paling kuat. Standar foto dokumentasi:\n- **Before** — Sebelum pekerjaan dimulai\n- **During** — Saat pekerjaan berlangsung (termasuk yang tertutup)\n- **After** — Setelah pekerjaan selesai\n\nBeri metadata: tanggal, lokasi, deskripsi pekerjaan.\n\n## Rapat Mingguan (Site Meeting)\n\nForum koordinasi rutin antara kontraktor, pengawas, dan pemilik proyek:\n- Bahas progres minggu lalu\n- Rencanakan minggu depan\n- Selesaikan isu yang tertunda\n- Catat dalam Notulen yang ditandatangani semua pihak` },
+    ],
+  },
+];
+
+// ─── Seed runner ──────────────────────────────────────────────────────────────
+// Reconcile-per-slug: upsert courses and lessons so content changes in
+// SEED_COURSES are reflected in an already-seeded database.
+// Returns separate "added" and "updated" counts.
+export async function seedLmsData(): Promise<{ added: number; updated: number; addedTitles: string[]; updatedTitles: string[] }> {
+  try {
+    let added = 0;
+    let updated = 0;
+    const addedTitles: string[] = [];
+    const updatedTitles: string[] = [];
+
+    for (const courseData of SEED_COURSES) {
+      const { lessons, ...course } = courseData;
+
+      const [existing] = await db.select()
+        .from(lmsCourses)
+        .where(eq(lmsCourses.slug, course.slug))
+        .limit(1);
+
+      let courseId: number;
+
+      if (!existing) {
+        // ── New course: insert course + all lessons ──────────────────────────
+        const [created] = await db.insert(lmsCourses).values({
+          title: course.title,
+          slug: course.slug,
+          shortDesc: course.shortDesc,
+          description: course.description,
+          category: course.category,
+          subcategory: course.subcategory,
+          color: course.color,
+          emoji: course.emoji,
+          instructor: course.instructor,
+          durationMinutes: course.durationMinutes,
+          price: course.price,
+          level: course.level,
+          isFeatured: course.isFeatured ?? false,
+          sortOrder: course.sortOrder,
+          isPublic: true,
+          isActive: true,
+        }).returning();
+        courseId = created.id;
+
+        for (let i = 0; i < lessons.length; i++) {
+          const lesson = lessons[i];
+          await db.insert(lmsLessons).values({
+            courseId,
+            title: lesson.title,
+            slug: lesson.slug,
+            content: lesson.content,
+            type: lesson.type,
+            durationMinutes: lesson.durationMinutes,
+            isPreview: lesson.isPreview ?? false,
+            sortOrder: i + 1,
+            isActive: true,
+          });
+        }
+        added++;
+        addedTitles.push(course.title);
+      } else {
+        // ── Existing course: compare and update if anything changed ──────────
+        courseId = existing.id;
+        let courseWasUpdated = false;
+
+        const courseChanged =
+          existing.title !== course.title ||
+          (existing.shortDesc ?? "") !== (course.shortDesc ?? "") ||
+          (existing.description ?? "") !== (course.description ?? "") ||
+          (existing.color ?? "") !== (course.color ?? "") ||
+          (existing.emoji ?? "") !== (course.emoji ?? "") ||
+          (existing.instructor ?? "") !== (course.instructor ?? "") ||
+          existing.durationMinutes !== course.durationMinutes ||
+          existing.price !== course.price ||
+          existing.level !== course.level ||
+          existing.isFeatured !== (course.isFeatured ?? false) ||
+          existing.sortOrder !== course.sortOrder;
+
+        if (courseChanged) {
+          await db.update(lmsCourses)
+            .set({
+              title: course.title,
+              shortDesc: course.shortDesc,
+              description: course.description,
+              color: course.color,
+              emoji: course.emoji,
+              instructor: course.instructor,
+              durationMinutes: course.durationMinutes,
+              price: course.price,
+              level: course.level,
+              isFeatured: course.isFeatured ?? false,
+              sortOrder: course.sortOrder,
+            })
+            .where(eq(lmsCourses.id, courseId));
+          courseWasUpdated = true;
+        }
+
+        // Reconcile lessons by slug
+        const existingLessons = await db.select()
+          .from(lmsLessons)
+          .where(eq(lmsLessons.courseId, courseId));
+        const existingBySlug = new Map(existingLessons.map((l) => [l.slug, l]));
+
+        for (let i = 0; i < lessons.length; i++) {
+          const lesson = lessons[i];
+          const existingLesson = existingBySlug.get(lesson.slug);
+
+          if (!existingLesson) {
+            await db.insert(lmsLessons).values({
+              courseId,
+              title: lesson.title,
+              slug: lesson.slug,
+              content: lesson.content,
+              type: lesson.type,
+              durationMinutes: lesson.durationMinutes,
+              isPreview: lesson.isPreview ?? false,
+              sortOrder: i + 1,
+              isActive: true,
+            });
+            courseWasUpdated = true;
+          } else {
+            const lessonChanged =
+              existingLesson.title !== lesson.title ||
+              (existingLesson.content ?? "") !== (lesson.content ?? "") ||
+              existingLesson.type !== lesson.type ||
+              existingLesson.durationMinutes !== lesson.durationMinutes ||
+              existingLesson.isPreview !== (lesson.isPreview ?? false) ||
+              existingLesson.sortOrder !== i + 1 ||
+              existingLesson.isActive !== true;
+
+            if (lessonChanged) {
+              await db.update(lmsLessons)
+                .set({
+                  title: lesson.title,
+                  content: lesson.content,
+                  type: lesson.type,
+                  durationMinutes: lesson.durationMinutes,
+                  isPreview: lesson.isPreview ?? false,
+                  sortOrder: i + 1,
+                  isActive: true,
+                })
+                .where(eq(lmsLessons.id, existingLesson.id));
+              courseWasUpdated = true;
+            }
+          }
+        }
+
+        // Deactivate lessons that were removed from the seed definition:
+        // present in the DB but absent from SEED_COURSES for this course.
+        const seedSlugs = new Set(lessons.map((l) => l.slug));
+        const staleLessonIds = existingLessons
+          .filter((l) => !seedSlugs.has(l.slug) && l.isActive !== false)
+          .map((l) => l.id);
+        if (staleLessonIds.length > 0) {
+          await db.update(lmsLessons)
+            .set({ isActive: false })
+            .where(inArray(lmsLessons.id, staleLessonIds));
+          courseWasUpdated = true;
+          console.log(`[LMS] ${staleLessonIds.length} pelajaran usang dinonaktifkan di kursus "${course.slug}".`);
+        }
+
+        if (courseWasUpdated) {
+          updated++;
+          updatedTitles.push(course.title);
+        }
+      }
+    }
+
+    console.log(`[LMS] Seed selesai — ${added} kursus baru, ${updated} kursus diperbarui (total target: ${SEED_COURSES.length}).`);
+    return { added, updated, addedTitles, updatedTitles };
+  } catch (e) {
+    console.error("[LMS] Seed error:", e);
+    throw e; // propagate so seedLmsDataTracked can set error status
+  }
+}
+
+// ─── Seed status tracker ─────────────────────────────────────────────────────
+type SeedStatus = "pending" | "done" | "skipped" | "error";
+let lmsSeedStatus: SeedStatus = "pending";
+
+function lmsSeedStaleMs(): number {
+  const raw = Number(process.env.LMS_SEED_STALE_MS);
+  return Number.isFinite(raw) && raw > 0 ? raw : 10 * 60 * 1000;
+}
+async function seedLmsDataTracked() {
+  try {
+    const { added, updated } = await seedLmsData();
+    // "skipped" = ran successfully but nothing changed (no inserts, no updates).
+    // Admin can still trigger a manual re-seed; the button shows for "skipped" or "error".
+    lmsSeedStatus = added === 0 && updated === 0 ? "skipped" : "done";
+  } catch (e) {
+    lmsSeedStatus = "error";
+    console.error("[LMS] Seed fatal:", e);
+  }
+}
+
+// Promise yang selesai saat seed boot-time (fire-and-forget) sudah settle.
+// Dipakai tes integrasi agar tidak menutup pool DB saat seed masih berjalan.
+export let lmsSeedSettled: Promise<void> = Promise.resolve();
+
+// ─── Route registration ───────────────────────────────────────────────────────
+export function registerLmsRoutes(
+  app: Express,
+  // Optional override for seedLmsData — used in tests to inject failures
+  // without touching the real DB connection pool.
+  _seedFnOverride?: () => Promise<{ added: number; updated: number }>,
+  _routeDbOverride?: any
+) {
+  // Route-level override is used by request tests with an in-memory adapter.
+  const routeDb = _routeDbOverride ?? db;
+  // When an override is provided the tracked-seed wrapper must use it.
+  const activeSeedFn = _seedFnOverride ?? seedLmsData;
+
+  // Re-wrap the tracked helper so the override is picked up.
+  const trackedSeed = async () => {
+    const generation = markSeedPending();
+    try {
+      const { added, updated } = await activeSeedFn();
+      publishSeedStatus(generation, added === 0 && updated === 0 ? "skipped" : "done");
+    } catch (e) {
+      publishSeedStatus(generation, "error");
+      console.error("[LMS] Seed fatal:", e);
+    }
+  };
+
+  lmsSeedSettled = trackedSeed();
+
+  // POST /api/admin/lms/courses/bulk-deactivate — nonaktifkan beberapa kursus sekaligus
+  app.post("/api/admin/lms/courses/bulk-deactivate", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const { ids } = req.body;
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ error: "Harus menyertakan array ids yang tidak kosong" });
+      }
+      const validIds = ids.map(Number).filter(n => !isNaN(n) && n > 0);
+      if (validIds.length === 0) {
+        return res.status(400).json({ error: "Tidak ada ID valid dalam array ids" });
+      }
+      // Only update courses that are currently active so the returned count
+      // reflects how many actually changed state (not the full selection).
+      const updated = await db.update(lmsCourses)
+        .set({ isActive: false })
+        .where(and(inArray(lmsCourses.id, validIds), eq(lmsCourses.isActive, true)))
+        .returning({ id: lmsCourses.id });
+      res.json({ ok: true, deactivated: updated.length, selected: validIds.length, ids: validIds });
+    } catch (err: any) {
+      console.error("[LMS] Bulk deactivate error:", err?.message);
+      res.status(500).json({ error: "Gagal menonaktifkan kursus" });
+    }
+  });
+
+  // POST /api/admin/lms/courses/bulk-activate — aktifkan beberapa kursus sekaligus
+  app.post("/api/admin/lms/courses/bulk-activate", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const { ids } = req.body;
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ error: "Harus menyertakan array ids yang tidak kosong" });
+      }
+      const validIds = ids.map(Number).filter(n => !isNaN(n) && n > 0);
+      if (validIds.length === 0) {
+        return res.status(400).json({ error: "Tidak ada ID valid dalam array ids" });
+      }
+      // Only update courses that are currently inactive so the returned count
+      // reflects how many actually changed state (not the full selection).
+      const updated = await db.update(lmsCourses)
+        .set({ isActive: true })
+        .where(and(inArray(lmsCourses.id, validIds), eq(lmsCourses.isActive, false)))
+        .returning({ id: lmsCourses.id });
+      res.json({ ok: true, activated: updated.length, selected: validIds.length, ids: validIds });
+    } catch (err: any) {
+      console.error("[LMS] Bulk activate error:", err?.message);
+      res.status(500).json({ error: "Gagal mengaktifkan kursus" });
+    }
+  });
+
+  // PATCH /api/admin/lms/courses/bulk-reactivate — aktifkan kembali beberapa kursus sekaligus
+  // Hanya kursus yang benar-benar tidak aktif yang diperbarui; count mencerminkan perubahan nyata.
+  app.patch("/api/admin/lms/courses/bulk-reactivate", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const { ids } = req.body;
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({ error: "Harus menyertakan array ids yang tidak kosong" });
+      }
+      const validIds = ids.map(Number).filter(n => !isNaN(n) && n > 0);
+      if (validIds.length === 0) {
+        return res.status(400).json({ error: "Tidak ada ID valid dalam array ids" });
+      }
+      // Filter WHERE isActive = false so only truly-inactive courses are counted.
+      // This mirrors the bulk-deactivate pattern so the returned count is honest.
+      const updated = await db.update(lmsCourses)
+        .set({ isActive: true })
+        .where(and(inArray(lmsCourses.id, validIds), eq(lmsCourses.isActive, false)))
+        .returning({ id: lmsCourses.id });
+      res.json({ ok: true, reactivated: updated.length, selected: validIds.length, ids: validIds });
+    } catch (err: any) {
+      console.error("[LMS] Bulk reactivate error:", err?.message);
+      res.status(500).json({ error: "Gagal mengaktifkan kembali kursus" });
+    }
+  });
+
+  // POST /api/admin/lms/reseed — trigger re-seed dari health dashboard (admin only)
+  app.post("/api/admin/lms/reseed", isAuthenticated, requireAdminLms, async (_req, res) => {
+    if (currentSeedStatus() === "pending") {
+      return res.status(409).json({ error: "Seeding sudah berjalan, tunggu selesai dulu." });
+    }
+    const generation = markSeedPending();
+    try {
+      const result = await activeSeedFn();
+      const { added, updated } = result;
+      const addedTitles = (result as any).addedTitles ?? [];
+      const updatedTitles = (result as any).updatedTitles ?? [];
+      publishSeedStatus(generation, added === 0 && updated === 0 ? "skipped" : "done");
+      res.json({ ok: true, added, updated, addedTitles, updatedTitles });
+    } catch (e: any) {
+      publishSeedStatus(generation, "error");
+      console.error("[LMS] Manual reseed error:", e);
+      res.status(500).json({ error: e?.message || "Reseed gagal." });
+    }
+  });
+
+  // POST /api/lms/retry-seed — public endpoint to retry a failed seed (no auth required)
+  // Only fires when status is "error"; a 30-second cooldown prevents accidental flooding.
+  let lastPublicRetrySeedAt = 0;
+  app.post("/api/lms/retry-seed", async (_req, res) => {
+    if (currentSeedStatus() !== "error") {
+      return res.status(409).json({ error: "Seed tidak dalam kondisi error; retry tidak diperlukan." });
+    }
+    const now = Date.now();
+    if (now - lastPublicRetrySeedAt < 30_000) {
+      return res.status(429).json({ error: "Terlalu sering. Tunggu 30 detik sebelum coba lagi." });
+    }
+    lastPublicRetrySeedAt = now;
+    trackedSeed().catch(e => console.error("[LMS] Public retry-seed error:", e));
+    res.json({ ok: true, message: "Retry dimulai. Halaman akan diperbarui otomatis." });
+  });
+
+  // GET /api/lms/status — seeding status + course count (public, lightweight)
+  app.get("/api/lms/status", async (_req, res) => {
+    try {
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(lmsCourses)
+        .where(and(eq(lmsCourses.isActive, true), eq(lmsCourses.isPublic, true)));
+      const st = currentSeedStatus();
+      res.json({ seeding: st === "pending", seedStatus: st, courseCount: Number(total) });
+    } catch (e) {
+      console.error("[LMS] GET status:", e);
+      const st = currentSeedStatus();
+      res.json({ seeding: st === "pending", seedStatus: st, courseCount: 0 });
+    }
+  });
+
+  // GET /api/lms/courses — list all public courses (optionally filter by category)
+  app.get("/api/lms/courses", async (req, res) => {
+    try {
+      const { category } = req.query as { category?: string };
+      let rows;
+      if (category && category !== "all") {
+        rows = await db.select().from(lmsCourses)
+          .where(and(eq(lmsCourses.isActive, true), eq(lmsCourses.isPublic, true), eq(lmsCourses.category, category)))
+          .orderBy(asc(lmsCourses.sortOrder));
+      } else {
+        rows = await db.select().from(lmsCourses)
+          .where(and(eq(lmsCourses.isActive, true), eq(lmsCourses.isPublic, true)))
+          .orderBy(asc(lmsCourses.sortOrder));
+      }
+      // Attach lesson count
+      const withCounts = await Promise.all(rows.map(async (c) => {
+        const lessons = await db.select().from(lmsLessons)
+          .where(and(eq(lmsLessons.courseId, c.id), eq(lmsLessons.isActive, true)));
+        return { ...c, lessonCount: lessons.length };
+      }));
+      res.json(withCounts);
+    } catch (e) {
+      console.error("[LMS] GET courses:", e);
+      res.status(500).json({ error: "Gagal mengambil kursus" });
+    }
+  });
+
+  // GET /api/lms/courses/:id — course detail + lessons
+  app.get("/api/lms/courses/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const [course] = await db.select().from(lmsCourses).where(eq(lmsCourses.id, id));
+      if (!course) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+      const lessons = await db.select().from(lmsLessons)
+        .where(and(eq(lmsLessons.courseId, id), eq(lmsLessons.isActive, true)))
+        .orderBy(asc(lmsLessons.sortOrder));
+      res.json({ ...course, lessons });
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil detail kursus" });
+    }
+  });
+
+  // GET /api/lms/lessons/:id — single lesson (check enrollment or preview)
+  app.get("/api/lms/lessons/:id", async (req: any, res) => {
+    try {
+      const id = parsePositiveInteger(req.params.id);
+      if (id === null) return res.status(400).json({ error: "ID lesson tidak valid" });
+      const [lesson] = await routeDb.select().from(lmsLessons).where(eq(lmsLessons.id, id));
+      if (!lesson || lesson.isActive !== true) return res.status(404).json({ error: "Lesson tidak ditemukan" });
+      const [course] = await routeDb.select().from(lmsCourses).where(eq(lmsCourses.id, lesson.courseId));
+      if (!course || course.isActive !== true) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+
+      const userId = getLmsUserId(req);
+      // If not preview, check enrollment
+      if (!lesson.isPreview && !userId) {
+        return res.status(403).json({ error: "Harus login untuk mengakses lesson ini", requireLogin: true });
+      }
+      if (!lesson.isPreview && userId) {
+        const [enrollment] = await routeDb.select().from(lmsEnrollments)
+          .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, lesson.courseId)));
+        if (!enrollment && course?.price === 0) {
+          await routeDb.transaction(async (tx: any) => {
+            await lockLmsStudentCourse(tx, userId, lesson.courseId);
+            const [racedEnrollment] = await tx.select().from(lmsEnrollments)
+              .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, lesson.courseId)))
+              .for("update");
+            if (!racedEnrollment) {
+              await tx.insert(lmsEnrollments).values({ userId, courseId: lesson.courseId, progress: 0 });
+            }
+          });
+        } else if (!enrollment) {
+          return res.status(403).json({ error: "Harus terdaftar di kursus ini", requireEnrollment: true });
+        }
+      }
+      res.json(lesson);
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil lesson" });
+    }
+  });
+
+  // POST /api/lms/enroll/:courseId — enroll in a course
+  app.post("/api/lms/enroll/:courseId", isAuthenticated, async (req: any, res) => {
+    try {
+      const courseId = parsePositiveInteger(req.params.courseId);
+      if (courseId === null) return res.status(400).json({ error: "ID kursus tidak valid" });
+      const userId = getLmsUserId(req);
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const [course] = await routeDb.select().from(lmsCourses).where(eq(lmsCourses.id, courseId));
+      if (!course || course.isActive !== true) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+      const enrollment = await routeDb.transaction(async (tx: any) => {
+        await lockLmsStudentCourse(tx, userId, courseId);
+        const [existing] = await tx.select().from(lmsEnrollments)
+          .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, courseId)))
+          .orderBy(desc(lmsEnrollments.progress))
+          .for("update");
+        if (existing) return existing;
+
+        // Only the immutable course ID establishes certificate ownership.
+        const [existingCert] = await tx.select({ id: lmsCertificates.id })
+          .from(lmsCertificates)
+          .where(and(eq(lmsCertificates.userId, userId), eq(lmsCertificates.courseId, courseId)));
+        const initialProgress = existingCert ? 100 : 0;
+        const initialCompletedAt = existingCert ? new Date() : undefined;
+        const [created] = await tx.insert(lmsEnrollments)
+          .values({ userId, courseId, progress: initialProgress, ...(initialCompletedAt ? { completedAt: initialCompletedAt } : {}) })
+          .returning();
+        return created;
+      });
+      res.json(enrollment);
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mendaftar kursus" });
+    }
+  });
+
+  // POST /api/lms/progress — mark lesson as complete
+  app.post("/api/lms/progress", isAuthenticated, async (req: any, res) => {
+    try {
+      const lessonId = parsePositiveInteger(req.body?.lessonId);
+      const courseId = parsePositiveInteger(req.body?.courseId);
+      if (lessonId === null || courseId === null) {
+        return res.status(400).json({ error: "ID lesson dan kursus harus berupa bilangan bulat positif" });
+      }
+      const userId = getLmsUserId(req);
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const [lesson] = await routeDb.select().from(lmsLessons).where(eq(lmsLessons.id, lessonId));
+      if (!lesson || lesson.isActive !== true) return res.status(404).json({ error: "Lesson tidak ditemukan" });
+      if (lesson.courseId !== courseId) return res.status(400).json({ error: "Lesson tidak termasuk dalam kursus tersebut" });
+      const [course] = await routeDb.select().from(lmsCourses).where(eq(lmsCourses.id, courseId));
+      if (!course || course.isActive !== true) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+
+      const now = new Date();
+      let certificateCode: string | null = null;
+      let progress = 0;
+      let completed: number[] = [];
+      let issuedCertificate = false;
+      const result: {
+        forbidden: true;
+      } | {
+        forbidden: false;
+        progress: number;
+        completed: number[];
+        certCode: string | null;
+        newCertificate: boolean;
+      } = await routeDb.transaction(async (tx: any) => {
+        // Serialize even when legacy data has duplicate enrollments (or there
+        // is not yet an enrollment row to lock).
+        await lockLmsStudentCourse(tx, userId, courseId);
+        const [enrollment] = await tx.select().from(lmsEnrollments)
+          .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, courseId)))
+          .for("update");
+        if (!enrollment) {
+          if (course.price !== 0) return { forbidden: true };
+          await tx.insert(lmsEnrollments).values({ userId, courseId, progress: 0 });
+        }
+
+        const [existingProgress] = await tx.select().from(lmsLessonProgress)
+          .where(and(
+            eq(lmsLessonProgress.userId, userId),
+            eq(lmsLessonProgress.courseId, courseId),
+            eq(lmsLessonProgress.lessonId, lessonId)
+          ))
+          .for("update");
+        if (!existingProgress) {
+          await tx.insert(lmsLessonProgress).values({ userId, courseId, lessonId });
+        }
+        const allLessons = await tx.select({ id: lmsLessons.id }).from(lmsLessons)
+          .where(and(eq(lmsLessons.courseId, courseId), eq(lmsLessons.isActive, true)));
+        const lessonIds = allLessons.map((row: any) => row.id);
+        const completedRows = lessonIds.length
+          ? await tx.select().from(lmsLessonProgress)
+            .where(and(eq(lmsLessonProgress.userId, userId), eq(lmsLessonProgress.courseId, courseId), inArray(lmsLessonProgress.lessonId, lessonIds)))
+          : [];
+        const completedLessonIds = [...new Set(completedRows.map((row: any) => row.lessonId as number))];
+        const nextProgress = allLessons.length
+          ? Math.round((completedLessonIds.length / allLessons.length) * 100)
+          : 0;
+        await tx.update(lmsEnrollments)
+          .set({ progress: nextProgress, completedAt: nextProgress === 100 ? now : null })
+          .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, courseId)));
+
+        let certCode: string | null = null;
+        let newCertificate = false;
+        if (nextProgress === 100) {
+          const [priorCert] = await tx.select().from(lmsCertificates)
+            .where(and(eq(lmsCertificates.userId, userId), eq(lmsCertificates.courseId, courseId)));
+          if (priorCert) {
+            certCode = priorCert.certificateCode;
+          } else {
+            const code = generateCertCode();
+            const [insertedCert] = await tx.insert(lmsCertificates)
+              .values({ userId, courseId, courseTitle: course.title, certificateCode: code })
+              .onConflictDoNothing()
+              .returning();
+            const [cert] = insertedCert ? [insertedCert] : await tx.select().from(lmsCertificates)
+              .where(and(eq(lmsCertificates.userId, userId), eq(lmsCertificates.courseId, courseId)));
+            certCode = cert?.certificateCode ?? null;
+            newCertificate = Boolean(insertedCert);
+          }
+        }
+        return {
+          forbidden: false,
+          progress: nextProgress,
+          completed: completedLessonIds,
+          certCode,
+          newCertificate,
+        };
+      });
+      if (result.forbidden) {
+        return res.status(403).json({ error: "Harus terdaftar di kursus ini", requireEnrollment: true });
+      }
+      progress = result.progress;
+      completed = result.completed;
+      certificateCode = result.certCode;
+      issuedCertificate = result.newCertificate;
+
+      // Send email only when a brand-new certificate was inserted.
+      if (issuedCertificate && certificateCode) {
+          (async () => {
+            try {
+              const uRows = await routeDb.execute(sql.raw(
+                `SELECT u.email, u.first_name, u.last_name, u.phone, up.display_name
+                 FROM users u
+                 LEFT JOIN user_profiles up ON up.user_id = u.id
+                 WHERE u.id = '${userId.replace(/'/g, "''")}'
+                 LIMIT 1`
+              ));
+              const uRow = (uRows as any).rows?.[0] ?? (uRows as any)[0];
+              const email = uRow?.email as string | undefined;
+              if (!email) return;
+              const [course] = await routeDb.select({ title: lmsCourses.title })
+                .from(lmsCourses).where(eq(lmsCourses.id, courseId));
+              const courseTitle = course?.title ?? "Kursus";
+              const studentName = resolveStudentName(uRow);
+              const issueDate = now.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+              const appBase = (process.env.APP_URL || "https://gustafta.my.id").replace(/\/$/, "");
+              const certsUrl = `${appBase}/lms/certificates`;
+              const verifyUrl = `${appBase}/lms/verify/${certificateCode}`;
+
+              const htmlContent = `<!DOCTYPE html>
+<html lang="id">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f3f4f6">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 0">
+    <tr><td align="center">
+      <table width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;padding:40px;font-family:Arial,sans-serif;color:#111">
+        <tr><td>
+          <p style="margin:0 0 4px;font-size:22px;font-weight:700;color:#4f46e5">Gustafta Academy</p>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:16px 0">
+          <p style="font-size:16px;margin:0 0 8px">Selamat, <b>${studentName}</b>! 🎓</p>
+          <p style="font-size:15px;color:#374151;margin:0 0 16px">
+            Anda telah berhasil menyelesaikan kursus <b>${courseTitle}</b> di Gustafta Academy.
+          </p>
+          <div style="padding:20px;background:#f5f3ff;border-radius:8px;border:1px solid #c4b5fd;margin:0 0 24px">
+            <p style="font-size:13px;color:#6b7280;margin:0 0 4px">Nama Kursus</p>
+            <p style="font-size:16px;font-weight:700;color:#111;margin:0 0 12px">${courseTitle}</p>
+            <p style="font-size:13px;color:#6b7280;margin:0 0 4px">Tanggal Terbit</p>
+            <p style="font-size:14px;color:#111;margin:0 0 12px">${issueDate}</p>
+            <p style="font-size:13px;color:#6b7280;margin:0 0 4px">Kode Sertifikat</p>
+            <p style="font-size:15px;font-weight:700;color:#4f46e5;font-family:monospace;letter-spacing:1px;margin:0">${certificateCode}</p>
+          </div>
+          <div style="text-align:center;margin:0 0 16px">
+            <a href="${certsUrl}" style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:14px 28px;border-radius:8px">📄 Unduh Sertifikat PDF</a>
+          </div>
+          <div style="text-align:center;margin:0 0 24px">
+            <a href="${verifyUrl}" style="font-size:13px;color:#4f46e5;text-decoration:underline">Verifikasi keaslian sertifikat →</a>
+          </div>
+          <hr style="border:none;border-top:1px solid #e5e7eb;margin:0 0 16px">
+          <p style="font-size:12px;color:#9ca3af;margin:0">Simpan email ini — kode sertifikat di atas bisa digunakan untuk memverifikasi kelulusan Anda kapan saja.</p>
+          <p style="font-size:12px;color:#9ca3af;margin:8px 0 0">© 2026 Gustafta. Seluruh hak dilindungi.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+              const textContent = `Selamat, ${studentName}!
+
+Anda telah berhasil menyelesaikan kursus "${courseTitle}" di Gustafta Academy.
+
+Nama Kursus  : ${courseTitle}
+Tanggal Terbit: ${issueDate}
+Kode Sertifikat: ${certificateCode}
+
+Unduh sertifikat PDF: ${certsUrl}
+Verifikasi keaslian : ${verifyUrl}
+
+Simpan email ini — kode sertifikat di atas bisa digunakan untuk memverifikasi kelulusan Anda kapan saja.
+
+© 2026 Gustafta.`;
+
+              const result = await sendEmail({
+                to: email,
+                toName: studentName,
+                subject: `🎓 Selamat! Sertifikat "${courseTitle}" berhasil diraih`,
+                htmlContent,
+                textContent,
+                tags: ["certificate", "lms"],
+              });
+              if (!result.sent) {
+                console.error(
+                  `[LMS] Certificate email failed for user ${userId} course ${courseId}: ${result.reason}${result.detail ? ` — ${result.detail}` : ""}`
+                );
+              }
+            } catch (err) {
+              console.error(
+                `[LMS] Certificate email failed for user ${userId} course ${courseId}:`,
+                err
+              );
+            }
+          })();
+        }
+
+      res.json({ progress, completed, certificateCode });
+    } catch (e) {
+      res.status(500).json({ error: "Gagal update progress" });
+    }
+  });
+
+  // GET /api/lms/my-courses — enrolled courses with progress
+  app.get("/api/lms/my-courses", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = getLmsUserId(req);
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const enrollments = await routeDb.select().from(lmsEnrollments)
+        .where(eq(lmsEnrollments.userId, userId));
+      const results = await Promise.all(enrollments.map(async (e: typeof lmsEnrollments.$inferSelect) => {
+        const [course] = await routeDb.select().from(lmsCourses).where(eq(lmsCourses.id, e.courseId));
+        const completed = await routeDb.select().from(lmsLessonProgress)
+          .where(and(eq(lmsLessonProgress.userId, userId), eq(lmsLessonProgress.courseId, e.courseId)));
+        return { ...e, course, completedLessons: completed.map((l: typeof lmsLessonProgress.$inferSelect) => l.lessonId) };
+      }));
+      res.json(results);
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil kursus saya" });
+    }
+  });
+
+  // GET /api/lms/certificates — my earned certificates
+  app.get("/api/lms/certificates", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = getLmsUserId(req);
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const certs = await routeDb.select().from(lmsCertificates)
+        .where(eq(lmsCertificates.userId, userId));
+      const results = await Promise.all(certs.map(async (c: typeof lmsCertificates.$inferSelect) => {
+        const [course] = c.courseId ? await routeDb.select({
+          id: lmsCourses.id, title: lmsCourses.title, emoji: lmsCourses.emoji,
+          color: lmsCourses.color, category: lmsCourses.category,
+        }).from(lmsCourses).where(eq(lmsCourses.id, c.courseId)) : [];
+        return { ...c, course: course ?? { id: null, title: c.courseTitle, emoji: "🎓", color: "#6366f1", category: "" } };
+      }));
+      res.json(results);
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil sertifikat" });
+    }
+  });
+
+  // GET /api/lms/certificate/:code — public verification endpoint
+  app.get("/api/lms/certificate/:code", async (req: any, res) => {
+    try {
+      const { code } = req.params;
+      const [cert] = await routeDb.select().from(lmsCertificates)
+        .where(eq(lmsCertificates.certificateCode, code));
+      if (!cert) return res.status(404).json({ error: "Sertifikat tidak ditemukan" });
+      const [course] = cert.courseId ? await routeDb.select({
+        id: lmsCourses.id, title: lmsCourses.title, emoji: lmsCourses.emoji,
+        color: lmsCourses.color, category: lmsCourses.category,
+        instructor: lmsCourses.instructor,
+      }).from(lmsCourses).where(eq(lmsCourses.id, cert.courseId)) : [];
+      const verifiedCourse = course ?? {
+        id: null,
+        title: cert.courseTitle,
+        emoji: "🎓",
+        color: "#6366f1",
+        category: "",
+        instructor: "",
+      };
+      // Get student name — prefer first_name+last_name from users (matches congrats email),
+      // fall back to display_name from user_profiles, then email prefix, then masked phone.
+      const nameRows = await routeDb.execute(sql.raw(
+        `SELECT u.first_name, u.last_name, u.email, u.phone, up.display_name
+         FROM users u
+         LEFT JOIN user_profiles up ON up.user_id = u.id
+         WHERE u.id = '${cert.userId.replace(/'/g, "''")}'
+         LIMIT 1`
+      ));
+      const nameArr = (nameRows.rows ?? nameRows) as any[];
+      const nr = nameArr[0] as any;
+      const studentName = resolveStudentName(nr);
+      res.json({ ...cert, course: verifiedCourse, studentName });
+    } catch (e) {
+      res.status(500).json({ error: "Gagal verifikasi sertifikat" });
+    }
+  });
+
+  // GET /api/lms/progress/:courseId — get my progress for a specific course
+  app.get("/api/lms/progress/:courseId", isAuthenticated, async (req: any, res) => {
+    try {
+      const courseId = parsePositiveInteger(req.params.courseId);
+      if (courseId === null) return res.status(400).json({ error: "ID kursus tidak valid" });
+      const userId = getLmsUserId(req);
+      if (!userId) return res.status(401).json({ error: "Unauthorized" });
+      const [enrollment] = await routeDb.select().from(lmsEnrollments)
+        .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, courseId)));
+      const completed = await routeDb.select().from(lmsLessonProgress)
+        .where(and(eq(lmsLessonProgress.userId, userId), eq(lmsLessonProgress.courseId, courseId)));
+      const [cert] = await routeDb.select().from(lmsCertificates)
+        .where(and(eq(lmsCertificates.userId, userId), eq(lmsCertificates.courseId, courseId)));
+      res.json({
+        enrolled: !!enrollment,
+        progress: enrollment?.progress ?? 0,
+        completedLessons: completed.map((l: typeof lmsLessonProgress.$inferSelect) => l.lessonId),
+        completedAt: enrollment?.completedAt ?? null,
+        certificateCode: cert?.certificateCode ?? null,
+      });
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil progress" });
+    }
+  });
+
+  // ─── Admin CRUD: Courses ──────────────────────────────────────────────────────
+
+  // POST /api/admin/lms/courses — create a new course
+  app.post("/api/admin/lms/courses", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const { title, slug, shortDesc, description, category, subcategory, color, emoji, instructor,
+        durationMinutes, price, level, isFeatured, isPublic, isActive, sortOrder } = req.body;
+      if (!title || !slug) return res.status(400).json({ error: "title dan slug wajib diisi" });
+      const [existing] = await db.select({ id: lmsCourses.id }).from(lmsCourses).where(eq(lmsCourses.slug, slug));
+      if (existing) return res.status(409).json({ error: "Slug sudah digunakan" });
+      const [course] = await db.insert(lmsCourses).values({
+        title, slug, shortDesc: shortDesc ?? "", description: description ?? "",
+        category: category ?? "onboarding", subcategory: subcategory ?? "",
+        color: color ?? "#6366f1", emoji: emoji ?? "📚", instructor: instructor ?? "Tim Gustafta",
+        durationMinutes: durationMinutes ?? 0, price: price ?? 0, level: level ?? "beginner",
+        isFeatured: isFeatured ?? false, isPublic: isPublic ?? true, isActive: isActive ?? true,
+        sortOrder: sortOrder ?? 0,
+      }).returning();
+      res.status(201).json(course);
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] POST course:", e);
+      res.status(500).json({ error: "Gagal membuat kursus" });
+    }
+  });
+
+  // PATCH /api/admin/lms/courses/:id — update a course
+  app.patch("/api/admin/lms/courses/:id", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "ID tidak valid" });
+      const { title, slug, shortDesc, description, category, subcategory, color, emoji, instructor,
+        durationMinutes, price, level, isFeatured, isPublic, isActive, sortOrder } = req.body;
+      if (slug) {
+        const [dup] = await db.select({ id: lmsCourses.id }).from(lmsCourses)
+          .where(and(eq(lmsCourses.slug, slug), eq(lmsCourses.id, id)));
+        // allow same slug for same course; block if another course has it
+        const [other] = await db.select({ id: lmsCourses.id }).from(lmsCourses).where(eq(lmsCourses.slug, slug));
+        if (other && other.id !== id) return res.status(409).json({ error: "Slug sudah digunakan kursus lain" });
+      }
+      const updates: Record<string, any> = {};
+      if (title !== undefined) updates.title = title;
+      if (slug !== undefined) updates.slug = slug;
+      if (shortDesc !== undefined) updates.shortDesc = shortDesc;
+      if (description !== undefined) updates.description = description;
+      if (category !== undefined) updates.category = category;
+      if (subcategory !== undefined) updates.subcategory = subcategory;
+      if (color !== undefined) updates.color = color;
+      if (emoji !== undefined) updates.emoji = emoji;
+      if (instructor !== undefined) updates.instructor = instructor;
+      if (durationMinutes !== undefined) updates.durationMinutes = durationMinutes;
+      if (price !== undefined) updates.price = price;
+      if (level !== undefined) updates.level = level;
+      if (isFeatured !== undefined) updates.isFeatured = isFeatured;
+      if (isPublic !== undefined) updates.isPublic = isPublic;
+      if (isActive !== undefined) updates.isActive = isActive;
+      if (sortOrder !== undefined) updates.sortOrder = sortOrder;
+      const [course] = await db.update(lmsCourses).set(updates).where(eq(lmsCourses.id, id)).returning();
+      if (!course) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+      res.json(course);
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] PATCH course:", e);
+      res.status(500).json({ error: "Gagal mengubah kursus" });
+    }
+  });
+
+  // GET /api/admin/lms/courses/:id/stats — enrollment count for a course
+  app.get("/api/admin/lms/courses/:id/stats", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "ID tidak valid" });
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(lmsEnrollments)
+        .where(eq(lmsEnrollments.courseId, id));
+      res.json({ enrollmentCount: Number(total) });
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] GET course stats:", e);
+      res.status(500).json({ error: "Gagal mengambil statistik kursus" });
+    }
+  });
+
+  // GET /api/admin/lms/courses/:id/enrollments — list a course's enrollments
+  // with student identity (name/email) so admins can pick who to reset.
+  app.get("/api/admin/lms/courses/:id/enrollments", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const courseId = parseInt(req.params.id);
+      if (!Number.isFinite(courseId)) return res.status(400).json({ error: "ID tidak valid" });
+      const rows = await db.execute(sql`
+        SELECT e.id, e.user_id, e.progress, e.completed_at, e.enrolled_at,
+               u.first_name, u.last_name, u.email, u.phone, up.display_name
+        FROM lms_enrollments e
+        LEFT JOIN users u ON u.id = e.user_id
+        LEFT JOIN user_profiles up ON up.user_id = e.user_id
+        WHERE e.course_id = ${courseId}
+        ORDER BY e.enrolled_at DESC
+      `);
+      const list = ((rows.rows ?? rows) as any[]).map((r) => ({
+        id: r.id,
+        userId: r.user_id,
+        progress: Number(r.progress ?? 0),
+        completedAt: r.completed_at,
+        enrolledAt: r.enrolled_at,
+        studentName: resolveStudentName(r),
+        email: r.email ?? "",
+      }));
+      res.json(list);
+    } catch (e) {
+      console.error("[LMS-ADMIN] GET course enrollments:", e);
+      res.status(500).json({ error: "Gagal mengambil daftar enrollment" });
+    }
+  });
+
+  // DELETE /api/admin/lms/courses/:courseId/enrollments/:userId — reset a
+  // student's enrollment. MUST also clear lms_lesson_progress rows for the
+  // same (user, course); otherwise a re-enroll would recalculate completion
+  // from stale progress rows and instantly jump back to 100%.
+  //
+  // By default the student's certificate is PRESERVED (manual-removal
+  // semantics: a completed student keeps their cert, and re-enroll restores
+  // 100% so the cert stays consistent). Pass ?purgeCertificate=true for a
+  // FULL reset: the certificate is deleted in the same transaction so the
+  // student truly starts from zero on re-enroll. The admin-dashboard Reset
+  // button uses the full reset.
+  app.delete("/api/admin/lms/courses/:courseId/enrollments/:userId", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      const userId = String(req.params.userId || "");
+      const purgeCertificate = String(req.query.purgeCertificate || "") === "true";
+      if (!Number.isFinite(courseId) || !userId) {
+        return res.status(400).json({ error: "courseId dan userId wajib diisi" });
+      }
+      const result = await db.transaction(async (tx) => {
+        const progressDeleted = await tx.delete(lmsLessonProgress)
+          .where(and(eq(lmsLessonProgress.userId, userId), eq(lmsLessonProgress.courseId, courseId)))
+          .returning({ id: lmsLessonProgress.id });
+        const enrollmentDeleted = await tx.delete(lmsEnrollments)
+          .where(and(eq(lmsEnrollments.userId, userId), eq(lmsEnrollments.courseId, courseId)))
+          .returning({ id: lmsEnrollments.id });
+        let certificatesDeleted = 0;
+        if (purgeCertificate) {
+          const certRows = await tx.delete(lmsCertificates)
+            .where(and(eq(lmsCertificates.userId, userId), eq(lmsCertificates.courseId, courseId)))
+            .returning({ id: lmsCertificates.id });
+          certificatesDeleted = certRows.length;
+        }
+        return { progressDeleted: progressDeleted.length, enrollmentDeleted: enrollmentDeleted.length, certificatesDeleted };
+      });
+      if (result.enrollmentDeleted === 0 && result.progressDeleted === 0) {
+        return res.status(404).json({ error: "Enrollment tidak ditemukan" });
+      }
+      res.json({ success: true, ...result });
+    } catch (e) {
+      console.error("[LMS-ADMIN] DELETE enrollment:", e);
+      res.status(500).json({ error: "Gagal mereset enrollment" });
+    }
+  });
+
+  // DELETE /api/admin/lms/courses/:id — delete a course (and its lessons)
+  // If students are enrolled, returns 409 unless ?force=true is passed.
+  // Prefer deactivating (PATCH isActive=false) when enrollments exist.
+  app.delete("/api/admin/lms/courses/:id", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "ID tidak valid" });
+      const force = req.query.force === "true";
+
+      // Check enrollment count before deleting
+      const [{ total }] = await db
+        .select({ total: count() })
+        .from(lmsEnrollments)
+        .where(eq(lmsEnrollments.courseId, id));
+      const enrollmentCount = Number(total);
+
+      if (enrollmentCount > 0 && !force) {
+        return res.status(409).json({
+          error: `Kursus ini memiliki ${enrollmentCount} siswa yang terdaftar. Gunakan force=true untuk menghapus paksa, atau nonaktifkan kursus.`,
+          enrollmentCount,
+        });
+      }
+
+      // Issued certificates are permanent records. Snapshot the course title
+      // and detach them before deleting the course so public verification keeps
+      // working after an administrator confirms a force-delete.
+      // Delete all other dependent rows AND the course in ONE transaction so a
+      // mid-way failure can never leave orphaned enrollment/progress rows
+      // pointing at a deleted course (or a half-deleted course).
+      const deleted = await db.transaction(async (tx) => {
+        await tx.delete(lmsLessonProgress).where(eq(lmsLessonProgress.courseId, id));
+        await tx.update(lmsCertificates)
+          .set({
+            courseTitle: sql`COALESCE((SELECT title FROM lms_courses WHERE id = ${id}), ${lmsCertificates.courseTitle})`,
+            courseId: null,
+          })
+          .where(eq(lmsCertificates.courseId, id));
+        await tx.delete(lmsLessons).where(eq(lmsLessons.courseId, id));
+        await tx.delete(lmsEnrollments).where(eq(lmsEnrollments.courseId, id));
+        const [row] = await tx.delete(lmsCourses).where(eq(lmsCourses.id, id)).returning();
+        return row;
+      });
+      if (!deleted) return res.status(404).json({ error: "Kursus tidak ditemukan" });
+      res.json({ ok: true });
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] DELETE course:", e);
+      res.status(500).json({ error: "Gagal menghapus kursus" });
+    }
+  });
+
+  // ─── Admin CRUD: Lessons ─────────────────────────────────────────────────────
+
+  // GET /api/admin/lms/courses/:courseId/lessons — list lessons for a course
+  app.get("/api/admin/lms/courses/:courseId/lessons", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      const lessons = await db.select().from(lmsLessons)
+        .where(eq(lmsLessons.courseId, courseId))
+        .orderBy(asc(lmsLessons.sortOrder), asc(lmsLessons.id));
+      res.json(lessons);
+    } catch (e) {
+      res.status(500).json({ error: "Gagal mengambil lessons" });
+    }
+  });
+
+  // POST /api/admin/lms/courses/:courseId/lessons — create a lesson
+  app.post("/api/admin/lms/courses/:courseId/lessons", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const courseId = parseInt(req.params.courseId);
+      if (isNaN(courseId)) return res.status(400).json({ error: "courseId tidak valid" });
+      const { title, slug, content, videoUrl, type, durationMinutes, sortOrder, isPreview, isActive } = req.body;
+      if (!title || !slug) return res.status(400).json({ error: "title dan slug wajib diisi" });
+      const [existing] = await db.select({ id: lmsLessons.id }).from(lmsLessons)
+        .where(and(eq(lmsLessons.courseId, courseId), eq(lmsLessons.slug, slug)));
+      if (existing) return res.status(409).json({ error: "Slug sudah digunakan di kursus ini" });
+      const [lesson] = await db.insert(lmsLessons).values({
+        courseId, title, slug, content: content ?? "", videoUrl: videoUrl ?? "",
+        type: type ?? "article", durationMinutes: durationMinutes ?? 5,
+        sortOrder: sortOrder ?? 0, isPreview: isPreview ?? false, isActive: isActive ?? true,
+      }).returning();
+      res.status(201).json(lesson);
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] POST lesson:", e);
+      res.status(500).json({ error: "Gagal membuat lesson" });
+    }
+  });
+
+  // PATCH /api/admin/lms/lessons/:id — update a lesson
+  app.patch("/api/admin/lms/lessons/:id", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "ID tidak valid" });
+      const { title, slug, content, videoUrl, type, durationMinutes, sortOrder, isPreview, isActive } = req.body;
+      const updates: Record<string, any> = {};
+      if (title !== undefined) updates.title = title;
+      if (slug !== undefined) updates.slug = slug;
+      if (content !== undefined) updates.content = content;
+      if (videoUrl !== undefined) updates.videoUrl = videoUrl;
+      if (type !== undefined) updates.type = type;
+      if (durationMinutes !== undefined) updates.durationMinutes = durationMinutes;
+      if (sortOrder !== undefined) updates.sortOrder = sortOrder;
+      if (isPreview !== undefined) updates.isPreview = isPreview;
+      if (isActive !== undefined) updates.isActive = isActive;
+      const [lesson] = await db.update(lmsLessons).set(updates).where(eq(lmsLessons.id, id)).returning();
+      if (!lesson) return res.status(404).json({ error: "Lesson tidak ditemukan" });
+      res.json(lesson);
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] PATCH lesson:", e);
+      res.status(500).json({ error: "Gagal mengubah lesson" });
+    }
+  });
+
+  // DELETE /api/admin/lms/lessons/:id — delete a lesson
+  // The lms_lesson_progress table has a FK (ON DELETE CASCADE) on lesson_id →
+  // lms_lessons.id, so deleting the lesson row atomically removes all progress
+  // rows at the DB level.  The explicit progress delete below is defence-in-depth
+  // for environments where the FK migration has not yet run; both operations
+  // execute inside a single transaction so no partial state is ever committed.
+  //
+  // After the lesson and its progress rows are removed, the enrollment progress%
+  // for every enrolled student is recalculated so stale / inflated values never
+  // reach the student UI.
+  //
+  // Enrollment guard: if the lesson's course has any enrolled students and
+  // ?force=true is NOT set, the route returns 409 with { error, enrolledStudents }
+  // so the frontend can show a confirmation dialog before destructively removing
+  // the lesson and wiping affected student progress.
+  //
+  // PRODUCT DECISION — certificates are IMMUTABLE HISTORICAL RECORDS.
+  // When the recalculation drops a student below 100% and clears completed_at,
+  // any lms_certificates row already issued for that completion is deliberately
+  // left untouched (NOT revoked or flagged).  The certificate attests that the
+  // student completed the course *as it existed at the time of completion*; a
+  // later curriculum edit by an admin must not retroactively invalidate it.
+  // This mirrors the manual enrollment-removal route above, which also
+  // preserves certificates by default.  Covered by
+  // tests/lms-lesson-delete-progress.test.ts ("certificate survives …").
+  app.delete("/api/admin/lms/lessons/:id", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) return res.status(400).json({ error: "ID tidak valid" });
+      const force = req.query.force === "true";
+
+      // Pre-fetch the lesson so we can (a) return 404 early and (b) get courseId
+      // for the enrollment count without doing the check inside the transaction.
+      const [lesson] = await db.select().from(lmsLessons).where(eq(lmsLessons.id, id));
+      if (!lesson) return res.status(404).json({ error: "Lesson tidak ditemukan" });
+
+      // Guard: block deletion if any student is enrolled in the course, unless
+      // the admin explicitly confirms with ?force=true.
+      const [{ enrolledStudents }] = await db
+        .select({ enrolledStudents: count() })
+        .from(lmsEnrollments)
+        .where(eq(lmsEnrollments.courseId, lesson.courseId));
+      const enrolled = Number(enrolledStudents);
+      if (enrolled > 0 && !force) {
+        return res.status(409).json({
+          error: `Kursus ini memiliki ${enrolled} siswa yang terdaftar. Gunakan ?force=true untuk menghapus lesson ini beserta data belajar mereka.`,
+          enrolledStudents: enrolled,
+        });
+      }
+
+      const courseId = lesson.courseId;
+      await db.transaction(async (tx) => {
+        // Explicit cleanup (defence-in-depth / pre-FK environments).
+        await tx.delete(lmsLessonProgress).where(eq(lmsLessonProgress.lessonId, id));
+        await tx.delete(lmsLessons).where(eq(lmsLessons.id, id));
+
+        // Recalculate progress for all enrolled students in the affected course.
+        // At this point inside the transaction the deleted lesson is already gone,
+        // so both lesson count and completed-lesson count are already correct.
+        await tx.execute(sql`
+          UPDATE lms_enrollments e
+          SET
+            progress = ROUND(
+              COALESCE(
+                (
+                  SELECT COUNT(*) FROM lms_lesson_progress lp
+                  WHERE lp.user_id = e.user_id AND lp.course_id = e.course_id
+                )::numeric /
+                NULLIF(
+                  (SELECT COUNT(*) FROM lms_lessons l WHERE l.course_id = e.course_id),
+                  0
+                ) * 100,
+                0
+              )
+            ),
+            -- Clear completedAt if the student no longer has 100% progress.
+            completed_at = CASE
+              WHEN ROUND(
+                COALESCE(
+                  (
+                    SELECT COUNT(*) FROM lms_lesson_progress lp
+                    WHERE lp.user_id = e.user_id AND lp.course_id = e.course_id
+                  )::numeric /
+                  NULLIF(
+                    (SELECT COUNT(*) FROM lms_lessons l WHERE l.course_id = e.course_id),
+                    0
+                  ) * 100,
+                  0
+                )
+              ) >= 100 THEN e.completed_at
+              ELSE NULL
+            END
+          WHERE e.course_id = ${courseId}
+        `);
+      });
+
+      res.json({ ok: true });
+    } catch (e: any) {
+      console.error("[LMS-ADMIN] DELETE lesson:", e);
+      res.status(500).json({ error: "Gagal menghapus lesson" });
+    }
+  });
+
+  // GET /api/admin/lms/health — health check: counts and seed status (admin only)
+  app.get("/api/admin/lms/health", isAuthenticated, requireAdminLms, async (_req, res) => {
+    try {
+      const [{ totalCourses }] = await db
+        .select({ totalCourses: count() })
+        .from(lmsCourses);
+      const [{ activeCourses }] = await db
+        .select({ activeCourses: count() })
+        .from(lmsCourses)
+        .where(and(eq(lmsCourses.isActive, true), eq(lmsCourses.isPublic, true)));
+      const [{ totalLessons }] = await db
+        .select({ totalLessons: count() })
+        .from(lmsLessons);
+      const [{ totalEnrollments }] = await db
+        .select({ totalEnrollments: count() })
+        .from(lmsEnrollments);
+
+      // Certificate stats
+      const [{ totalCertificates }] = await db
+        .select({ totalCertificates: count() })
+        .from(lmsCertificates);
+
+      // Completions that still have no certificate (should be 0 after a successful backfill)
+      const pendingCertRows = await db.execute(sql.raw(`
+        SELECT COUNT(*) AS pending_count
+        FROM lms_enrollments e
+        WHERE e.progress = 100
+          AND e.completed_at IS NOT NULL
+          AND NOT EXISTS (
+            SELECT 1 FROM lms_certificates c
+            WHERE c.user_id = e.user_id AND c.course_id = e.course_id
+          )
+      `));
+      const pendingCertificates = Number(
+        (pendingCertRows.rows?.[0] as any)?.pending_count ?? 0
+      );
+
+      // Last backfill metadata from system_config
+      let lastBackfill: { backfilled: number; total: number; at: string } | null = null;
+      try {
+        const cfgRows = await db.execute(sql.raw(
+          `SELECT value FROM system_config WHERE key = 'lms_cert_backfill_last' LIMIT 1`
+        ));
+        const raw = (cfgRows.rows?.[0] as any)?.value;
+        if (raw) lastBackfill = typeof raw === "string" ? JSON.parse(raw) : raw;
+      } catch (_) { /* non-critical */ }
+
+      const seedStatusNow = currentSeedStatus();
+      res.json({
+        seedStatus: seedStatusNow,
+        seeding: seedStatusNow === "pending",
+        counts: {
+          totalCourses: Number(totalCourses),
+          activeCourses: Number(activeCourses),
+          totalLessons: Number(totalLessons),
+          totalEnrollments: Number(totalEnrollments),
+          totalCertificates: Number(totalCertificates),
+          pendingCertificates,
+        },
+        lastBackfill,
+      });
+    } catch (e) {
+      console.error("[LMS-ADMIN] GET health:", e);
+      res.status(500).json({ error: "Gagal mengambil status LMS" });
+    }
+  });
+
+  // POST /api/admin/lms/cert-repair — on-demand retry of the certificate backfill
+  // In-memory concurrency guard: only one repair run may be in flight at a time.
+  let certRepairInFlight = false;
+  app.post("/api/admin/lms/cert-repair", isAuthenticated, requireAdminLms, async (_req, res) => {
+    if (certRepairInFlight) {
+      return res.status(409).json({ error: "Perbaikan sertifikat sedang berjalan. Coba lagi sebentar." });
+    }
+    certRepairInFlight = true;
+    try {
+      const pendingRows = await db.execute(sql`
+        SELECT e.user_id, e.course_id, course.title AS course_title
+        FROM lms_enrollments e
+        JOIN lms_courses course ON course.id = e.course_id
+        WHERE e.progress = 100
+          AND e.completed_at IS NOT NULL
+          AND NOT EXISTS (
+            SELECT 1 FROM lms_certificates c
+            WHERE c.user_id = e.user_id AND c.course_id = e.course_id
+          )
+      `);
+      const rows = pendingRows.rows ?? [];
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let backfilled = 0;
+      for (const row of rows as Array<{ user_id: string; course_id: number; course_title: string }>) {
+        const year = new Date().getFullYear();
+        let code = "";
+        for (let i = 0; i < 8; i++) code += chars[Math.floor(Math.random() * chars.length)];
+        const certCode = `GUSTAFTA-${year}-${code}`;
+        try {
+          await db.execute(sql`
+            INSERT INTO lms_certificates (user_id, course_id, course_title, certificate_code)
+            VALUES (${row.user_id}, ${row.course_id}, ${row.course_title}, ${certCode})
+            ON CONFLICT (user_id, course_id) DO NOTHING
+          `);
+          backfilled++;
+        } catch (_) { /* skip individual failures */ }
+      }
+      // Persist so health card reflects latest repair
+      try {
+        await db.execute(sql`
+          INSERT INTO system_config (key, value)
+          VALUES ('lms_cert_backfill_last', ${JSON.stringify({ backfilled, total: rows.length, at: new Date().toISOString() })})
+          ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
+        `);
+      } catch (_) { /* non-critical */ }
+
+      const stillPending = rows.length - backfilled;
+      if (stillPending > 0) {
+        console.warn(`[LMS-ADMIN] cert-repair: ${stillPending} completion(s) still have no certificate after repair.`);
+      } else {
+        console.log(`[LMS-ADMIN] cert-repair: ${backfilled}/${rows.length} certificates issued (all clear).`);
+      }
+
+      res.json({ ok: true, backfilled, total: rows.length, stillPending });
+    } catch (e) {
+      console.error("[LMS-ADMIN] POST cert-repair:", e);
+      res.status(500).json({ error: "Gagal menjalankan perbaikan sertifikat" });
+    } finally {
+      certRepairInFlight = false;
+    }
+  });
+
+  // GET /api/admin/lms/courses — list all courses (admin view, includes inactive)
+  app.get("/api/admin/lms/courses", isAuthenticated, requireAdminLms, async (req: any, res) => {
+    try {
+      const courses = await db.select().from(lmsCourses).orderBy(asc(lmsCourses.sortOrder), asc(lmsCourses.id));
+      // Attach lesson count using a single aggregation query
+      const lessonCounts = await db
+        .select({ courseId: lmsLessons.courseId, cnt: count() })
+        .from(lmsLessons)
+        .groupBy(lmsLessons.courseId);
+      const countMap = Object.fromEntries(lessonCounts.map((r) => [r.courseId, r.cnt]));
+      const withCounts = courses.map((c) => ({ ...c, lessonCount: countMap[c.id] ?? 0 }));
+      res.json(withCounts);
+    } catch (e) {
+      console.error("[LMS-ADMIN] GET courses:", e);
+      res.status(500).json({ error: "Gagal mengambil kursus" });
+    }
+  });
+
+  // GET /api/lms/ecourses — public orchestrator agents grouped by category, usable as ecourses
+  app.get("/api/lms/ecourses", async (req, res) => {
+    try {
+      const { category } = req.query as { category?: string };
+      let extra = "";
+      if (category && category !== "all") {
+        const safe = category.replace(/'/g, "''");
+        extra = ` AND lower(a.category) = lower('${safe}')`;
+      }
+      const rows = await db.execute(sql.raw(`
+        SELECT
+          a.id,
+          a.name,
+          a.description,
+          a.tagline,
+          a.avatar,
+          a.category,
+          a.subcategory,
+          a.widget_color,
+          (SELECT COUNT(*)::int FROM knowledge_bases kb WHERE kb.agent_id = a.id AND kb.status = 'active') AS kb_count
+        FROM agents a
+        WHERE a.is_public = true
+          AND a.is_orchestrator = true
+          AND a.category IS NOT NULL AND a.category != ''
+          AND (a.description IS NOT NULL AND length(a.description) > 20)
+          ${extra}
+        ORDER BY a.category ASC, a.id ASC
+        LIMIT 200
+      `));
+      res.json(rows.rows ?? rows);
+    } catch (e) {
+      console.error("[LMS] GET ecourses:", e);
+      res.status(500).json({ error: "Gagal mengambil ecourse" });
+    }
+  });
+}
+
+let lmsSeedStartedAt = Date.now();
+let lmsSeedGeneration = 0;
+
+/**
+ * Returns the current seed status, expiring a stuck "pending" seed to "error"
+ * when it has exceeded the stale ceiling. All readers (health endpoint, status
+ * endpoint, reseed guard) must go through this so a hung seed can never block
+ * manual reseeds forever.
+ */
+function currentSeedStatus(): SeedStatus {
+  if (lmsSeedStatus === "pending" && Date.now() - lmsSeedStartedAt > lmsSeedStaleMs()) {
+    console.error(
+      `[LMS] Seed watchdog: seed masih 'pending' setelah ${Date.now() - lmsSeedStartedAt}ms (batas ${lmsSeedStaleMs()}ms) — dianggap macet, status di-set 'error'.`
+    );
+    lmsSeedStatus = "error";
+    // Supersede the expired execution. Its Promise may still settle later, but
+    // its old generation is no longer allowed to overwrite recovery status.
+    lmsSeedGeneration++;
+  }
+  return lmsSeedStatus;
+}
+
+function markSeedPending(): number {
+  lmsSeedStatus = "pending";
+  lmsSeedStartedAt = Date.now();
+  return ++lmsSeedGeneration;
+}
+
+function publishSeedStatus(generation: number, status: Exclude<SeedStatus, "pending">) {
+  if (generation === lmsSeedGeneration) {
+    lmsSeedStatus = status;
+  }
+}

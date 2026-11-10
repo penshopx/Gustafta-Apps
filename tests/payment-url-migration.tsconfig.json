@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": [
+    "payment-url-migration.test.ts",
+    "payment-url-migration-db-http.test.ts",
+    "payment-url-migration-catalog.test.ts",
+    "fixtures/payment-url-migration.ts",
+    "fixtures/payment-url-migration-kill-child.ts"
+  ],
+  "exclude": []
+}

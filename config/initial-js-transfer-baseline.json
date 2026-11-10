@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "measuredAt": "2026-10-28T07:24:29.615Z",
+  "profile": "production-gzip6-anonymous-v1",
+  "browserVersion": "Chrome/138.0.7204.100",
+  "platform": "Linux x86_64, Nix Chromium (version-matched to checksum-pinned CI Chrome)",
+  "build": "Vite production, empty application environment, no VITE_META_PIXEL_ID",
+  "viewport": { "width": 1440, "height": 900 },
+  "observationMs": 5000,
+  "coldVisits": 3,
+  "cacheDisabled": true,
+  "serviceWorkersBypassed": true,
+  "total": { "requests": 2, "transferBytes": 302448, "decodedBodyBytes": 975587 },
+  "groups": {
+    "localInitial": { "requests": 1, "transferBytes": 301514, "decodedBodyBytes": 973649 },
+    "localRuntime": { "requests": 1, "transferBytes": 934, "decodedBodyBytes": 1938 },
+    "thirdParty": { "requests": 0, "transferBytes": 0, "decodedBodyBytes": 0 }
+  },
+  "repeatTotalTransferBytes": [302448, 302448, 302448],
+  "assets": [
+    {
+      "path": "/assets/index-iSrG6B42.js",
+      "sha256": "44fd2b8c739918f77f210330d4173c43a120f2600e11043514793a1b5e5b0c3a",
+      "transferBytes": 301514
+    },
+    {
+      "path": "/sw.js",
+      "sha256": "d1f3aabdfe1bcd8a5d44eac7d1c1ced3c7cd524bd4cee111f33624a7fa6115b6",
+      "transferBytes": 934
+    }
+  ]
+}

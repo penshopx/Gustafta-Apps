@@ -1,0 +1,695 @@
+{
+  "kit_version": "1.0.0",
+  "type": "portable_specification_not_runtime_plugin",
+  "reference_domain": "https://gustafta.my.id",
+  "baseline_modules": [
+    "F01",
+    "F02",
+    "F03"
+  ],
+  "default_integration_mode": "local",
+  "modules": [
+    {
+      "id": "F01",
+      "name": "Akun dan sesi lokal",
+      "purpose": "Memberi identitas pengguna aplikasi tujuan tanpa mewajibkan akun atau login Gustafta.",
+      "depends_on": [],
+      "evidence_paths": [
+        "server/replit_integrations/auth/emailAuth.ts",
+        "client/src/hooks/use-auth.ts"
+      ],
+      "screens": "Masuk, keluar, profil akun, pemulihan akses; konfigurasi provider oleh admin.",
+      "records": "users, sessions, recovery_challenges; identitas pengguna lokal atau pemetaan provider terverifikasi.",
+      "flow": "Daftar/masuk melalui provider yang dipilih → verifikasi bila diwajibkan → sesi server → akses fitur → logout mencabut sesi.",
+      "controls": "Jangan menyalin akun, hash sandi, session secret, allowlist founder, atau kebijakan auto-promote Gustafta. Sesi dan pemeriksaan akun nonaktif berlaku di server.",
+      "acceptance": [
+        "Pengguna tanpa sesi ditolak pada API privat.",
+        "Logout atau pencabutan sesi menghentikan akses berikutnya.",
+        "Pengguna biasa tidak dapat menetapkan dirinya sebagai admin."
+      ],
+      "target_extension": "Pilih mekanisme auth sesuai proyek tujuan; jangan mengganti auth yang sudah berfungsi. SSO lintas aplikasi bukan bawaan kit.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F02",
+      "name": "Peran dan batas kepemilikan",
+      "purpose": "Membatasi setiap aksi berdasarkan pengguna, organisasi, proyek, dan objek.",
+      "depends_on": [
+        "F01"
+      ],
+      "evidence_paths": [
+        "server/lib/agent-authz.ts",
+        "tests/agent-authz-decision.test.ts"
+      ],
+      "screens": "Pengelolaan anggota dan role; pesan akses ditolak; pemilihan organisasi jika benar-benar dibutuhkan.",
+      "records": "memberships, roles, permissions; owner_user_id dan organization_id pada objek privat.",
+      "flow": "Identitas server → membership aktif → izin tindakan → batas objek/proyek → izinkan atau tolak; terapkan juga pada ekspor, pencarian dan chat.",
+      "controls": "Bukan sekadar menyembunyikan tombol. Jangan percaya owner/role dari request. Role admin aplikasi tidak otomatis berhak atas semua organisasi.",
+      "acceptance": [
+        "A dan B tidak dapat membaca, mengubah, mengunduh atau menghapus objek satu sama lain.",
+        "Mengganti ID objek pada request tetap ditolak.",
+        "Anggota yang dicabut langsung kehilangan akses."
+      ],
+      "target_extension": "Matriks tenant/proyek adalah kontrak penerapan baru; tidak diasumsikan sudah seragam di seluruh Gustafta.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F03",
+      "name": "Jejak audit",
+      "purpose": "Mencatat siapa melakukan tindakan penting dan pada objek mana.",
+      "depends_on": [
+        "F01",
+        "F02"
+      ],
+      "evidence_paths": [
+        "server/ruang-kelola-routes.ts",
+        "server/ruang-simpan-routes.ts",
+        "client/src/pages/admin-audit.tsx"
+      ],
+      "screens": "Riwayat per objek; filter aktor/tindakan/waktu; ekspor audit berizin.",
+      "records": "audit_events: actor, tenant, object_ref, action, revision, outcome, correlation_id, occurred_at; diff yang disanitasi.",
+      "flow": "Aksi bisnis → perubahan sah dan audit keberhasilan konsisten → riwayat dapat dibaca oleh pihak berizin; penolakan keamanan dicatat tanpa payload rahasia.",
+      "controls": "Jangan simpan token, raw prompt sensitif, isi lengkap dokumen atau URL bertanda tangan. Role biasa tidak boleh mengubah audit; jangan klaim kebal terhadap admin database.",
+      "acceptance": [
+        "Aktor berasal dari sesi server, bukan field by dari klien.",
+        "Mutasi berhasil memiliki audit yang sesuai dan tidak menggandakan event saat retry.",
+        "Ekspor audit tidak membocorkan data organisasi lain atau secret."
+      ],
+      "target_extension": "Transaksi audit bersama mutasi dan kebijakan retensi wajib dirancang di target; bukan klaim seluruh route sumber sudah memenuhi.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F04",
+      "name": "Profil resmi perusahaan lokal",
+      "purpose": "Menyimpan identitas perusahaan sebagai rujukan tunggal di aplikasi tujuan.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/ruang-simpan-app-api.ts",
+        "client/src/components/ruang-simpan-integration-panel.tsx"
+      ],
+      "screens": "Form profil, tampilkan sumber/revisi, riwayat perubahan, konflik simpan.",
+      "records": "company_profiles: owner/tenant, nama legal, identitas usaha yang relevan, alamat, kontak, klasifikasi, revision; dokumen bukti sebagai referensi privat.",
+      "flow": "Pemilik mengisi → validasi format → simpan dengan expected_revision → proses lain membaca profil lokal yang sama.",
+      "controls": "Nama atau isian pengguna tidak membuktikan legalitas aktif. Jangan seed data perusahaan nyata Gustafta. Field sensitif ditampilkan sesuai izin.",
+      "acceptance": [
+        "Simpan pertama dan edit berikutnya sama-sama berhasil dengan batas pemilik.",
+        "Dua edit serentak tidak menimpa diam-diam; revisi lama menghasilkan konflik.",
+        "Perusahaan B tidak mendapat profil A meski mengganti parameter owner."
+      ],
+      "target_extension": "Untuk berbagi profil pusat pilih F22; jangan mengganti profil lokal dengan cache pusat tanpa menentukan otoritas.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F05",
+      "name": "Ruang Simpan lokal",
+      "purpose": "Mengelola arsip berkas, folder, pencarian dan status dokumen.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/ruang-simpan-routes.ts",
+        "client/src/pages/ruang-simpan.tsx"
+      ],
+      "screens": "Daftar/folder, unggah, preview, unduh, metadata, status dan riwayat; keadaan kosong/gagal.",
+      "records": "files, folders, storage_objects; metadata MIME, ukuran, checksum, pemilik, status draft/aktif/kadaluarsa/arsip.",
+      "flow": "Unggah tervalidasi → bytes ke storage privat → metadata lokal → preview/unduh berizin → pengarsipan atau penghapusan sesuai kebijakan.",
+      "controls": "Storage bucket bukan publik. Terapkan batas ukuran, pemeriksaan tipe, karantina bila diperlukan, safe filename, SSRF guard bila impor URL diaktifkan.",
+      "acceptance": [
+        "Unggah, baca, edit metadata dan unduh benar-benar persisten setelah restart.",
+        "ID/URL berkas milik akun lain tidak dapat dipakai.",
+        "Berkas gagal unggah tidak meninggalkan metadata sukses palsu."
+      ],
+      "target_extension": "Storage dapat mengikuti penyedia target. Scan malware, versioned bytes dan policy retensi tambahan bukan otomatis sudah tersedia dari sumber.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F06",
+      "name": "Kuasa akses dokumen",
+      "purpose": "Memberi izin terbatas per berkas/folder tanpa membagikan seluruh arsip.",
+      "depends_on": [
+        "F05"
+      ],
+      "evidence_paths": [
+        "server/ruang-simpan-routes.ts",
+        "server/ruang-simpan-app-api.ts"
+      ],
+      "screens": "Permintaan akses, pemilik menyetujui/menolak, daftar grant, masa berlaku, pencabutan, log penggunaan.",
+      "records": "document_grants, access_requests; grantee terverifikasi, target, view/download, purpose, expires_at, revoked_at.",
+      "flow": "Peminta memilih tujuan → pemilik menilai → grant eksplisit → server memeriksa grant setiap akses → habis/cabut menghentikan akses.",
+      "controls": "Email yang ditulis peminta tidak cukup sebagai bukti identitas. Izin profil berbeda dari izin berkas. Keanggotaan folder dievaluasi saat akses.",
+      "acceptance": [
+        "Grant view tidak otomatis mengizinkan download.",
+        "Akses kedaluwarsa/dicabut ditolak termasuk tautan lama sesuai batas lifetime URL.",
+        "Pindah berkas keluar folder mengubah akses tanpa grant snapshot diam-diam."
+      ],
+      "target_extension": "Penerima eksternal membutuhkan possession proof atau auth sah; jangan membangun pemulihan token dari email saja.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F07",
+      "name": "Basis pengetahuan dan sumber",
+      "purpose": "Menyediakan rujukan terkurasi untuk pencarian serta jawaban AI.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "client/src/components/panels/knowledge-base-panel.tsx",
+        "client/src/hooks/use-knowledge-base.ts",
+        "shared/schema.ts"
+      ],
+      "screens": "Unggah/import sumber, status proses, kategori, revisi, kutipan dan daftar sumber.",
+      "records": "knowledge_sources, chunks, embeddings, source_versions; provenance, checksum, visibility, owner.",
+      "flow": "Sumber berizin → ekstraksi → chunk → embedding bila dipakai → pencarian terbatas scope → kutipan ke sumber yang berhak dibaca.",
+      "controls": "Dokumen bukan instruksi sistem. Jangan mengubah naskah sumber resmi dengan rewrite AI; pisahkan catatan turunan. Isolasi indeks dan retrieval per pemilik.",
+      "acceptance": [
+        "Retrieval untuk A tidak mengembalikan chunk privat B.",
+        "Jawaban dapat merujuk sumber dan versi yang dapat diakses.",
+        "Gagal ekstraksi/embedding tampil sebagai gagal, bukan siap palsu."
+      ],
+      "target_extension": "Embedding dan model memerlukan provider target serta persetujuan pemrosesan data; pencarian teks dapat menjadi implementasi awal yang diberi label.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F08",
+      "name": "Asisten AI spesialis",
+      "purpose": "Memberi dialog berbasis bidang aplikasi, dengan batas tugas yang jelas.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "client/src/pages/agent-chat.tsx",
+        "server/lib/agent-authz.ts",
+        "server/routes.ts"
+      ],
+      "screens": "Percakapan, status streaming, stop/retry, sumber jika memakai F07, pilihan model yang diizinkan.",
+      "records": "assistants, conversations, messages; pemilik/session pengunjung, prompt version, provider/model, usage.",
+      "flow": "Pesan → hak akses → konteks berizin → provider → stream jawaban → simpan pada percakapan pengguna itu saja.",
+      "controls": "API key di server. Agen tidak boleh melakukan transaksi final atau mengakses tools tanpa izin. Chat publik memakai session per pengunjung, bukan riwayat bersama.",
+      "acceptance": [
+        "Dua pengguna/pengunjung tidak mendapat riwayat satu sama lain.",
+        "Provider mati menghasilkan error jelas tanpa jawaban dummy.",
+        "Stop/retry dan akhir stream tidak menggandakan pesan tersimpan."
+      ],
+      "target_extension": "F07 opsional untuk grounding; tanpa sumber jangan mengklaim jawaban berbasis bukti. Biaya/provider AI bukan koneksi Gustafta.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F09",
+      "name": "Dialog menuju Blueprint",
+      "purpose": "Mengubah kebutuhan menjadi rancangan tujuan, peran, input, output dan batas kerja.",
+      "depends_on": [
+        "F08"
+      ],
+      "evidence_paths": [
+        "server/blueprint-engine-routes.ts",
+        "client/src/pages/blueprint-builder.tsx"
+      ],
+      "screens": "Dialog kebutuhan, editor blueprint, preview konfigurasi, simpan revisi, konfirmasi penerapan.",
+      "records": "blueprints, revisions, preview_result; objective, inputs, outputs, constraints, human_gate.",
+      "flow": "Dialog → ekstraksi rancangan → pengguna memperbaiki → validasi → preview/dry-run → penerapan hanya setelah konfirmasi sah.",
+      "controls": "Preview tidak menulis konfigurasi aktif atau mengirim pesan. Blueprint bukan hasil pekerjaan final. Penerapan mempertahankan kepemilikan pengguna.",
+      "acceptance": [
+        "Blueprint tersimpan dapat dibuka dan diperbaiki ulang.",
+        "Dry-run tidak menambah agen, grant, log bisnis atau pekerjaan nyata.",
+        "Konfigurasi tanpa konfirmasi/izin ditolak."
+      ],
+      "target_extension": "Gunakan skema kebutuhan domain target; istilah produk Ruang X berbeda dari tahap engine Workroom.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F10",
+      "name": "Tim AI dan kolaborasi",
+      "purpose": "Membagi pekerjaan ke beberapa spesialis dengan supervisi manusia.",
+      "depends_on": [
+        "F08"
+      ],
+      "evidence_paths": [
+        "server/organization-engine-routes.ts",
+        "client/src/pages/organization-builder.tsx",
+        "shared/team-blueprints.ts"
+      ],
+      "screens": "Editor anggota, peran/tugas, hubungan delegasi, supervisor, preview sebelum aktivasi.",
+      "records": "teams, members, delegation_edges, team_revisions; referensi local_id sebelum menjadi ID tersimpan.",
+      "flow": "Pilih sekitar tiga peran awal → tetapkan tujuan dan gate → validasi graph → preview → simpan konfigurasi/wiring atomik → jalankan terbatas.",
+      "controls": "Tidak semua anggota boleh memanggil semua tool. Batasi kedalaman, budget dan durasi; hindari delegasi melingkar; autorisasi setiap sub-agent.",
+      "acceptance": [
+        "Referensi anggota salah/siklus terlarang ditolak.",
+        "Kegagalan konfigurasi tidak meninggalkan setengah tim.",
+        "Delegasi ke agen privat pihak lain ditolak."
+      ],
+      "target_extension": "Tidak wajib Hermes/OpenClaw atau 16 agen. F09 hanya bila ingin membentuk tim dari blueprint; proses manual tetap tersedia.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F11",
+      "name": "Workroom eksekusi",
+      "purpose": "Mengelola pekerjaan bertahap hingga menghasilkan output yang dapat ditinjau.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03",
+        "F12"
+      ],
+      "evidence_paths": [
+        "client/src/pages/workroom.tsx",
+        "client/src/pages/workroom-detail.tsx",
+        "shared/schema.ts",
+        "server/routes.ts"
+      ],
+      "screens": "Daftar pekerjaan, detail langkah/checklist, log, lampiran, gerbang, keluaran dan status.",
+      "records": "workrooms, stages/tasks, outputs, logs, gate_refs; owner/project/revision/status.",
+      "flow": "Buat pekerjaan → isi bukti/langkah → minta persetujuan saat gate → hasil keputusan menentukan kelanjutan → simpan output dan tutup.",
+      "controls": "Centang checklist atau analisis AI bukan bukti penerimaan fisik, pembayaran, tanda tangan atau legalitas. Pembukaan gate tidak otomatis menjalankan aksi eksternal.",
+      "acceptance": [
+        "Langkah wajib dan gate pending mencegah selesai palsu.",
+        "Output terkait pekerjaan dapat ditemukan setelah restart.",
+        "Pengguna lain tidak dapat memutuskan gate dengan mengganti ID."
+      ],
+      "target_extension": "Model tahap domain, automasi executor dan pengikatan versi gate perlu dibangun di target; sumber punya Workroom/log/gate dasar.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F12",
+      "name": "Gerbang persetujuan manusia",
+      "purpose": "Memastikan keputusan penting dibuat oleh penanggung jawab yang sah.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "client/src/pages/workroom-detail.tsx",
+        "shared/schema.ts",
+        "server/routes.ts"
+      ],
+      "screens": "Antrean keputusan, bukti dan revisi objek, setujui/tolak beserta alasan, keputusan kedaluwarsa.",
+      "records": "approval_requests, decisions; actor_role, object_revision, payload_hash, policy_version, expires_at.",
+      "flow": "Draf → pending → pemeriksaan manusia → approved/rejected → eksekusi terotorisasi idempoten; revisi baru membatalkan approval lama.",
+      "controls": "AI tidak boleh menyetujui atas nama manusia. Maker/checker dan nominal mengikuti kebijakan target. Tindakan keselamatan darurat manusia tidak ditunda karena gate digital.",
+      "acceptance": [
+        "Approval dari revisi lama tidak dapat dipakai pada objek baru.",
+        "Peminta tidak dapat menyetujui dirinya ketika maker/checker diwajibkan.",
+        "Retry eksekusi approval tidak menggandakan transaksi."
+      ],
+      "target_extension": "Binding hash/revisi/expiry dan state eksekusi adalah penguatan spesifikasi; bukan klaim gate Gustafta saat ini sudah lengkap.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F13",
+      "name": "Generator dokumen",
+      "purpose": "Menyusun draf dokumen dari data terstruktur dan template berizin.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "client/src/pages/docgen-studio.tsx",
+        "server/lib/docgen-generator.ts",
+        "server/routes.ts"
+      ],
+      "screens": "Pilih template, form input, preview, edit, ekspor; tampilkan sumber dan status draf.",
+      "records": "templates, document_drafts, document_versions, export_jobs; revision dan input snapshot.",
+      "flow": "Pilih template → isi data tervalidasi → susun draf → manusia memeriksa → ekspor format yang benar-benar didukung.",
+      "controls": "Tidak membuat tanda tangan atau mengklaim dokumen resmi otomatis. Sanitasi HTML/template; data wajib kosong ditampilkan, bukan diisi fakta karangan.",
+      "acceptance": [
+        "Nilai input dan tabel penting sama pada preview serta ekspor.",
+        "Template yang tidak tersedia memberi error jelas.",
+        "Ekspor tidak mengambil arsip pengguna lain."
+      ],
+      "target_extension": "PDF/DOCX dipilih sesuai kebutuhan dan library target. F05 opsional untuk penyimpanan; F08 opsional untuk bantuan penyusunan AI.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F14",
+      "name": "Akademi dan pembelajaran",
+      "purpose": "Mengelola kursus, materi, progres, asesmen dan bukti penyelesaian.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/routes-lms.ts",
+        "client/src/pages/admin-academy.tsx",
+        "shared/schema.ts"
+      ],
+      "screens": "Katalog kursus, materi/lesson, progres, asesmen, admin kursus, verifikasi sertifikat terbatas.",
+      "records": "courses, lessons, enrollments, progress, assessments, issued_certificates; snapshot judul saat terbit.",
+      "flow": "Daftar → akses materi sesuai hak → progres → penilaian sesuai rubrik → sertifikat jika semua syarat terpenuhi.",
+      "controls": "Sertifikat internal bukan otomatis SKK/izin profesi. Sertifikat terbit tetap dapat diverifikasi jika kursus dihapus; publik hanya melihat field minimum.",
+      "acceptance": [
+        "Progres milik akun sendiri dan tidak bisa diisi silang.",
+        "Belum memenuhi syarat tidak mendapat sertifikat.",
+        "Sertifikat terbit bertahan setelah penghapusan course dengan snapshot."
+      ],
+      "target_extension": "Seleksi akses berbayar memakai F17 jika diperlukan; asesmen berisiko memerlukan penilai manusia, bukan label lulus AI.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F15",
+      "name": "Dashboard dan antrean tindak lanjut",
+      "purpose": "Menampilkan ringkasan serta tindakan relevan dari data aplikasi sendiri.",
+      "depends_on": [
+        "F01",
+        "F02"
+      ],
+      "evidence_paths": [
+        "client/src/pages/dashboard.tsx",
+        "server/ruang-kelola-routes.ts"
+      ],
+      "screens": "Kartu statistik, daftar prioritas, filter proyek/periode, drill-down, waktu pembaruan.",
+      "records": "Tidak wajib tabel baru; agregasi domain berizin, cache ber-scope, definisi KPI.",
+      "flow": "Query berizin → agregasi server → ringkasan → klik menuju objek yang sama → tindakan melalui API domain.",
+      "controls": "Angka tidak memakai data contoh pada produksi. Jumlah objek rahasia juga dapat bocor; semua agregasi/filter harus mematuhi scope.",
+      "acceptance": [
+        "Nilai kartu konsisten dengan daftar terfilter.",
+        "Akun kosong menampilkan nol/keadaan kosong, bukan data seed pelanggan.",
+        "Cache A tidak tersaji untuk B dan staleness ditandai."
+      ],
+      "target_extension": "KPI setiap sektor didefinisikan pemilik proses; tidak mengimpor semua metrik dashboard Gustafta.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F16",
+      "name": "Notifikasi dan pengingat",
+      "purpose": "Membawa tindakan jatuh tempo atau keputusan ke pengguna yang tepat.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/routes.ts",
+        "server/lib/email.ts"
+      ],
+      "screens": "Inbox lokal, belum dibaca, buka objek, preferensi; status kanal eksternal bila dipilih.",
+      "records": "notifications, delivery_attempts, dedup_keys; recipient, object_ref, event_type, status.",
+      "flow": "Event sah → penerima berizin → notifikasi dalam aplikasi → opsional email/WA melalui provider target → retry terbatas.",
+      "controls": "Alamat/nomor provider Gustafta tidak disalin. Hindari isi sensitif dalam pesan; tautan tetap memerlukan akses sah. Jadwal tidak bergantung interval in-memory yang hilang.",
+      "acceptance": [
+        "Satu event tidak menggandakan pengiriman akibat retry.",
+        "Penerima hanya melihat objek yang berhak diakses.",
+        "Provider gagal tercatat dan tidak menggagalkan transaksi utama."
+      ],
+      "target_extension": "Inbox lokal tidak butuh provider. Outbox durable dan scheduler dipilih sesuai runtime, bukan wajib VM/broker baru.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F17",
+      "name": "Paket akses dan entitlement",
+      "purpose": "Mengatur fitur yang boleh dipakai berdasarkan paket/izin yang sah.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/routes.ts",
+        "client/src/data/pricing.ts",
+        "shared/schema.ts"
+      ],
+      "screens": "Daftar hak aktif, masa berlaku, halaman batas akses, admin pemberian akses dengan alasan.",
+      "records": "plans, feature_entitlements, subscriptions/grants; user/tenant, valid_from/to, source, granted_by.",
+      "flow": "Tentukan paket aplikasi → grant sah/admin berizin atau pembayaran terverifikasi → server cek entitlement → kedaluwarsa mencabut hak paket.",
+      "controls": "Nama badge bukan dasar izin. Jangan menyalin harga, pembagian pendapatan atau transaksi Gustafta. Account aktif berbeda dari langganan aktif.",
+      "acceptance": [
+        "Akses ditolak di backend ketika paket berakhir.",
+        "Grant admin mencatat pemberi dan alasan, tidak mengubah audit lama.",
+        "Pengguna tidak dapat mengaktifkan paket lewat payload klien."
+      ],
+      "target_extension": "Model komersial aplikasi tujuan ditetapkan sendiri. Pembayaran opsional F19; paket akses bisa nonkomersial.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F18",
+      "name": "Voucher/kode akses",
+      "purpose": "Memberi entitlement melalui kode terbatas tanpa pembayaran langsung.",
+      "depends_on": [
+        "F17"
+      ],
+      "evidence_paths": [
+        "server/routes.ts",
+        "shared/schema.ts",
+        "client/src/pages/admin-access-codes.tsx"
+      ],
+      "screens": "Admin membuat kode, batas kuota/masa, redeem pengguna, hasil sudah dipakai/habis/kedaluwarsa.",
+      "records": "access_codes, redemptions; hash kode jika diperlukan, capacity, grant target, unique redemption.",
+      "flow": "Masukkan kode → validasi server → lock kuota → catat redemption dan grant dalam transaksi → hasil konsisten pada retry.",
+      "controls": "Kode adalah akses sensitif, jangan masuk log publik. Redeem tidak boleh mengaktifkan akun diblokir atau menaikkan role admin.",
+      "acceptance": [
+        "Dua redeem serentak pada kuota satu hanya memberi satu grant.",
+        "Retry pengguna sama tidak mengurangi kuota lagi.",
+        "Kode kedaluwarsa/habis ditolak tanpa efek parsial."
+      ],
+      "target_extension": "Format, durasi dan kebijakan kode ditetapkan aplikasi tujuan, bukan mengambil kode produksi sumber.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F19",
+      "name": "Katalog dan pesanan opsional",
+      "purpose": "Menampilkan produk/layanan aplikasi tujuan dan status pemenuhannya.",
+      "depends_on": [
+        "F17"
+      ],
+      "evidence_paths": [
+        "client/src/pages/store.tsx",
+        "server/routes.ts",
+        "shared/schema.ts"
+      ],
+      "screens": "Katalog, detail produk, formulir pesanan, status bayar/pemenuhan, admin pengecualian.",
+      "records": "products, price_snapshots, orders, fulfillment_jobs; payment_provider_ref dan immutable order totals.",
+      "flow": "Pilih produk → hitung harga server → buat pesanan idempoten → bayar bila provider dikonfigurasi → bukti provider sah → grant/pemenuhan.",
+      "controls": "Halaman order confirmed bukan bukti paid. Provider/webhook harus diverifikasi; token download bukan dapat diperoleh dari email saja.",
+      "acceptance": [
+        "Harga dari klien tidak memengaruhi total server.",
+        "Webhook ulang tidak menggandakan grant/pemenuhan.",
+        "Pesanan unpaid tidak membuka produk atau unduhan berbayar."
+      ],
+      "target_extension": "Provider pembayaran adalah integrasi target tersendiri, tidak menggunakan merchant/key Gustafta. Jika tidak ada provider, tampilkan mode manual secara jujur.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F20",
+      "name": "Register kepatuhan dan tenggat",
+      "purpose": "Memantau dokumen wajib, kelengkapan, kedaluwarsa dan tindak lanjut perusahaan.",
+      "depends_on": [
+        "F04",
+        "F05"
+      ],
+      "evidence_paths": [
+        "server/ruang-kelola-routes.ts",
+        "client/src/pages/ruang-kelola.tsx"
+      ],
+      "screens": "Daftar kewajiban, status bukti, expiry, checklist kesiapan, riwayat tinjauan.",
+      "records": "compliance_requirements, document_register, evidence_links, reviews; rule_source dan checked_at.",
+      "flow": "Pilih daftar kewajiban domain → tautkan bukti → cek tanggal/kelengkapan → tinjauan manusia → tindak lanjut.",
+      "controls": "Lengkap secara checklist bukan sertifikasi legalitas. Referensi regulasi perlu sumber resmi dan versi; status AI berupa indikasi, bukan keputusan lembaga.",
+      "acceptance": [
+        "Tanggal kedaluwarsa dan daftar kekurangan dihitung konsisten.",
+        "Bukti tidak tersedia tidak dianggap terpenuhi.",
+        "Perubahan aturan/sumber ditampilkan dan tidak menimpa review historis."
+      ],
+      "target_extension": "Aturan SBU/SKK/ISO tidak ditanam sebagai kebenaran universal; pemilik domain mengesahkan rule set aplikasi.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F21",
+      "name": "Ruang solusi sektoral",
+      "purpose": "Membungkus fitur umum menjadi pengalaman domain yang relevan, bukan kloning seluruh platform.",
+      "depends_on": [
+        "F01",
+        "F02"
+      ],
+      "evidence_paths": [
+        "client/src/lib/workroom-domains.ts",
+        "client/src/pages/ruang-proyek.tsx",
+        "server/ruang-proyek-routes.ts"
+      ],
+      "screens": "Beranda domain, profil konteks, daftar proses, navigasi fitur terpilih, bantuan bidang.",
+      "records": "Domain config dan record bisnis milik aplikasi; jangan membuat tabel duplikat untuk data yang sudah ada.",
+      "flow": "Tentukan masalah/sektor → pilih fitur → sesuaikan istilah/form/rule → hubungkan alur lokal → tampilkan hasil domain.",
+      "controls": "Jangan mengaktifkan sektor atau menu yang tidak dipilih. Nama, warna, harga, entitas legal dan aturan bisnis milik aplikasi tujuan.",
+      "acceptance": [
+        "Menu hanya memuat fitur terpilih dan dapat dijalankan.",
+        "Alur domain memakai sumber data lokal yang sama, tanpa salinan transaksi paralel.",
+        "Belum ada modul bisnis domain ditampilkan sebagai belum dibuat, bukan tersedia palsu."
+      ],
+      "target_extension": "Logika khusus gudang/tender/RAB/alat tetap perlu blueprint domain; katalog Ruang tidak membuktikan semua aplikasi sektoral lengkap.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    },
+    {
+      "id": "F22",
+      "name": "Adapter data pusat Gustafta — opsional",
+      "purpose": "Membaca profil/berkas pusat hanya ketika memang perlu berbagi data, bukan untuk memasang fitur lokal.",
+      "depends_on": [
+        "F01",
+        "F02",
+        "F03"
+      ],
+      "evidence_paths": [
+        "server/ruang-simpan-app-api.ts",
+        "tests/ruang-simpan-app-api.test.ts"
+      ],
+      "screens": "Admin status koneksi tersanitasi, pilihan profil pusat, izin berkas terpisah, gagal/putus koneksi; token tidak ditampilkan.",
+      "records": "connection metadata, owner mapping, scope metadata, optional scoped cache with revision; credential di fasilitas secrets.",
+      "flow": "Persetujuan pemilik → credential server → GET endpoint pusat → validasi JSON/header/status/scope → proyeksi field minimum dengan provenance.",
+      "controls": "Default OFF. Base resmi https://gustafta.my.id; tidak mengganti ke domain lain diam-diam. profile:read tidak mengizinkan files:read/write. Tidak ada fallback bypass jika 403.",
+      "acceptance": [
+        "Tanpa token GET /api/v1/ruang-simpan/company-profile memberi 401 JSON dengan private,no-store dan X-Gustafta-RS-Contract=rs-app-v1-private-no-store.",
+        "Token tanpa profile:read ditolak 403; token sah dibuktikan dari server aplikasi tujuan tanpa dipublikasikan.",
+        "Uji dua pemilik dan izin berkas dilakukan terpisah; HTML 200 tidak dianggap sukses API."
+      ],
+      "target_extension": "Tidak diterapkan jika mode local. Live SBU belum dinyatakan selesai oleh paket ini; adapter memerlukan pengujian nyata tersendiri.",
+      "evidence_status": "Referensi implementasi ditemukan di kode; bukan sertifikasi produksi",
+      "default_mode": "local"
+    }
+  ],
+  "presets": [
+    {
+      "id": "dokumen-kepatuhan",
+      "name": "Arsip dan kepatuhan perusahaan",
+      "modules": [
+        "F04",
+        "F05",
+        "F06",
+        "F15",
+        "F20",
+        "F21"
+      ],
+      "reason": "Profil, arsip, izin dokumen dan kelengkapan; tanpa AI/pembayaran.",
+      "resolved_modules": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "F15",
+        "F20",
+        "F21"
+      ]
+    },
+    {
+      "id": "asisten-spesialis",
+      "name": "Asisten AI bidang tertentu",
+      "modules": [
+        "F07",
+        "F08",
+        "F13",
+        "F15",
+        "F21"
+      ],
+      "reason": "Dialog bersumber dan draf dokumen; satu asisten dahulu.",
+      "resolved_modules": [
+        "F01",
+        "F02",
+        "F03",
+        "F07",
+        "F08",
+        "F13",
+        "F15",
+        "F21"
+      ]
+    },
+    {
+      "id": "operasional-proyek",
+      "name": "Pekerjaan operasional proyek",
+      "modules": [
+        "F04",
+        "F05",
+        "F11",
+        "F12",
+        "F15",
+        "F16",
+        "F21"
+      ],
+      "reason": "Pekerjaan, bukti, gerbang manusia dan tindak lanjut; proses sektoral tetap dirancang.",
+      "resolved_modules": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F11",
+        "F12",
+        "F15",
+        "F16",
+        "F21"
+      ]
+    },
+    {
+      "id": "akademi-internal",
+      "name": "Akademi internal",
+      "modules": [
+        "F14",
+        "F15",
+        "F16",
+        "F21"
+      ],
+      "reason": "Pembelajaran dan bukti penyelesaian; bukan otomatis sertifikasi profesi.",
+      "resolved_modules": [
+        "F01",
+        "F02",
+        "F03",
+        "F14",
+        "F15",
+        "F16",
+        "F21"
+      ]
+    },
+    {
+      "id": "layanan-berpaket",
+      "name": "Layanan dengan paket akses",
+      "modules": [
+        "F04",
+        "F05",
+        "F17",
+        "F18",
+        "F21"
+      ],
+      "reason": "Akses terbatas paket/voucher; katalog/pembayaran F19 dipilih terpisah.",
+      "resolved_modules": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F17",
+        "F18",
+        "F21"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+name: External ecosystem monitor watchdog
+
+on:
+  # Both scheduled and downstream workflow triggers intentionally disabled.
+  workflow_dispatch:
+    inputs:
+      allow_operational_run:
+        description: "Operational watchdog can write alert state/send email; keep false for draft review. Use isolated receipt workflow for notification tests."
+        type: boolean
+        default: false
+
+permissions:
+  actions: read
+  issues: write
+
+concurrency:
+  group: ecosystem-monitor-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watchdog:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_operational_run == true }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      # Enable both Email and Telegram for this separate check in Healthchecks
+      # (docs/ecosystem-external-heartbeats.md); Actions cannot alert if stopped.
+      # The external service checks for missing scheduled watchdog runs even
+      # when both GitHub schedules stop. workflow_run/manual events cannot
+      # mask a missing scheduled run.
+      - name: Heartbeat scheduled watchdog to independent monitor
+        if: ${{ github.event_name == 'schedule' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_WATCHDOG_HEARTBEAT_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Watchdog heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Watchdog heartbeat could not be delivered."
+            exit 1
+          fi
+      # Separate provider and secret. A Healthchecks outage must not skip this step.
+      - name: Heartbeat scheduled watchdog to Cronitor
+        if: ${{ github.event_name == 'schedule' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_WATCHDOG_CRONITOR_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Watchdog Cronitor heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Watchdog Cronitor heartbeat could not be delivered."
+            exit 1
+          fi
+      # Deliberately no checkout, setup-node or npm ci: this must still run
+      # when the monitored workflow fails before it can produce a report.
+      # Alert issues marked "sending" require operator verification: change to
+      # "sent" if delivered, or delete only after confirming no email was sent.
+      - name: Decide whether the monitor needs an alert
+        id: detect
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const output = process.env.GITHUB_OUTPUT;
+          const headers = {
+            Authorization: `Bearer ${process.env.GH_TOKEN}`,
+            Accept: "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+          };
+          const base = `https://api.github.com/repos/${process.env.REPOSITORY}/actions`;
+          async function get(url) {
+            const response = await fetch(url, { headers, signal: AbortSignal.timeout(15000) });
+            if (!response.ok) throw new Error("GitHub API unavailable");
+            return response.json();
+          }
+          async function probeAlertState() {
+            // Read both APIs used by alert claims, even when there is no warning
+            // candidate. This is an availability check, NOT proof an issue is absent.
+            const now = new Date();
+            const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - ((now.getUTCDay() + 6) % 7)));
+            const query = encodeURIComponent(`repo:${process.env.REPOSITORY} in:title "ecosystem-watchdog-failed-${monday.toISOString().slice(0, 10)}"`);
+            const search = await get(`https://api.github.com/search/issues?q=${query}&per_page=100&page=1`);
+            if (!search || !Number.isSafeInteger(search.total_count) ||
+                search.total_count < 0 || search.total_count >= 1000 ||
+                search.incomplete_results !== false || !Array.isArray(search.items)) {
+              throw new Error("Issue search unavailable");
+            }
+            const recent = await get(`https://api.github.com/repos/${process.env.REPOSITORY}/issues?state=all&sort=created&direction=desc&per_page=100&page=1`);
+            if (!Array.isArray(recent)) throw new Error("Issue list unavailable");
+          }
+          async function failureWithoutReport(run) {
+            if (run.conclusion === "success") return false;
+            if (!run.conclusion) return true; // still queued or running long after schedule
+            const result = await get(`${base}/runs/${run.id}/jobs?per_page=100`);
+            if (!Array.isArray(result.jobs)) throw new Error("Missing jobs");
+            const steps = result.jobs.flatMap(job => job.steps || []);
+            const step = name => steps.find(item => item.name === name);
+            const check = step("Check external app URLs and rendered pages");
+            const key = step("Prepare alert deduplication key");
+            const claim = step("Claim weekly failure alert");
+            const notify = step("Notify operational email");
+            // An alert can be blocked even if another category delivered its
+            // email. Do not let that success hide a failed GitHub state step.
+            const stateSteps = [
+              "Claim weekly failure alert", "Confirm failure alert delivery",
+              "Claim weekly network alert", "Confirm network alert delivery",
+              "Claim weekly browser alert", "Confirm browser alert delivery",
+              "Identify recovered apps", "Confirm recovery delivery",
+              "Release recovery after known delivery failure",
+              "Resolve ambiguous recovery delivery",
+            ];
+            if (stateSteps.some(name => step(name)?.conclusion === "failure")) {
+              fs.appendFileSync(output, "checker_state_blocked=true\n");
+              return true;
+            }
+            // A normal failed app check is handled by the existing report alert.
+            // A missing report, failed notification, or failure before/after the
+            // check instead needs an independent, report-free warning.
+            return !(check?.conclusion === "failure" &&
+              key?.conclusion === "success" &&
+              (notify?.conclusion === "success" ||
+                (claim?.conclusion === "success" && notify?.conclusion === "skipped")));
+          }
+          (async () => {
+            let reason = "";
+            if (process.env.EVENT_NAME === "schedule") await probeAlertState();
+            if (process.env.EVENT_NAME === "workflow_run") {
+              const runId = Number(process.env.RUN_ID);
+              if (!Number.isSafeInteger(runId) || runId <= 0) throw new Error("Invalid run");
+              const run = await get(`${base}/runs/${runId}`);
+              if (await failureWithoutReport(run)) reason = "failed";
+            } else {
+              const data = await get(`${base}/workflows/ecosystem-link-health.yml/runs?event=schedule&per_page=20`);
+              if (!Array.isArray(data.workflow_runs)) throw new Error("Missing runs");
+              const today = new Date().toISOString().slice(0, 10);
+              const runs = data.workflow_runs.filter(run => run.created_at?.startsWith(today));
+              if (!runs.length) reason = "missed";
+              else if (await failureWithoutReport(runs[0])) reason = "failed";
+            }
+            if (reason) {
+              const now = new Date();
+              const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - ((now.getUTCDay() + 6) % 7)));
+              // Fixed category/week key bounds mail volume even across repeated runs.
+              const week = monday.toISOString().slice(0, 10);
+              fs.appendFileSync(output, `reason=${reason}\nkey=ecosystem-watchdog-${reason}-${week}\n`);
+            }
+            console.log(reason ? "Monitor warning candidate found." : "No monitor warning needed.");
+          })().catch(() => {
+            // Never print API responses, workflow logs, headers or credentials.
+            console.error("Could not inspect monitor status.");
+            process.exitCode = 1;
+          });
+          NODE
+      - name: Notify operational email of monitor failure
+        if: ${{ steps.detect.outputs.reason != '' }}
+        id: notify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          ALERT_KEY: ${{ steps.detect.outputs.key }}
+          REASON: ${{ steps.detect.outputs.reason }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          BREVO_ALERT_EMAIL: ${{ secrets.BREVO_ALERT_EMAIL }}
+          BREVO_SENDER_EMAIL: ${{ secrets.BREVO_SENDER_EMAIL }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const reason = process.env.REASON;
+          if (!["failed", "missed"].includes(reason)) process.exit(1);
+          const key = process.env.ALERT_KEY;
+          if (!/^ecosystem-watchdog-(?:failed|missed)-\d{4}-\d{2}-\d{2}$/.test(key) ||
+              key !== `ecosystem-watchdog-${reason}-${key.slice(-10)}` ||
+              !/^[\w.-]+\/[\w.-]+$/.test(process.env.REPOSITORY || "") || !process.env.GH_TOKEN) process.exit(1);
+          if (!process.env.BREVO_API_KEY || !process.env.BREVO_ALERT_EMAIL) {
+            console.error("Monitor alert email is not configured.");
+            process.exit(1);
+          }
+          const title = `Ecosystem alert delivery: ${key}`;
+          const base = `https://api.github.com/repos/${process.env.REPOSITORY}`;
+          const headers = {
+            authorization: `Bearer ${process.env.GH_TOKEN}`,
+            accept: "application/vnd.github+json",
+            "x-github-api-version": "2022-11-28",
+            "content-type": "application/json",
+          };
+          async function api(path, method = "GET", body) {
+            try {
+              const response = await fetch(
+                (path.startsWith("/search/issues?") ? "https://api.github.com" : base) + path, {
+                  method, headers, body: body ? JSON.stringify(body) : undefined,
+                  signal: AbortSignal.timeout(15000),
+                });
+              if (!response.ok) throw new Error("State unavailable");
+              return await response.json();
+            } catch {
+              githubStateFailed = true;
+              throw new Error("State unavailable");
+            }
+          }
+          async function find() {
+            let found;
+            const query = encodeURIComponent(`repo:${process.env.REPOSITORY} in:title "${title}"`);
+            let count = 0;
+            for (let page = 1; ; page++) {
+              const result = await api(`/search/issues?q=${query}&per_page=100&page=${page}`);
+              if (!result || !Number.isSafeInteger(result.total_count) ||
+                  result.total_count < 0 || result.total_count >= 1000 ||
+                  result.incomplete_results !== false || !Array.isArray(result.items)) {
+                throw new Error("Incomplete issue search");
+              }
+              count += result.items.length;
+              if (count > result.total_count || (!result.items.length && count < result.total_count)) {
+                throw new Error("Invalid issue search");
+              }
+              for (const issue of result.items) {
+                if (!issue || typeof issue.title !== "string") throw new Error("Invalid issue search");
+                if (issue.title !== title || issue.pull_request) continue;
+                if (found) throw new Error("Duplicate alert state");
+                found = issue;
+              }
+              if (count === result.total_count) break;
+              if (result.items.length !== 100 || page >= 10) throw new Error("Incomplete issue search");
+            }
+            // Search indexing can lag a fresh claim. Check the live newest page.
+            const recent = await api("/issues?state=all&sort=created&direction=desc&per_page=100&page=1");
+            if (!Array.isArray(recent)) throw new Error("Invalid issue list");
+            for (const issue of recent) {
+              if (!issue || typeof issue.title !== "string") throw new Error("Invalid issue list");
+              if (issue.title !== title || issue.pull_request) continue;
+              if (found && found.number !== issue.number) throw new Error("Duplicate alert state");
+              found = issue;
+            }
+            if (found && (!Number.isSafeInteger(found.number) || found.number <= 0 ||
+                !["sending", "sent"].includes(found.body))) throw new Error("Invalid alert state");
+            return found;
+          }
+          const description = reason === "missed"
+            ? "Pemeriksaan harian aplikasi eksternal belum berjalan sesuai jadwal."
+            : "Workflow pemeriksaan aplikasi eksternal gagal tanpa pemberitahuan gangguan yang berhasil dikirim.";
+          let githubStateFailed = false;
+          (async () => {
+            if (await find()) {
+              fs.appendFileSync(process.env.GITHUB_OUTPUT, "github_state_ok=true\n");
+              console.log("Monitor warning already claimed; no duplicate email.");
+              return;
+            }
+            // Claim before contacting Brevo. A failed acknowledgement or uncertain
+            // provider outcome stays "sending" until manually verified.
+            const claim = await api("/issues", "POST", { title, body: "sending" });
+            if (!claim || !Number.isSafeInteger(claim.number) || claim.number <= 0 ||
+                claim.title !== title || claim.body !== "sending") throw new Error("Invalid claim");
+            // Mail failures do not mean GitHub state is unavailable; sending
+            // still blocks retries. Only the API failure monitor is kept down.
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, "github_state_ok=true\n");
+            const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+              method: "POST",
+              headers: { "api-key": process.env.BREVO_API_KEY, "content-type": "application/json" },
+              body: JSON.stringify({
+                sender: { name: "Gustafta", email: process.env.BREVO_SENDER_EMAIL || "noreply@gustafta.my.id" },
+                to: [{ email: process.env.BREVO_ALERT_EMAIL }],
+                subject: "Peringatan: pemeriksaan harian aplikasi eksternal terganggu",
+                textContent: `${description}\nPeriksa workflow External ecosystem link health di GitHub Actions. Pesan ini tidak menyimpulkan keadaan aplikasi.`,
+              }),
+              signal: AbortSignal.timeout(10000),
+            });
+            if (!response.ok) throw new Error("Delivery failed");
+            await api(`/issues/${claim.number}`, "PATCH", { body: "sent" });
+            console.log("Monitor alert email sent.");
+          })().catch(() => {
+            if (githubStateFailed) fs.appendFileSync(process.env.GITHUB_OUTPUT, "github_state_failed=true\n");
+            // Do not expose provider responses or raw error messages.
+            console.error("Monitor alert email could not be sent.");
+            process.exitCode = 1;
+          });
+          NODE
+      # This separate external check measures GitHub Search/Issues availability,
+      # not whether the schedule started. A failed lookup/claim cannot be healed
+      # by a manual run or by the earlier schedule heartbeat.
+      - name: Heartbeat successful alert state check to independent monitor
+        if: ${{ always() && github.event_name == 'schedule' && steps.detect.outcome == 'success' && steps.detect.outputs.checker_state_blocked != 'true' && (steps.detect.outputs.reason == '' || steps.notify.outputs.github_state_ok == 'true') && steps.notify.outputs.github_state_failed != 'true' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_ALERT_STATE_HEARTBEAT_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Alert state heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Alert state heartbeat could not be delivered."
+            exit 1
+          fi
+      - name: Heartbeat successful alert state check to Cronitor
+        if: ${{ always() && github.event_name == 'schedule' && steps.detect.outcome == 'success' && steps.detect.outputs.checker_state_blocked != 'true' && (steps.detect.outputs.reason == '' || steps.notify.outputs.github_state_ok == 'true') && steps.notify.outputs.github_state_failed != 'true' }}
+        continue-on-error: true
+        env:
+          HEARTBEAT_URL: ${{ secrets.ECOSYSTEM_ALERT_STATE_CRONITOR_URL }}
+        run: |
+          if [ -z "$HEARTBEAT_URL" ]; then
+            echo "Alert state Cronitor heartbeat is not configured."
+            exit 1
+          fi
+          if ! curl --fail --silent --output /dev/null --max-time 10 --retry 2 \
+            --request POST --data '' "$HEARTBEAT_URL" > /dev/null 2>&1; then
+            echo "Alert state Cronitor heartbeat could not be delivered."
+            exit 1
+          fi

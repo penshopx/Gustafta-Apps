@@ -1,0 +1,6 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "incremental": false },
+  "include": ["workroom-gates.test.ts", "workroom-gates.vitest.tsx", "workroom-sources.test.ts", "workroom-sources.vitest.tsx", "workroom-versions.vitest.tsx", "workroom-analysis.test.ts", "workroom-budget-monitor.test.ts", "workroom-budget-monitor.vitest.tsx"],
+  "exclude": []
+}

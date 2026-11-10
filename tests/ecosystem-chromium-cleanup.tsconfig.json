@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["node"]
+  },
+  "include": [
+    "check-ecosystem-chromium-cleanup.test.ts",
+    "check-ecosystem-browser-cleanup.test.ts",
+    "fixtures/chromium-tester-cancellation.ts",
+    "helpers/chromium-fixture-watchdog.ts"
+  ]
+}

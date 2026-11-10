@@ -1,0 +1,78 @@
+﻿kode,kbli,judul_kbli,sifat,kualifikasi_kutipan,pdf,lampiran
+BG001,41011,Konstruksi Konvensional Gedung Hunian,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",18,9
+BG002,41012,Konstruksi Konvensional Gedung Perkantoran,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",18,9
+BG003,41013,Konstruksi Konvensional Gedung Industri,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",18,9
+BG004,41014,Konstruksi Konvensional Gedung Perbelanjaan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BG005,41015,Konstruksi Konvensional Gedung Kesehatan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BG006,41016,Konstruksi Konvensional Gedung Pendidikan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BG007,41017,Konstruksi Konvensional Gedung Penginapan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BG008,41018,Konstruksi Konvensional Gedung Hiburan Dan Olahraga,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BG009,41019,Konstruksi Konvensional Gedung Lainnya,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS001,42101,Konstruksi Jalan Pada Permukaan Tanah,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS002,42102,"Konstruksi Bangunan Sipil Jembatan, Jalan Layang, Fly Over, Dan Underpass",Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS003,42103,Konstruksi Jalan Rel,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS004,42201,Konstruksi Jaringan Irigasi Dan Drainase,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS005,42202,Konstruksi Bangunan Sipil Pengolahan Air Bersih,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS006,42203,Konstruksi Bangunan Sipil Sistem Pengolahan Limbah,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS007,42204,Konstruksi Bangunan Sipil Elektrikal,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS008,42205,Konstruksi Bangunan Sipil Telekomunikasi Untuk Prasarana Transportasi,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19,10
+BS009,42206,Konstruksi Sentral Telekomunikasi,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",19–20,10–11
+BS010,42911,Konstruksi Bangunan Prasarana Sumber Daya Air,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS011,42912,Konstruksi Bangunan Pelabuhan Bukan Perikanan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS012,42913,Konstruksi Bangunan Pelabuhan Perikanan,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS013,42991,Konstruksi Bangunan Sipil Minyak Dan Gas Bumi,Umum,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS014,42992,Konstruksi Bangunan Sipil Pertambangan,Umum,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS015,42993,Konstruksi Bangunan Sipil Panas Bumi,Umum,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS016,42994,Konstruksi Bangunan Sipil Fasilitas Olahraga,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS017,42999,Konstruksi Bangunan Sipil Lainnya Ytdl,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS018,42995,Konstruksi Bangunan Sipil Fasilitas Pengolahan,Umum,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS019,42996,Konstruksi Bangunan Sipil Fasilitas Militer Dan Bandar Antariksa,Umum,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+BS020,42209,Konstruksi Proyek Utilitas Lainnya,Umum,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+IN001,43291,Pemasangan Perlengkapan Mekanikal Bangunan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+IN002,43212,Pemasangan Jaringan Telekomunikasi,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+IN003,43299,Pemasangan Konstruksi Lainnya Ytdl,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+IN004,43223,Pemasangan Jaringan Penyaluran Gas,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",20,11
+IN005,43214,"Pemasangan Sistem Navigasi Laut, Sungai, Dan Udara",Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN006,43213,Pemasangan Sistem Elektronika,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN007,43221,Pemasangan Saluran Air (Plumbing),Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN008,43224,Pemasangan Pendingin Dan Ventilasi Udara,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN010,43299,Pemasangan Konstruksi Lainnya Ytdl,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN011,43216,Pemasangan Perlengkapan Jalan Berbasis Listrik,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN012,43215,Pemasangan Sistem Persinyalan Dan Telekomunikasi Kereta Api,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN013,43222,Pemasangan Sistem Pemanas Dan Geotermal,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+IN014,33203,"Pemasangan Perlengkapan Meteorologi, Klimatologi, Dan Geofisika",Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK001,43901,Pemasangan Dan Rekayasa Struktur Bangunan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK002,42914,Konstruksi Reservoir Pembangkit Listrik Tenaga Air,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK003,42914,Konstruksi Reservoir Pembangkit Listrik Tenaga Air,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK004,42915,Konstruksi Bangunan Sipil Pelindung Pantai,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK005,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK006,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",21,12
+KK007,43299,Pemasangan Konstruksi Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK008,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK009,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK010,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK011,43903,Pemasangan Rangka Dan Atap/Roof Covering,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK012,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK013,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK014,42104,Konstruksi Terowongan,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK015,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KK016,43904,Pemasangan Kerangka Baja,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KP001,41020,Konstruksi Prapabrikasi Bangunan Gedung,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+KP002,42209,Konstruksi Proyek Utilitas Lainnya,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+PB001,43301,"Pemasangan Kaca, Pintu, Kusen, Jendela, Dan Sejenisnya",Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+PB003,43302,"Pengerjaan Lantai, Dinding, Dan Plafon",Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",22,13
+PB004,43309,Penyelesaian Konstruksi Bangunan Lainnya,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PB005,43309,Penyelesaian Konstruksi Bangunan Lainnya,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PB007,43303,Pengecatan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PB009,43309,Penyelesaian Konstruksi Bangunan Lainnya,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PB010,43309,Penyelesaian Konstruksi Bangunan Lainnya,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PB011,43909,Konstruksi Khusus Lainnya Ytdl,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PA001,43905,Penyewaan Alat Konstruksi Dengan Operator,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL001,43110,Pembongkaran,Spesialis,"MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL002,42912,Konstruksi Bangunan Pelabuhan Bukan Perikanan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL003,43120,Penyiapan Lahan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL004,43120,Penyiapan Lahan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL005,42207,Konstruksi Pengeboran/Penggali an Air Tanah,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL006,43120,Penyiapan Lahan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23,14
+PL007,43120,Penyiapan Lahan,Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",23–24,14–15
+PL008,43902,Pemasangan Perancah (Steger),Spesialis,"K (K1, K2, K3) MB BUJKN, B BUJK PMA, B KPBUJKA",24,15

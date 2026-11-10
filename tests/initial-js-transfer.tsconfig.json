@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  "include": [
+    "../scripts/check-initial-js-transfer.ts",
+    "../scripts/lib/initial-js-transfer.ts",
+    "../scripts/lib/initial-js-transfer-budget.ts",
+    "../scripts/lib/initial-js-production-server.ts",
+    "../scripts/check-initial-js-production.ts",
+    "../scripts/lib/owned-browser-cleanup.ts",
+    "initial-js-transfer.test.ts"
+  ]
+}
