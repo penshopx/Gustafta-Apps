@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { saveAndVerifyMulticlawPersona } from "@/lib/multiclaw-persona-save";
 import {
   ArrowLeft, Search, Settings, BookOpen, Sliders, Users, Loader2,
   Trash2, Plus, RefreshCw, CheckCircle2, Upload, ChevronRight,
@@ -367,14 +368,29 @@ export default function MultiClawAdmin() {
     setSavingPersona(true); setSavedPersonaOk(false);
     try {
       const validStarters = editStarters.filter(s => s.trim());
-      const r = await fetch(`/api/agents/${agent.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ greetingMessage: editGreeting, conversationStarters: validStarters, isEnabled: editIsEnabled }) });
-      if (r.ok) {
-        toast({ title: "Persona tersimpan ✓" });
-        setSavedPersonaOk(true);
-        setAgent({ ...agent, greetingMessage: editGreeting, conversationStarters: validStarters, isEnabled: editIsEnabled });
-        setTimeout(() => setSavedPersonaOk(false), 3000);
-      } else throw new Error();
-    } catch { toast({ title: "Gagal simpan persona.", variant: "destructive" }); }
+      const payload = {
+        greetingMessage: editGreeting,
+        conversationStarters: validStarters,
+        isEnabled: editIsEnabled,
+      };
+      const saved = await saveAndVerifyMulticlawPersona(agent.id, agent.slug, payload);
+
+      toast({ title: "Persona tersimpan dan terverifikasi ✓" });
+      setSavedPersonaOk(true);
+      setAgent({
+        ...agent,
+        greetingMessage: saved.greetingMessage,
+        conversationStarters: saved.conversationStarters,
+        isEnabled: saved.isEnabled,
+      });
+      setEditGreeting(saved.greetingMessage);
+      setEditStarters(saved.conversationStarters);
+      setEditIsEnabled(saved.isEnabled);
+      setTimeout(() => setSavedPersonaOk(false), 3000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.";
+      toast({ title: "Gagal menyimpan Persona & UX", description: message, variant: "destructive" });
+    }
     finally { setSavingPersona(false); }
   }
 

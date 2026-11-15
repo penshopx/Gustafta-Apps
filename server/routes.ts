@@ -35437,6 +35437,7 @@ Hasilkan JSON valid dan profesional.`;
 
   // ==================== MULTICLAW ADMIN API ====================
   app.get("/api/multiclaw/agent/:slug", async (req: any, res: any) => {
+    res.setHeader("Cache-Control", "private, no-store");
     try {
       const agent = await storage.getAgentBySlug(req.params.slug);
       if (!agent) return res.status(404).json({ error: "Agent not found for slug: " + req.params.slug });
