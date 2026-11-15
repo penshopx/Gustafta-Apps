@@ -35440,19 +35440,8 @@ Hasilkan JSON valid dan profesional.`;
     try {
       const agent = await storage.getAgentBySlug(req.params.slug);
       if (!agent) return res.status(404).json({ error: "Agent not found for slug: " + req.params.slug });
-      return res.json({
-        id: agent.id, name: agent.name, slug: agent.slug,
-        model: (agent as any).aiModel || (agent as any).model || SMART_MODEL,
-        temperature: (agent as any).temperature ?? 0.7,
-        maxTokens: (agent as any).maxTokens ?? 2000,
-        systemPrompt: (agent as any).systemPrompt || "",
-        isEnabled: (agent as any).isEnabled ?? true,
-        agenticSubAgents: (agent as any).agenticSubAgents || null,
-        ragChunkSize: (agent as any).ragChunkSize ?? 800,
-        ragChunkOverlap: (agent as any).ragChunkOverlap ?? 200,
-        tagline: (agent as any).tagline || "",
-        description: (agent as any).description || "",
-      });
+      const { toMulticlawAdminAgent } = await import("./lib/multiclaw-admin-agent");
+      return res.json(toMulticlawAdminAgent(agent));
     } catch (e: any) {
       console.error("multiclaw/agent error:", e);
       res.status(500).json({ error: "Failed to resolve agent" });
