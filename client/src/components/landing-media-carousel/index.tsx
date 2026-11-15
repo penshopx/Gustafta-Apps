@@ -7,11 +7,11 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import constructionReadinessUrl from "@assets/generated_images/gustafta-konstruksi-01-kesiapan.png";
-import constructionPlanningUrl from "@assets/generated_images/gustafta-konstruksi-02-perencanaan.png";
-import constructionExecutionUrl from "@assets/generated_images/gustafta-konstruksi-03-pelaksanaan.png";
-import constructionMonitoringUrl from "@assets/generated_images/gustafta-konstruksi-04-monitoring.png";
-import constructionHandoverUrl from "@assets/generated_images/gustafta-konstruksi-05-serah-terima.png";
+const constructionReadinessUrl = "/assets/konstruksi-01-kesiapan.webp";
+const constructionPlanningUrl = "/assets/konstruksi-02-perencanaan.webp";
+const constructionExecutionUrl = "/assets/konstruksi-03-pelaksanaan.webp";
+const constructionMonitoringUrl = "/assets/konstruksi-04-monitoring.webp";
+const constructionHandoverUrl = "/assets/konstruksi-05-serah-terima.webp";
 const optionalLandingVideos = import.meta.glob<string>(
   "@assets/generated_videos/gustafta_*",
   { eager: true, query: "?url", import: "default" },

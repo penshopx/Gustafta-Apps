@@ -7,11 +7,11 @@ import {
 } from "@/hooks/use-meta-pixel";
 import { Check, Gift, BookOpen, FileText, Video, Sparkles, ChevronRight } from "lucide-react";
 import { EBOOK_DIALOG } from "@/data/pricing";
-import coverFlat from "@assets/Monolog-_cover_1781287565935.jpg";
-import cover3D from "@assets/Buku_3D_1781288556255.png";
 import { useContactNumbers } from "@/lib/contact";
 
 const SCALEV_EBOOK = `${PAYMENT_BASE_URL}/p/ebook-buku-i-dialog-gustafta`;
+const coverFlat = "/assets/monolog-cover.webp";
+const cover3D = "/assets/dialog-book-3d.webp";
 
 const BONUS_ICONS = [BookOpen, Sparkles, FileText, Video, Gift];
 

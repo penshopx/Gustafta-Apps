@@ -9,8 +9,8 @@ import {
   Database, Workflow, Package, Repeat2, BookOpen, Wrench, FileText,
   Megaphone, Lightbulb, MessageSquare, CheckCircle2, ChevronRight,
 } from "lucide-react";
-import heroIllustration from "@assets/generated_images/gaia_hero.png";
-import coverMonolog from "@assets/cover-monolog.jpg";
+const heroIllustration = "/assets/gaia-hero.webp";
+const coverMonolog = "/assets/monolog-cover.webp";
 
 export default function Profil() {
   return (

@@ -7,7 +7,7 @@
 // ============================================================
 import { CASHFLOW_EBOOK } from "@/data/pricing";
 import { SBU_SKK_EBOOK, SBU_SKK_FUNNEL } from "@/data/pricing";
-import sbuSkkCover from "@assets/0_cover_Ebook_SBU-SKK_1787296306789.png";
+const sbuSkkCover = "/assets/sbu-skk-ebook-cover.webp";
 
 export type DigitalProduct = {
   slug: string;

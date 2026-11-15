@@ -12,13 +12,13 @@ import {
   HardHat, FileText, ClipboardList, Building2, Award, Wrench,
 } from "lucide-react";
 import { TRILOGI } from "@/data/pricing";
-import coverFlat from "@assets/Monolog-_cover_1781287565935.jpg";
-import cover3D from "@assets/Buku_3D_1781288556255.png";
-import mockupDevices from "@assets/1781288755_1781288818548.jpg";
 import { useContactNumbers } from "@/lib/contact";
 
 const SCALEV_BUNDLE = `${PAYMENT_BASE_URL}`;
 const SCALEV_BUKU1  = `${PAYMENT_BASE_URL}`;
+const coverFlat = "/assets/monolog-cover.webp";
+const cover3D = "/assets/dialog-book-3d.webp";
+const mockupDevices = "/assets/trilogi-mockup.webp";
 
 // Data konteks industri konstruksi Indonesia (sumber publik/resmi)
 const STATS_KONSTRUKSI = [

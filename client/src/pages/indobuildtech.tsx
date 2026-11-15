@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SharedHeader } from "@/components/shared-header";
-import posterUrl from "@assets/Indobuildtech_2_1783396237535.jpeg";
-import speakersUrl from "@assets/Indobuildtech_1_1783396237537.jpeg";
 import {
   Sparkles, Calendar, MapPin, Gift, Bot, BookOpen, GraduationCap, Users,
   ArrowRight, CheckCircle2, Ticket, Building2, ShieldCheck, FileSearch, Award, Zap,
   UserPlus, MessageSquare, Edit3, Stethoscope,
 } from "lucide-react";
 
+const posterUrl = "/assets/indobuildtech-poster.webp";
+const speakersUrl = "/assets/indobuildtech-speakers.webp";
 const REGISTER_URL = "https://bit.ly/SeminarIndobuildtech2026";
 
 /* Claw profesi konstruksi yang jadi bagian bonus (mengacu ke rute nyata di platform). */

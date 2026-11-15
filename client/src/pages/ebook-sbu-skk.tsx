@@ -4,7 +4,6 @@ import { SharedHeader } from "@/components/shared-header";
 import { Button } from "@/components/ui/button";
 import { PAYMENT_BASE_URL } from "@/lib/payment-base";
 import { SBU_SKK_EBOOK, SBU_SKK_FUNNEL } from "@/data/pricing";
-import cover from "@assets/0_cover_Ebook_SBU-SKK_1787296306789.png";
 import {
   ArrowRight,
   Check,
@@ -13,6 +12,8 @@ import {
   Package,
   ShieldCheck,
 } from "lucide-react";
+
+const cover = "/assets/sbu-skk-ebook-cover.webp";
 
 type OrderKey = "tutor" | "bundle" | "ai-specialist";
 
