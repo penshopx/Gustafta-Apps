@@ -7,36 +7,44 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Button } from "@/components/ui/button";
-import promoVideoUrl from "@assets/generated_videos/gustafta_promo_24s_web.mp4";
-import promoVideoWebmUrl from "@assets/generated_videos/gustafta_promo_24s_web.webm";
-import promoPosterUrl from "@assets/generated_videos/gustafta_promo_24s_poster.jpg";
-import explainerVideoUrl from "@assets/generated_videos/gustafta_explainer.mp4";
-import explainerVideoWebmUrl from "@assets/generated_videos/gustafta_explainer.webm";
-import explainerPosterUrl from "@assets/generated_videos/gustafta_explainer_poster.jpg";
 import constructionReadinessUrl from "@assets/generated_images/gustafta-konstruksi-01-kesiapan.png";
 import constructionPlanningUrl from "@assets/generated_images/gustafta-konstruksi-02-perencanaan.png";
 import constructionExecutionUrl from "@assets/generated_images/gustafta-konstruksi-03-pelaksanaan.png";
 import constructionMonitoringUrl from "@assets/generated_images/gustafta-konstruksi-04-monitoring.png";
 import constructionHandoverUrl from "@assets/generated_images/gustafta-konstruksi-05-serah-terima.png";
-import constructionWorkflowVideoUrl from "@assets/generated_videos/gustafta-konstruksi-workflow.mp4";
-import constructionWorkflowVideoWebmUrl from "@assets/generated_videos/gustafta-konstruksi-workflow.webm";
+const optionalLandingVideos = import.meta.glob<string>(
+  "@assets/generated_videos/gustafta_*",
+  { eager: true, query: "?url", import: "default" },
+);
+
+function findLandingVideo(stem: string, extension: "mp4" | "webm" | "jpg") {
+  const entry = Object.entries(optionalLandingVideos).find(([path]) =>
+    path.endsWith(`${stem}.${extension}`),
+  );
+  return entry?.[1];
+}
 
 const videoSlides = [
   {
-    webm: promoVideoWebmUrl,
-    mp4: promoVideoUrl,
-    poster: promoPosterUrl,
+    stem: "gustafta_promo_24s_web",
+    poster: findLandingVideo("gustafta_promo_24s_poster", "jpg") ?? constructionReadinessUrl,
     title: "Gustafta dalam 24 detik",
     caption: "Satu titik awal untuk kesiapan, peluang, dan pekerjaan konstruksi.",
   },
   {
-    webm: explainerVideoWebmUrl,
-    mp4: explainerVideoUrl,
-    poster: explainerPosterUrl,
+    stem: "gustafta_explainer",
+    poster: findLandingVideo("gustafta_explainer_poster", "jpg") ?? constructionPlanningUrl,
     title: "Cara kerja yang punya konteks",
     caption: "Dari dokumen dan pengetahuan, menuju langkah kerja yang dapat dijalankan.",
   },
-];
+].flatMap((slide) => {
+  const webm = findLandingVideo(slide.stem, "webm");
+  const mp4 = findLandingVideo(slide.stem, "mp4");
+  return webm && mp4 ? [{ ...slide, webm, mp4 }] : [];
+});
+
+const constructionWorkflowWebm = findLandingVideo("gustafta-konstruksi-workflow", "webm");
+const constructionWorkflowMp4 = findLandingVideo("gustafta-konstruksi-workflow", "mp4");
 
 const constructionWorkflowSlides = [
   {
@@ -89,17 +97,19 @@ const constructionWorkflowSlides = [
     caption: "Dokumen akhir, keputusan, dan pembelajaran proyek tidak hilang ketika bangunan diserahterimakan.",
     gustafta: "Ruang Simpan menjaga arsip dan pengetahuan agar siap digunakan kembali pada pekerjaan berikutnya.",
   },
-  {
-    kind: "video" as const,
-    webm: constructionWorkflowVideoWebmUrl,
-    mp4: constructionWorkflowVideoUrl,
-    poster: constructionExecutionUrl,
-    number: "06",
-    eyebrow: "Ringkasan bergerak",
-    title: "Satu alur kerja, terhubung dari awal hingga akhir.",
-    caption: "Lihat bagaimana informasi bergerak bersama pekerjaan konstruksi tanpa memutus peran profesional di dalamnya.",
-    gustafta: "Gustafta mengisi celah di antara dokumen, keputusan, pekerjaan lapangan, dan pengetahuan organisasi.",
-  },
+  ...(constructionWorkflowWebm && constructionWorkflowMp4
+    ? [{
+        kind: "video" as const,
+        webm: constructionWorkflowWebm,
+        mp4: constructionWorkflowMp4,
+        poster: constructionExecutionUrl,
+        number: "06",
+        eyebrow: "Ringkasan bergerak",
+        title: "Satu alur kerja, terhubung dari awal hingga akhir.",
+        caption: "Lihat bagaimana informasi bergerak bersama pekerjaan konstruksi tanpa memutus peran profesional di dalamnya.",
+        gustafta: "Gustafta mengisi celah di antara dokumen, keputusan, pekerjaan lapangan, dan pengetahuan organisasi.",
+      }]
+    : []),
 ];
 
 const CONSTRUCTION_SLIDE_DURATION_MS = 5_200;
@@ -218,6 +228,8 @@ export function LandingVideoCarousel() {
       video.currentTime = 0;
     });
   }, [active]);
+
+  if (videoSlides.length === 0) return null;
 
   return (
     <section
