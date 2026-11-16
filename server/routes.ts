@@ -5,6 +5,7 @@ import { invalidateAgentCache, parseSubAgentsValue } from "./db-storage";
 import {
   multiclawAdminOverrideKey,
   multiclawAdminPatchSchema,
+  updateMulticlawAgentInTransaction,
 } from "./lib/multiclaw-admin-config";
 import { publicChatScope } from "./lib/public-chat-scope";
 import { createLegacyMemoryRecovery, RecoveryConflict } from "./lib/legacy-memory-recovery";
@@ -35469,14 +35470,14 @@ Hasilkan JSON valid dan profesional.`;
 
       const overrideKey = multiclawAdminOverrideKey(slug);
       const serializedPatch = JSON.stringify(parsed.data);
-      const updateAgentInTransaction = storage.updateAgent as (
-        id: string,
-        data: Record<string, unknown>,
-        executor?: unknown,
-      ) => Promise<Agent | undefined>;
 
-      const updated = await db.transaction(async (tx) => {
-        const next = await updateAgentInTransaction(String(existing.id), parsed.data, tx);
+      await db.transaction(async (tx) => {
+        const next = await updateMulticlawAgentInTransaction(
+          storage,
+          String(existing.id),
+          parsed.data,
+          tx,
+        );
         if (!next) throw new Error("Agent not found");
 
         // Store a merged JSON override atomically with the agent update. This

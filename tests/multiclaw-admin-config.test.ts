@@ -4,6 +4,7 @@ import {
   applyMulticlawAdminOverrides,
   multiclawAdminOverrideKey,
   multiclawAdminPatchSchema,
+  updateMulticlawAgentInTransaction,
 } from "../server/lib/multiclaw-admin-config";
 import { saveAndVerifyMulticlawConfig } from "../client/src/lib/multiclaw-config-save";
 
@@ -77,6 +78,28 @@ test("admin override patch rejects fields outside the editor contract", () => {
   assert.equal(multiclawAdminPatchSchema.safeParse({ systemPrompt: "prompt" }).success, true);
   assert.equal(multiclawAdminPatchSchema.safeParse({ systemPrompt: "prompt", userId: "attacker" }).success, false);
   assert.equal(multiclawAdminPatchSchema.safeParse({ conversationStarters: Array(7).fill("x") }).success, false);
+});
+
+test("transactional agent update keeps the storage receiver bound", async () => {
+  const executor = { transaction: true };
+  const storage = {
+    marker: "storage-instance",
+    async updateAgent(this: { marker: string }, id: string, patch: Record<string, unknown>) {
+      return { id, marker: this.marker, patch, receivedExecutor: arguments[2] };
+    },
+  };
+
+  const result = await updateMulticlawAgentInTransaction(
+    storage,
+    "42",
+    { systemPrompt: "updated prompt" },
+    executor,
+  ) as { id: string; marker: string; patch: Record<string, unknown>; receivedExecutor: unknown };
+
+  assert.equal(result.id, "42");
+  assert.equal(result.marker, "storage-instance");
+  assert.deepEqual(result.patch, { systemPrompt: "updated prompt" });
+  assert.equal(result.receivedExecutor, executor);
 });
 
 test("saved MultiClaw edits are reapplied after startup seeds overwrite the database row", async () => {

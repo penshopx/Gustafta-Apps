@@ -30,6 +30,26 @@ export const multiclawAdminPatchSchema = z.object(editableFields).partial().stri
 
 export type MulticlawAdminPatch = z.infer<typeof multiclawAdminPatchSchema>;
 
+export interface MulticlawAgentUpdateStorage {
+  updateAgent: (id: string, data: Record<string, unknown>) => Promise<unknown>;
+}
+
+/** Keep the storage receiver bound when passing its transaction executor. */
+export function updateMulticlawAgentInTransaction(
+  storage: MulticlawAgentUpdateStorage,
+  id: string,
+  patch: MulticlawAdminPatch,
+  executor: unknown,
+): Promise<unknown> {
+  const update = storage.updateAgent as unknown as (
+    this: MulticlawAgentUpdateStorage,
+    agentId: string,
+    data: MulticlawAdminPatch,
+    transactionExecutor: unknown,
+  ) => Promise<unknown>;
+  return update.call(storage, id, patch, executor);
+}
+
 export function multiclawAdminOverrideKey(slug: string): string {
   return `${MULTICLAW_ADMIN_OVERRIDE_PREFIX}${slug}`;
 }
