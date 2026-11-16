@@ -9,6 +9,7 @@ type MulticlawAdminAgentSource = {
   systemPrompt?: string | null;
   isEnabled?: boolean | null;
   agenticSubAgents?: unknown;
+  ragTopK?: number | null;
   ragChunkSize?: number | null;
   ragChunkOverlap?: number | null;
   tagline?: string | null;
@@ -29,6 +30,7 @@ export function toMulticlawAdminAgent(agent: MulticlawAdminAgentSource) {
     systemPrompt: agent.systemPrompt || "",
     isEnabled: agent.isEnabled ?? true,
     agenticSubAgents: agent.agenticSubAgents || null,
+    ragTopK: agent.ragTopK ?? 5,
     ragChunkSize: agent.ragChunkSize ?? 800,
     ragChunkOverlap: agent.ragChunkOverlap ?? 200,
     tagline: agent.tagline || "",

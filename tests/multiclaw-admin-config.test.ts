@@ -6,7 +6,20 @@ import {
   multiclawAdminPatchSchema,
   updateMulticlawAgentInTransaction,
 } from "../server/lib/multiclaw-admin-config";
+import { toMulticlawAdminAgent } from "../server/lib/multiclaw-admin-agent";
 import { saveAndVerifyMulticlawConfig } from "../client/src/lib/multiclaw-config-save";
+
+test("MultiClaw admin response includes ragTopK so prompt saves can pass readback verification", () => {
+  const adminAgent = toMulticlawAdminAgent({
+    id: 44,
+    name: "ArsitekturClaw",
+    slug: "arsitekturclaw-orchestrator",
+    ragTopK: 7,
+  });
+
+  assert.equal(adminAgent.ragTopK, 7);
+  assert.equal(adminAgent.ragChunkSize, 800);
+});
 
 test("MultiClaw admin config save verifies system prompt and model from a fresh read", async () => {
   const payload = {
