@@ -240,6 +240,13 @@ class TtlCache<T> {
 // Cache instances — 5 menit TTL untuk agen, 3 menit untuk KB & chunks
 const agentCache = new TtlCache<any>(5 * 60 * 1000);
 const agentListCache = new TtlCache<any[]>(2 * 60 * 1000);
+
+/** Clear process-local agent snapshots after a transaction commits elsewhere. */
+export function invalidateAgentCache(id?: string): void {
+  if (id) agentCache.delete(id);
+  agentCache.delete("__active__");
+  agentListCache.clear();
+}
 const kbCache = new TtlCache<any[]>(3 * 60 * 1000);
 const chunkCache = new TtlCache<KnowledgeChunk[]>(3 * 60 * 1000);
 

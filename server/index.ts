@@ -3032,6 +3032,32 @@ Data yang belum tersedia akan saya estimasi dengan standar industri dan ditandai
         log("[SmartModelUpgrade] error: " + (err as Error).message);
       }
 
+      // Reconcile admin-edited MultiClaw config after seed scripts and the
+      // platform model upgrade, so prompt/Persona fixes survive every restart.
+      try {
+        const [{ db: rawDb }, schema, overrideModule] = await Promise.all([
+          import("./db"),
+          import("@shared/schema"),
+          import("./lib/multiclaw-admin-config"),
+        ]);
+        const rows = await rawDb.select({
+          key: schema.systemConfig.key,
+          value: schema.systemConfig.value,
+        }).from(schema.systemConfig);
+        const overrideRows = rows.filter((row) =>
+          row.key.startsWith(overrideModule.MULTICLAW_ADMIN_OVERRIDE_PREFIX)
+        );
+        const result = await overrideModule.applyMulticlawAdminOverrides(overrideRows, {
+          getAgentBySlug: (slug) => storage.getAgentBySlug(slug),
+          updateAgent: async (id, patch) => storage.updateAgent(id, patch as any),
+        });
+        if (result.applied || result.skipped) {
+          log(`[MultiClawAdminOverrides] reapplied ${result.applied}; skipped ${result.skipped}`);
+        }
+      } catch (err) {
+        log("[MultiClawAdminOverrides] Error reapplying saved configuration: " + (err as Error).message);
+      }
+
       await startSchedulerLeaderElection();
       startScheduler();
     },

@@ -18,16 +18,16 @@ test("persona save only succeeds after a fresh read returns every requested valu
       : Response.json(savedAgent, { headers: { "Cache-Control": "private, no-store" } });
   };
 
-  const result = await saveAndVerifyMulticlawPersona(73, savedAgent.slug, payload, request);
+  const result = await saveAndVerifyMulticlawPersona(savedAgent.slug, payload, request);
 
   assert.equal(result.greetingMessage, payload.greetingMessage);
   assert.deepEqual(result.conversationStarters, payload.conversationStarters);
   assert.equal(result.isEnabled, payload.isEnabled);
   assert.equal(calls.length, 2);
-  assert.equal(calls[0].url, "/api/agents/73");
+  assert.equal(calls[0].url, "/api/multiclaw/agent/manprojakclaw-orchestrator");
   assert.equal(calls[0].init?.credentials, "include");
   assert.deepEqual(JSON.parse(String(calls[0].init?.body)), payload);
-  assert.equal(calls[1].url, "/api/multiclaw/agent/manprojakclaw-orchestrator");
+  assert.equal(calls[1].url, calls[0].url);
   assert.equal(calls[1].init?.cache, "no-store");
 });
 
@@ -38,7 +38,7 @@ test("persona save reports the server's authorization or validation error", asyn
   );
 
   await assert.rejects(
-    saveAndVerifyMulticlawPersona(73, "manprojakclaw-orchestrator", payload, request),
+    saveAndVerifyMulticlawPersona("manprojakclaw-orchestrator", payload, request),
     /Forbidden: bukan pemilik agen/,
   );
 });
@@ -59,7 +59,7 @@ test("persona save does not claim success when the server readback differs", asy
   };
 
   await assert.rejects(
-    saveAndVerifyMulticlawPersona(73, "manprojakclaw-orchestrator", payload, request),
-    /belum terverifikasi tersimpan/,
+    saveAndVerifyMulticlawPersona("manprojakclaw-orchestrator", payload, request),
+    /penyimpanan belum terverifikasi/,
   );
 });

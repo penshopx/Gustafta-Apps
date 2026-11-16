@@ -1,7 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { parseSubAgentsValue } from "./db-storage";
+import { invalidateAgentCache, parseSubAgentsValue } from "./db-storage";
+import {
+  multiclawAdminOverrideKey,
+  multiclawAdminPatchSchema,
+} from "./lib/multiclaw-admin-config";
 import { publicChatScope } from "./lib/public-chat-scope";
 import { createLegacyMemoryRecovery, RecoveryConflict } from "./lib/legacy-memory-recovery";
 import { ARCHIVE_REFERENCE_PATTERN, APPROVAL_REASON, REJECTION_REASONS } from "../shared/legacy-memory-evidence";
@@ -35436,7 +35440,7 @@ Hasilkan JSON valid dan profesional.`;
   });
 
   // ==================== MULTICLAW ADMIN API ====================
-  app.get("/api/multiclaw/agent/:slug", async (req: any, res: any) => {
+  app.get("/api/multiclaw/agent/:slug", isAuthenticated, requireAdmin, async (req: any, res: any) => {
     res.setHeader("Cache-Control", "private, no-store");
     try {
       const agent = await storage.getAgentBySlug(req.params.slug);
@@ -35446,6 +35450,57 @@ Hasilkan JSON valid dan profesional.`;
     } catch (e: any) {
       console.error("multiclaw/agent error:", e);
       res.status(500).json({ error: "Failed to resolve agent" });
+    }
+  });
+
+  app.patch("/api/multiclaw/agent/:slug", isAuthenticated, requireAdmin, async (req: any, res: any) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    const parsed = multiclawAdminPatchSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({
+        error: parsed.error.issues[0]?.message || "Pengaturan MultiClaw tidak valid.",
+      });
+    }
+
+    try {
+      const slug = String(req.params.slug || "");
+      const existing = await storage.getAgentBySlug(slug);
+      if (!existing) return res.status(404).json({ error: "Agent not found for slug: " + slug });
+
+      const overrideKey = multiclawAdminOverrideKey(slug);
+      const serializedPatch = JSON.stringify(parsed.data);
+      const updateAgentInTransaction = storage.updateAgent as (
+        id: string,
+        data: Record<string, unknown>,
+        executor?: unknown,
+      ) => Promise<Agent | undefined>;
+
+      const updated = await db.transaction(async (tx) => {
+        const next = await updateAgentInTransaction(String(existing.id), parsed.data, tx);
+        if (!next) throw new Error("Agent not found");
+
+        // Store a merged JSON override atomically with the agent update. This
+        // survives startup seed scripts that reconcile prompts/config on every boot.
+        await tx.insert(systemConfig)
+          .values({ key: overrideKey, value: serializedPatch })
+          .onConflictDoUpdate({
+            target: systemConfig.key,
+            set: {
+              value: sqlExpr`(${systemConfig.value}::jsonb || ${serializedPatch}::jsonb)::text`,
+              updatedAt: new Date(),
+            },
+          });
+        return next;
+      });
+
+      invalidateAgentCache(String(existing.id));
+      const fresh = await storage.getAgentBySlug(slug);
+      if (!fresh) return res.status(404).json({ error: "Agent disappeared after update" });
+      const { toMulticlawAdminAgent } = await import("./lib/multiclaw-admin-agent");
+      return res.json(toMulticlawAdminAgent(fresh));
+    } catch (e: any) {
+      console.error("[multiclaw admin update] failed:", e);
+      return res.status(500).json({ error: "Gagal menyimpan pengaturan MultiClaw." });
     }
   });
 

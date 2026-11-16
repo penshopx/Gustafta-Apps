@@ -5,6 +5,8 @@ description: How Persona & UX changes must be confirmed as saved in the MultiCla
 
 The MultiClaw Persona & UX editor must not treat an HTTP success response or optimistic client state as proof that data persisted. After PATCH, read the agent back without cache and compare the greeting, conversation starters, and enabled state before showing success. Surface the server's actual failure reason.
 
-**Why:** The user clarified that the requirement is actual saved data, not merely preventing fields from appearing blank after reload; a GET projection omission can hide saved data, while a generic success toast can conceal a failed write.
+MultiClaw startup seeds can overwrite existing prompts and settings. Admin edits to fields that seeds reconcile must therefore be persisted as explicit overrides and reapplied after the full seed/reconciliation pass; a successful database update alone is not restart-durable.
 
-**How to apply:** When changing the Persona & UX save path, verify the PATCH payload survives a fresh read and cover authorization errors and readback mismatches in tests.
+**Why:** The requirement is actual saved data, not merely a generic success toast; a fresh-read projection can hide a failed write, and seed scripts can overwrite an admin-edited prompt during boot.
+
+**How to apply:** Save editable configuration and its restart-durable override atomically, reapply overrides only after all startup seeds finish, then verify a no-cache server read before showing success. Cover authorization failures and readback mismatches.

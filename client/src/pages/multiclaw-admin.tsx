@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { saveAndVerifyMulticlawPersona } from "@/lib/multiclaw-persona-save";
+import { saveAndVerifyMulticlawConfig } from "@/lib/multiclaw-config-save";
 import {
   ArrowLeft, Search, Settings, BookOpen, Sliders, Users, Loader2,
   Trash2, Plus, RefreshCw, CheckCircle2, Upload, ChevronRight,
@@ -196,8 +197,15 @@ export default function MultiClawAdmin() {
     setAgent(null); setKbList([]); setRagStats(null); setAgentError(null); setAddMode(null);
     setLoadingAgent(true);
     try {
-      const r = await fetch(`/api/multiclaw/agent/${slug}`);
-      if (!r.ok) { setAgentError(`Agen tidak ditemukan untuk slug: ${slug}`); return; }
+      const r = await fetch(`/api/multiclaw/agent/${encodeURIComponent(slug)}`, {
+        credentials: "include",
+        cache: "no-store",
+      });
+      if (!r.ok) {
+        const error = await r.json().catch(() => ({}));
+        setAgentError(error.error || `Gagal memuat MultiClaw (HTTP ${r.status}).`);
+        return;
+      }
       const a = await r.json();
       setAgent(a);
       setEditPrompt(a.systemPrompt || "");
@@ -343,10 +351,24 @@ export default function MultiClawAdmin() {
     if (!agent) return;
     setSavingSettings(true); setSavedOk(false);
     try {
-      const r = await fetch(`/api/agents/${agent.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ systemPrompt: editPrompt, aiModel: editModel, temperature: editTemp, maxTokens: editMaxTokens, ragChunkSize: editChunkSize, ragChunkOverlap: editChunkOverlap, ragTopK: editRagTopK }) });
-      if (r.ok) { toast({ title: "Pengaturan tersimpan ✓" }); setSavedOk(true); setTimeout(() => setSavedOk(false), 3000); }
-      else throw new Error();
-    } catch { toast({ title: "Gagal simpan. Pastikan sudah login.", variant: "destructive" }); }
+      const saved = await saveAndVerifyMulticlawConfig(agent.slug, {
+        systemPrompt: editPrompt,
+        aiModel: editModel,
+        temperature: editTemp,
+        maxTokens: editMaxTokens,
+        ragChunkSize: editChunkSize,
+        ragChunkOverlap: editChunkOverlap,
+        ragTopK: editRagTopK,
+      });
+      setAgent({ ...agent, ...saved } as AgentData);
+      setEditPrompt(String(saved.systemPrompt ?? ""));
+      toast({ title: "Pengaturan tersimpan dan diverifikasi ✓" });
+      setSavedOk(true);
+      setTimeout(() => setSavedOk(false), 3000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.";
+      toast({ title: "Gagal menyimpan pengaturan MultiClaw", description: message, variant: "destructive" });
+    }
     finally { setSavingSettings(false); }
   }
 
@@ -356,10 +378,21 @@ export default function MultiClawAdmin() {
     setSavingSubAgents(true); setSavedSubAgentsOk(false);
     try {
       const payload = valid.map(s => ({ role: s.role.trim(), agentId: Number(s.agentId), description: s.description.trim() }));
-      const r = await fetch(`/api/agents/${agent.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ agenticSubAgents: payload }) });
-      if (r.ok) { toast({ title: `Sub-agents tersimpan ✓ (${payload.length} agen)` }); setSavedSubAgentsOk(true); setAgent({ ...agent, agenticSubAgents: payload }); setTimeout(() => setSavedSubAgentsOk(false), 3000); }
-      else throw new Error();
-    } catch { toast({ title: "Gagal simpan sub-agents.", variant: "destructive" }); }
+      const saved = await saveAndVerifyMulticlawConfig(agent.slug, { agenticSubAgents: payload });
+      const savedSubAgents = Array.isArray(saved.agenticSubAgents) ? saved.agenticSubAgents : payload;
+      toast({ title: `Sub-agents tersimpan dan diverifikasi ✓ (${savedSubAgents.length} agen)` });
+      setSavedSubAgentsOk(true);
+      setAgent({ ...agent, ...saved } as AgentData);
+      setEditSubAgents(savedSubAgents.map((s: any) => ({
+        role: s.role || "",
+        agentId: s.agentId ?? "",
+        description: s.description || "",
+      })));
+      setTimeout(() => setSavedSubAgentsOk(false), 3000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.";
+      toast({ title: "Gagal menyimpan sub-agents", description: message, variant: "destructive" });
+    }
     finally { setSavingSubAgents(false); }
   }
 
@@ -373,7 +406,7 @@ export default function MultiClawAdmin() {
         conversationStarters: validStarters,
         isEnabled: editIsEnabled,
       };
-      const saved = await saveAndVerifyMulticlawPersona(agent.id, agent.slug, payload);
+      const saved = await saveAndVerifyMulticlawPersona(agent.slug, payload);
 
       toast({ title: "Persona tersimpan dan terverifikasi ✓" });
       setSavedPersonaOk(true);

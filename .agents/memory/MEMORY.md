@@ -156,4 +156,4 @@
 - [Upload reservation recovery](upload-reservation-recovery.md) — age alone cannot distinguish an abandoned reservation from a slow active storage request.
 - [Upload object ownership](upload-object-ownership.md) — a failed metadata write or lost commit acknowledgement is not proof an uploaded object is unused; confirm references before cleanup.
 - [Fixture watchdog ownership](fixture-watchdog-ownership.md) — independent cleanup must own temporary profiles before launch and freeze the proven process tree before removing profiles.
-- [MultiClaw Persona persistence](multiclaw-persona-persistence.md) — report Persona saves as successful only after a fresh server read confirms greeting, starters, and enabled state.
+- [MultiClaw Persona persistence](multiclaw-persona-persistence.md) — seed scripts overwrite existing configs; persist admin overrides after seeds and verify saves with a fresh read.
