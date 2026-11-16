@@ -7,7 +7,10 @@ import {
   updateMulticlawAgentInTransaction,
 } from "../server/lib/multiclaw-admin-config";
 import { toMulticlawAdminAgent } from "../server/lib/multiclaw-admin-agent";
-import { saveAndVerifyMulticlawConfig } from "../client/src/lib/multiclaw-config-save";
+import {
+  saveAndVerifyMulticlawConfig,
+  saveAndVerifyMulticlawSystemPrompt,
+} from "../client/src/lib/multiclaw-config-save";
 
 test("MultiClaw admin response includes ragTopK so prompt saves can pass readback verification", () => {
   const adminAgent = toMulticlawAdminAgent({
@@ -55,6 +58,50 @@ test("MultiClaw admin config save verifies system prompt and model from a fresh 
   assert.equal(calls[0].init?.method, "PATCH");
   assert.equal(calls[0].init?.credentials, "include");
   assert.equal(calls[1].init?.cache, "no-store");
+});
+
+test("system-prompt save sends and verifies only the prompt field", async () => {
+  const prompt = "Prompt hasil perbaikan yang panjang";
+  const calls: Array<{ init?: RequestInit }> = [];
+  const request: typeof fetch = async (_input, init) => {
+    calls.push({ init });
+    return calls.length === 1
+      ? Response.json({ success: true })
+      : Response.json({
+          id: 44,
+          slug: "arsitekturclaw-orchestrator",
+          systemPrompt: prompt,
+          // Other settings are deliberately unrelated to this operation.
+          ragTopK: 5,
+        });
+  };
+
+  const saved = await saveAndVerifyMulticlawSystemPrompt(
+    "arsitekturclaw-orchestrator",
+    prompt,
+    request,
+  );
+
+  assert.deepEqual(JSON.parse(String(calls[0].init?.body)), { systemPrompt: prompt });
+  assert.equal(saved.systemPrompt, prompt);
+});
+
+test("temperature readback accepts PostgreSQL real precision", async () => {
+  const request: typeof fetch = async (_input, init) =>
+    init?.method === "PATCH"
+      ? Response.json({ success: true })
+      : Response.json({
+          id: 44,
+          slug: "arsitekturclaw-orchestrator",
+          temperature: 0.699999988079071,
+        });
+
+  const saved = await saveAndVerifyMulticlawConfig(
+    "arsitekturclaw-orchestrator",
+    { temperature: 0.7 },
+    request,
+  );
+  assert.equal(saved.temperature, 0.699999988079071);
 });
 
 test("MultiClaw config save reports a readback mismatch instead of false success", async () => {

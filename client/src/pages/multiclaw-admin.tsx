@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { saveAndVerifyMulticlawPersona } from "@/lib/multiclaw-persona-save";
-import { saveAndVerifyMulticlawConfig } from "@/lib/multiclaw-config-save";
+import { saveAndVerifyMulticlawConfig, saveAndVerifyMulticlawSystemPrompt } from "@/lib/multiclaw-config-save";
 import {
   ArrowLeft, Search, Settings, BookOpen, Sliders, Users, Loader2,
   Trash2, Plus, RefreshCw, CheckCircle2, Upload, ChevronRight,
@@ -352,7 +352,6 @@ export default function MultiClawAdmin() {
     setSavingSettings(true); setSavedOk(false);
     try {
       const saved = await saveAndVerifyMulticlawConfig(agent.slug, {
-        systemPrompt: editPrompt,
         aiModel: editModel,
         temperature: editTemp,
         maxTokens: editMaxTokens,
@@ -361,13 +360,29 @@ export default function MultiClawAdmin() {
         ragTopK: editRagTopK,
       });
       setAgent({ ...agent, ...saved } as AgentData);
-      setEditPrompt(String(saved.systemPrompt ?? ""));
       toast({ title: "Pengaturan tersimpan dan diverifikasi ✓" });
       setSavedOk(true);
       setTimeout(() => setSavedOk(false), 3000);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.";
       toast({ title: "Gagal menyimpan pengaturan MultiClaw", description: message, variant: "destructive" });
+    }
+    finally { setSavingSettings(false); }
+  }
+
+  async function saveSystemPrompt() {
+    if (!agent) return;
+    setSavingSettings(true); setSavedOk(false);
+    try {
+      const saved = await saveAndVerifyMulticlawSystemPrompt(agent.slug, editPrompt);
+      setAgent({ ...agent, ...saved } as AgentData);
+      setEditPrompt(String(saved.systemPrompt ?? ""));
+      toast({ title: "System prompt tersimpan dan diverifikasi ✓" });
+      setSavedOk(true);
+      setTimeout(() => setSavedOk(false), 3000);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Terjadi kesalahan yang tidak diketahui.";
+      toast({ title: "Gagal menyimpan system prompt", description: message, variant: "destructive" });
     }
     finally { setSavingSettings(false); }
   }
@@ -681,7 +696,7 @@ export default function MultiClawAdmin() {
                             ))}
                           </div>
                         </div>
-                        <textarea className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-3 text-xs text-slate-200 font-mono resize-none" rows={24} value={editPrompt} onChange={e => setEditPrompt(e.target.value)} />
+                        <textarea className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-3 text-xs text-slate-200 font-mono resize-none" rows={24} maxLength={500_000} value={editPrompt} onChange={e => setEditPrompt(e.target.value)} />
                         <Button onClick={improveBrain} disabled={improvingBrain} variant="outline" className="w-full border-purple-500/40 text-purple-300 hover:bg-purple-900/20" data-testid="btn-improve-brain">
                           {improvingBrain ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Claude sedang menyempurnakan otak…</> : "✨ Sempurnakan Otak (Claude)"}
                         </Button>
@@ -697,7 +712,7 @@ export default function MultiClawAdmin() {
                             </div>
                           </div>
                         )}
-                        <Button onClick={saveSettings} disabled={savingSettings} className={`w-full ${savedOk ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"} text-white`}>
+                        <Button onClick={saveSystemPrompt} disabled={savingSettings} className={`w-full ${savedOk ? "bg-green-600 hover:bg-green-700" : "bg-blue-600 hover:bg-blue-700"} text-white`}>
                           {savingSettings ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Menyimpan...</> : savedOk ? <><CheckCircle2 className="h-4 w-4 mr-2" />Tersimpan!</> : "Simpan System Prompt"}
                         </Button>
                       </div>

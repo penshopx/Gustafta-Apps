@@ -28,6 +28,11 @@ function sameValue(expectedKey: string, expected: unknown, saved: Record<string,
   const responseKey = expectedKey === "aiModel" ? "model" : expectedKey;
   const actual = saved[responseKey];
   if (Array.isArray(expected)) return JSON.stringify(actual) === JSON.stringify(expected);
+  // PostgreSQL `real` stores temperature as float32; tolerate its expected
+  // round-trip representation instead of reporting an unrelated save failure.
+  if (expectedKey === "temperature" && typeof expected === "number" && typeof actual === "number") {
+    return Math.abs(actual - expected) < 1e-6;
+  }
   return actual === expected;
 }
 
@@ -64,4 +69,13 @@ export async function saveAndVerifyMulticlawConfig(
   }
 
   return saved as SavedMulticlawConfig;
+}
+
+/** Keep system-prompt saves independent from unrelated model/RAG settings. */
+export async function saveAndVerifyMulticlawSystemPrompt(
+  slug: string,
+  systemPrompt: string,
+  request: typeof fetch = fetch,
+): Promise<SavedMulticlawConfig> {
+  return saveAndVerifyMulticlawConfig(slug, { systemPrompt }, request);
 }
