@@ -10,6 +10,7 @@ import {
 import { publicChatScope } from "./lib/public-chat-scope";
 import { createLegacyMemoryRecovery, RecoveryConflict } from "./lib/legacy-memory-recovery";
 import { ARCHIVE_REFERENCE_PATTERN, APPROVAL_REASON, REJECTION_REASONS } from "../shared/legacy-memory-evidence";
+import { PANDUAN_SBU_AGENT_SLUG } from "../shared/multiclaw-agent-slugs";
 import { db, pool } from "./db";
 import { registerTaxonomyAdminRoutes } from "./taxonomy-admin-routes";
 import { registerKBPublicationRoutes } from "./kb-publication-routes";
@@ -18782,17 +18783,7 @@ Jika informasi tidak ditemukan, isi dengan string kosong "".
   // GET /api/panduan-sbu/agent — PanduanSBU single-agent answer machine untuk masyarakat umum
   app.get("/api/panduan-sbu/agent", async (_req, res) => {
     try {
-      const { agents: agentsTable } = await import("@shared/schema");
-      const { ilike } = await import("drizzle-orm");
-
-      let agent = await storage.getAgentBySlug("panduan-sbu");
-
-      if (!agent) {
-        const rows = await db.select().from(agentsTable)
-          .where(ilike(agentsTable.slug, "%panduan-sbu%"))
-          .limit(1);
-        if (rows.length > 0) agent = await storage.getAgent(String(rows[0].id));
-      }
+      const agent = await storage.getAgentBySlug(PANDUAN_SBU_AGENT_SLUG);
 
       if (!agent) return res.status(404).json({ error: "PanduanSBU agent belum ditemukan." });
       res.json({ id: agent.id, name: (agent as any).name, tagline: (agent as any).tagline });

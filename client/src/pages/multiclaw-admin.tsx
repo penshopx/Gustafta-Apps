@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { saveAndVerifyMulticlawPersona } from "@/lib/multiclaw-persona-save";
 import { saveAndVerifyMulticlawConfig, saveAndVerifyMulticlawSystemPrompt } from "@/lib/multiclaw-config-save";
+import { PANDUAN_SBU_AGENT_SLUG } from "@shared/multiclaw-agent-slugs";
 import {
   ArrowLeft, Search, Settings, BookOpen, Sliders, Users, Loader2,
   Trash2, Plus, RefreshCw, CheckCircle2, Upload, ChevronRight,
@@ -19,7 +20,7 @@ const CLAW_REGISTRY = [
   { href: "/skema-claw", slug: "skema-claw-orchestrator", name: "SkemaClaw", tagline: "Sertifikasi BUJK Permen PU 6/2025", cat: "SBU & Sertifikasi", color: "blue" },
   { href: "/lkut-claw", slug: "lkut-hub", name: "LKUTClaw", tagline: "LKUT BUJK", cat: "SBU & Sertifikasi", color: "cyan" },
   { href: "/abu-claw", slug: "hub-konsultan-abu-lsbu", name: "ABUClaw", tagline: "Konsultan ABU & LSBU", cat: "SBU & Sertifikasi", color: "slate" },
-  { href: "/panduan-sbu", slug: "panduan-sbu", name: "PanduanSBU", tagline: "Tanya Jawab SBU", cat: "SBU & Sertifikasi", color: "emerald" },
+  { href: "/panduan-sbu", slug: PANDUAN_SBU_AGENT_SLUG, name: "PanduanSBU", tagline: "Tanya Jawab SBU", cat: "SBU & Sertifikasi", color: "emerald" },
   // SKK & Kompetensi
   { href: "/manprojak-claw", slug: "manprojakclaw-orchestrator", name: "ManprojakClaw", tagline: "SKK Manajemen Pelaksanaan", cat: "SKK & Kompetensi", color: "indigo" },
   { href: "/arsitektur-claw", slug: "arsitekturclaw-orchestrator", name: "ArsitekturClaw", tagline: "SKK Klasifikasi Arsitektur", cat: "SKK & Kompetensi", color: "rose" },
