@@ -38,6 +38,7 @@ const LoginPage = lazy(() => import("@/pages/login"));
 const Dashboard = lazy(() => import("@/pages/dashboard"));
 const MonitorMarketing = lazy(() => import("@/pages/monitor-marketing"));
 const Documentation = lazy(() => import("@/pages/documentation"));
+const PanduanOperasional = lazy(() => import("@/pages/panduan-operasional"));
 const Pricing = lazy(() => import("@/pages/pricing"));
 const SyaratKetentuan = lazy(() => import("@/pages/syarat-ketentuan"));
 const KebijakanPrivasi = lazy(() => import("@/pages/kebijakan-privasi"));
@@ -514,6 +515,7 @@ export function Router() {
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/monitor-marketing" component={MonitorMarketing} />
       <Route path="/documentation" component={Documentation} />
+      <Route path="/panduan-operasional" component={PanduanOperasional} />
       <Route path="/pricing" component={Pricing} />
       <Route path="/syarat-ketentuan" component={SyaratKetentuan} />
       <Route path="/kebijakan-privasi" component={KebijakanPrivasi} />

@@ -250,6 +250,16 @@ export default function Documentation() {
 
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-5xl mx-auto">
+          <div className="mb-8 rounded-lg border border-blue-500/25 bg-blue-500/[0.06] p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-blue-600 dark:text-blue-300 mb-1">Rujukan operasional</p>
+              <h2 className="text-lg font-bold mb-1">Panduan Pengguna, Admin &amp; Superadmin</h2>
+              <p className="text-sm text-muted-foreground">Panduan menyeluruh untuk alur kerja, akses, keamanan, dan pemecahan masalah Gustafta.</p>
+            </div>
+            <Link href="/panduan-operasional" className="shrink-0 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:opacity-90 transition-opacity">
+              Buka panduan
+            </Link>
+          </div>
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4" data-testid="text-doc-title">Dokumentasi Gustafta</h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
