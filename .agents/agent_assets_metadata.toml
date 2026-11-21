@@ -495,3 +495,17 @@ mtime_ms = 1792293563589
 storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/c90801a3-981d-442d-932f-6aae82d0cbee/c7bd9917-3f59-402a-97a6-3e2867f6f7e9"
 storage_version_token = "1792293715522060"
 content_type = "text/csv"
+
+[[outputs]]
+id = "n-h_fjlk556ZFfMiEhfqD"
+uri = "file://docs/panduan-operasional-gustafta.md"
+type = "text"
+title = "Panduan Operasional Gustafta"
+description = "Panduan peran pengguna, admin, dan superadmin; peta fitur dan konten; alur kerja; serta praktik keamanan dan pemecahan masalah."
+logical_id = "939148e8-df6f-466b-a1e0-bafac369e8ec"
+content_hash = "sha256:af67b9ae2d97bb46a4a33596aaf41f0c66aea520b8452fff9ef69fcc838cabca"
+size = 22346
+mtime_ms = 1795249430808
+storage_uri = "gcs://replit-rams-assets-sisko/rams/assets/repl:1603c309-3ded-42e5-8d5b-58fe224f14b9/939148e8-df6f-466b-a1e0-bafac369e8ec/93a34528-7bb1-4f8f-899c-5efef5f8182b"
+storage_version_token = "1795249452142997"
+content_type = "text/markdown"
