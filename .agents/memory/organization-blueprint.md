@@ -264,3 +264,16 @@ Parity dari Tahap 44 (`trilogi-chat.tsx`) & Tahap 45 (widget Chaesa). Komponen b
 Additive-only. (1) `landing.tsx`: seksi baru "Baru di Gustafta" (4 kartu: Kolaborasi Tim, Rakit Tim AI→/organization-builder, Blueprint Builder→/blueprint-builder, Chatbot Bersertifikat→/store) + strip transparansi; item stage MERAKIT & MENGGUNAKAN diperkaya. (2) `dialog-gustafta.tsx`: blok "Setelah chatbot pertama Anda" di hasil blueprint + fallback langkahAwal. (3) `seed-knowledge-base.ts` Helpdesk "Keunggulan Utama" +5 bullet.
 - **Why:** fitur nyata (agent sharing via `share-agent-dialog.tsx`, organization/blueprint builder, badge Bersertifikat di Store) sudah dibangun tapi belum dipromosikan ke publik; user minta landing/dialog/helpdesk menonjolkan daya tarik terutama kolaborasi.
 - **How to apply:** Helpdesk = agen DB yang di-RE-SEED (updateAgent systemPrompt) SETIAP boot di `server/index.ts` (~line 741) bila nama "Gustafta Helpdesk"/"Gustafta Assistant" ada — jadi edit systemPrompt di seed cukup + RESTART (cache 5 menit). Verifikasi hanya iklankan rute yang benar-benar terdaftar di `App.tsx` (cek dulu) & fitur yang punya UI, jangan iklankan fitur admin-only sebagai fitur user.
+
+## AI Builder: jalur manual dan kustomisasi AI sistem
+
+AI Builder ditujukan bertahap untuk tim internal Gustafta terlebih dahulu, lalu creator eksternal. Dalam satu produk, sediakan dua jalur:
+
+- **Rakit manual:** mulai dari hierarki Gustafta yang ada; gunakan empat tingkat inti dan tambahkan tingkat kelima hanya bila ada tanggung jawab yang benar-benar berbeda.
+- **Mulai dari AI Specialist sistem:** pilih template Gustafta lalu atur System Prompt, Knowledge Base, Sub-Agents, Persona & UX, serta Model & RAG. Kedua jalur berakhir pada editor/pengujian/publikasi yang sama.
+
+Edit atas AI Specialist sistem harus menjadi salinan atau override yang privat bagi pemilik, bukan perubahan pada template bersama. Pembaruan seed/template tidak boleh diam-diam menghapus konfigurasi pemilik. Simpan draf harus tahan restart dan diverifikasi dengan baca-ulang; publikasi merupakan tindakan terpisah dari penyimpanan.
+
+**Why:** pemilik memilih kedua cara perakitan dan rollout internal-lalu-eksternal, serta mengonfirmasi bahwa kustomisasi AI sistem menjadi versi pribadi. Isolasi ini mencegah perubahan satu pemilik mengubah perilaku AI pengguna lain.
+
+**How to apply:** pertahankan dua jalur pada perencanaan produk; konfirmasi definisi hierarki terkini sebelum mengunci tingkat, terapkan izin per-pemilik untuk salinan/override, lindungi override dari rekonsiliasi seed, dan verifikasi baca-ulang sebelum menampilkan sukses.
