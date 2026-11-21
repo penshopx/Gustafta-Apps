@@ -269,7 +269,7 @@ Additive-only. (1) `landing.tsx`: seksi baru "Baru di Gustafta" (4 kartu: Kolabo
 
 AI Builder ditujukan bertahap untuk tim internal Gustafta terlebih dahulu, lalu creator eksternal. Dalam satu produk, sediakan dua jalur:
 
-- **Rakit manual:** mulai dari hierarki Gustafta yang ada; gunakan empat tingkat inti dan tambahkan tingkat kelima hanya bila ada tanggung jawab yang benar-benar berbeda.
+- **Rakit manual:** pemilik menetapkan empat tingkat inti pada hierarki Gustafta, dengan tingkat kelima opsional hanya bila ada tanggung jawab yang benar-benar berbeda.
 - **Mulai dari AI Specialist sistem:** pilih template Gustafta lalu atur System Prompt, Knowledge Base, Sub-Agents, Persona & UX, serta Model & RAG. Kedua jalur berakhir pada editor/pengujian/publikasi yang sama.
 
 Edit atas AI Specialist sistem harus menjadi salinan atau override yang privat bagi pemilik, bukan perubahan pada template bersama. Pembaruan seed/template tidak boleh diam-diam menghapus konfigurasi pemilik. Simpan draf harus tahan restart dan diverifikasi dengan baca-ulang; publikasi merupakan tindakan terpisah dari penyimpanan.
