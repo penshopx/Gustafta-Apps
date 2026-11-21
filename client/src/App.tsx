@@ -417,6 +417,7 @@ const GeneratorLaporanAuditK3 = lazy(() => import("@/pages/generator-laporan-aud
 const KalkulatorProduktivitasAlat = lazy(() => import("@/pages/kalkulator-produktivitas-alat"));
 const DocGenerator = lazy(() => import("@/pages/doc-generator"));
 const MultiClawAdmin = lazy(() => import("@/pages/multiclaw-admin"));
+const AiBuilderPage = lazy(() => import("@/pages/ai-builder"));
 const MultiClawDirectory = lazy(() => import("@/pages/multiclaw-directory"));
 const PaketBidangPage = lazy(() => import("@/pages/paket-bidang"));
 const DialogGustaftaPage = lazy(() => import("@/pages/dialog-gustafta"));
@@ -591,6 +592,7 @@ export function Router() {
         return null;
       }} />
       <Route path="/blueprint-builder" component={BlueprintBuilderPage} />
+      <Route path="/ai-builder" component={AiBuilderPage} />
       <Route path="/sertifikat/:token" component={SharedCertificatePage} />
       <Route path="/organization-builder" component={OrganizationBuilderPage} />
       <Route path="/blueprint-saya" component={BlueprintSayaPage} />

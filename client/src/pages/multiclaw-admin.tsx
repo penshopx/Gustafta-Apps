@@ -466,6 +466,11 @@ export default function MultiClawAdmin() {
           <h1 className="text-white font-bold text-base">MultiClaw Admin Hub</h1>
           <p className="text-slate-400 text-xs">Kelola Knowledge Base, System Prompt & Pengaturan semua {CLAW_REGISTRY.length} MultiClaw</p>
         </div>
+        <Link href="/ai-builder">
+          <Button variant="outline" size="sm" className="border-sky-500/40 bg-sky-500/10 text-sky-200 hover:bg-sky-500/20 hover:text-white">
+            AI Builder
+          </Button>
+        </Link>
         <Badge className="bg-blue-500/15 text-blue-400 border-blue-500/30">{CLAW_REGISTRY.length} Claw</Badge>
       </div>
 

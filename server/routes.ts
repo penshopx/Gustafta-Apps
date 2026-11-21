@@ -3,6 +3,13 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { invalidateAgentCache, parseSubAgentsValue } from "./db-storage";
 import {
+  AiBuilderTemplateError,
+  cloneAiBuilderSystemTemplate,
+  includeAiBuilderPrivateCloneConfig,
+  listAiBuilderOwnedAgents,
+  listAiBuilderTemplates,
+} from "./lib/ai-builder-access";
+import {
   multiclawAdminOverrideKey,
   multiclawAdminPatchSchema,
   updateMulticlawAgentInTransaction,
@@ -2581,7 +2588,12 @@ export async function registerRoutes(
         agents = agents
           .filter((a: any) => a.userId === userId || collabRoleByAgent.has(String(a.id)))
           .map((a: any) => {
-            const sanitized: any = sanitizeAgentForPublic(a);
+            const sanitized: any = includeAiBuilderPrivateCloneConfig(
+              sanitizeAgentForPublic(a),
+              a,
+              userId,
+              parseSubAgentsValue(a.agenticSubAgents),
+            );
             if (a.userId === userId) {
               sanitized.effectiveRole = "owner";
             } else {
@@ -2664,7 +2676,12 @@ export async function registerRoutes(
 
       // Admin gets full data; owner & collaborators get sanitized data.
       if (isAdminUser) return res.json(agent);
-      const sanitized: any = sanitizeAgentForPublic(agent);
+      const sanitized: any = includeAiBuilderPrivateCloneConfig(
+        sanitizeAgentForPublic(agent),
+        agent,
+        userId,
+        parseSubAgentsValue((agent as any).agenticSubAgents),
+      );
       sanitized.effectiveRole = isOwner ? "owner" : (collaboratorRole || "viewer");
       if (!isOwner) sanitized.shared = true;
       res.json(sanitized);
@@ -20952,6 +20969,58 @@ Return HANYA JSON berikut (tanpa penjelasan lain):
       role,
       user: dbUser || null,
     });
+  });
+
+  // Internal AI Builder surfaces. Templates are system-owned only; private
+  // copies are always stamped to the authenticated admin and edited through
+  // the normal owner-authorized agent/dashboard APIs.
+  app.get("/api/ai-builder/mine", isAuthenticated, requireAdmin, async (req: any, res: any) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    try {
+      const userId = getSessionUserId(req);
+      if (!userId) return res.status(401).json({ error: "Tidak terautentikasi" });
+      return res.json(listAiBuilderOwnedAgents(await storage.getAgents(), userId));
+    } catch (error) {
+      console.error("[ai-builder] failed to list owned agents:", error);
+      return res.status(500).json({ error: "Gagal memuat AI milik Anda." });
+    }
+  });
+
+  app.get("/api/ai-builder/templates", isAuthenticated, requireAdmin, async (_req: any, res: any) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    try {
+      return res.json(listAiBuilderTemplates(await storage.getAgents()));
+    } catch (error) {
+      console.error("[ai-builder] failed to list system templates:", error);
+      return res.status(500).json({ error: "Gagal memuat AI Specialist sistem." });
+    }
+  });
+
+  app.post("/api/ai-builder/templates/:id/clone", isAuthenticated, requireAdmin, async (req: any, res: any) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    try {
+      const idText = String(req.params.id || "");
+      if (!/^[1-9]\d*$/.test(idText)) {
+        return res.status(400).json({ error: "ID AI Specialist tidak valid." });
+      }
+      const userId = getSessionUserId(req);
+      if (!userId) return res.status(401).json({ error: "Tidak terautentikasi" });
+
+      const { agent: clone, reused } = await cloneAiBuilderSystemTemplate(storage, idText, userId);
+      return res.status(201).json({
+        agent: {
+          id: clone.id,
+          name: clone.name,
+        },
+        reused,
+      });
+    } catch (error: any) {
+      if (error instanceof AiBuilderTemplateError) {
+        return res.status(error.status).json({ error: error.message });
+      }
+      console.error("[ai-builder] failed to clone system template:", error?.message || error);
+      return res.status(500).json({ error: "Gagal membuat versi pribadi AI Specialist." });
+    }
   });
 
   // ==================== ADMIN: DASHBOARD STATS ====================

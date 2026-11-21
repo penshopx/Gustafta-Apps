@@ -231,6 +231,8 @@ let pool: any;
 let users: any;
 let agents: any;
 let agentCollaborators: any;
+let knowledgeBases: any;
+let knowledgeChunks: any;
 let storageDb: any;
 let registerRoutes: any;
 let eq: any;
@@ -318,7 +320,7 @@ before(async () => {
 
   ({ db, pool } = await import("../server/db"));
   ({ users } = await import("../shared/models/auth"));
-  ({ agents, agentCollaborators } = await import("../shared/schema"));
+  ({ agents, agentCollaborators, knowledgeBases, knowledgeChunks } = await import("../shared/schema"));
   ({ storage: storageDb } = await import("../server/storage"));
   ({ registerRoutes } = await import("../server/routes"));
   ({ eq, inArray } = await import("drizzle-orm"));
@@ -359,6 +361,15 @@ after(async () => {
   if (!testDatabaseReady) return;
   if (!HAS_DB) return;
   try {
+    if (createdAgentIds.length) {
+      const kbRows = await db.select({ id: knowledgeBases.id }).from(knowledgeBases)
+        .where(inArray(knowledgeBases.agentId, createdAgentIds));
+      const kbIds = kbRows.map((row: any) => row.id);
+      if (kbIds.length) {
+        await db.delete(knowledgeChunks).where(inArray(knowledgeChunks.knowledgeBaseId, kbIds));
+        await db.delete(knowledgeBases).where(inArray(knowledgeBases.id, kbIds));
+      }
+    }
     if (createdAgentIds.length) {
       await db.delete(agentCollaborators).where(inArray(agentCollaborators.agentId, createdAgentIds));
       await db.delete(agents).where(inArray(agents.id, createdAgentIds));
@@ -410,6 +421,100 @@ test("GET /api/agents/:id — matriks akses baca", { skip: !HAS_DB ? testDbSkip 
   const asAdmin = await req("GET", `/api/agents/${agentId}`, adminId);
   assert.equal(asAdmin.status, 200);
   assert.equal(asAdmin.json.systemPrompt, "SECRET-PROMPT-DO-NOT-LEAK", "admin menerima data penuh");
+});
+
+test("AI Builder: clone sistem tersimpan privat, idempoten, dan prompt clone dapat disimpan lalu dibaca ulang oleh pemilik", { skip: !HAS_DB ? testDbSkip : false }, async () => {
+  const [master] = await db.insert(agents).values({
+    userId: "",
+    name: `IT AI Builder template ${suffix}`,
+    tagline: "Template uji disposable",
+    systemPrompt: "PROMPT-KANONIK-TEMPLATE",
+    isPublic: true,
+    isListed: true,
+    isEnabled: true,
+    archived: false,
+  }).returning({ id: agents.id });
+  createdAgentIds.push(master.id);
+  const [sourceKb] = await db.insert(knowledgeBases).values({
+    agentId: master.id,
+    visibility: "platform",
+    name: "Builder template source",
+    type: "text",
+    content: "Konten KB template untuk verifikasi salinan.",
+    processingStatus: "completed",
+  }).returning({ id: knowledgeBases.id });
+  await db.insert(knowledgeChunks).values({
+    knowledgeBaseId: sourceKb.id,
+    agentId: master.id,
+    chunkIndex: 0,
+    content: "Chunk KB template.",
+    embedding: [],
+  });
+
+  const templates = await req("GET", "/api/ai-builder/templates", adminId);
+  assert.equal(templates.status, 200);
+  const templateCard = templates.json.find((row: any) => row.id === master.id);
+  assert.ok(templateCard, "template sistem tersedia untuk admin");
+  assert.equal(templateCard.systemPrompt, undefined, "API katalog tidak membocorkan prompt");
+
+  assert.equal((await req("POST", `/api/ai-builder/templates/${master.id}/clone`, outsiderId)).status, 403);
+  const first = await req("POST", `/api/ai-builder/templates/${master.id}/clone`, adminId);
+  assert.equal(first.status, 201);
+  assert.equal(first.json.reused, false);
+  const cloneId = first.json.agent.id;
+  createdAgentIds.push(cloneId);
+
+  const cloneRow = await storageDb.getAgent(String(cloneId));
+  assert.equal(cloneRow.userId, adminId, "salinan dimiliki admin yang meminta");
+  assert.equal(cloneRow.clonedFromAgentId, master.id);
+  assert.equal(cloneRow.isPublic, false);
+  assert.equal(cloneRow.isListed, false);
+  assert.equal(cloneRow.systemPrompt, "PROMPT-KANONIK-TEMPLATE");
+  const copiedKbRows = await db.select().from(knowledgeBases).where(eq(knowledgeBases.agentId, cloneId));
+  assert.equal(copiedKbRows.length, 1);
+  assert.equal(copiedKbRows[0].content, "Konten KB template untuk verifikasi salinan.");
+  const copiedChunks = await db.select().from(knowledgeChunks).where(eq(knowledgeChunks.agentId, cloneId));
+  assert.equal(copiedChunks.length, 1);
+  assert.equal(copiedChunks[0].content, "Chunk KB template.");
+
+  const clonePromptUpdate = await req("PATCH", `/api/agents/${cloneId}`, adminId, { systemPrompt: "PROMPT-PRIBADI-DISIMPAN" });
+  assert.equal(clonePromptUpdate.status, 200);
+  const second = await req("POST", `/api/ai-builder/templates/${master.id}/clone`, adminId);
+  assert.equal(second.status, 201);
+  assert.equal(second.json.reused, true);
+  assert.equal(second.json.agent.id, cloneId, "kunjungan ulang memakai salinan yang sama");
+  assert.equal((await storageDb.getAgent(String(cloneId))).systemPrompt, "PROMPT-PRIBADI-DISIMPAN", "kunjungan ulang tidak menimpa edit");
+  assert.equal((await storageDb.getAgent(String(master.id))).systemPrompt, "PROMPT-KANONIK-TEMPLATE", "template sistem tetap utuh");
+
+  const mine = await req("GET", "/api/ai-builder/mine", adminId);
+  assert.ok(mine.json.some((row: any) => row.id === cloneId));
+  assert.equal(mine.json.some((row: any) => row.id === master.id), false, "template tidak masuk daftar AI milik admin");
+
+  // Pemilik non-admin dari salinan privat juga dapat mengedit prompt melalui
+  // dashboard dan membaca kembali nilai yang sudah tersimpan; pengguna lain
+  // tetap ditolak dan kolaborator tidak memperoleh systemPrompt.
+  const ownerCloneId = await makeAgent({ ownerId });
+  await db.update(agents).set({
+    clonedFromAgentId: master.id,
+    isPublic: false,
+    isListed: false,
+    systemPrompt: "PROMPT-PRIVAT-AWAL",
+  }).where(eq(agents.id, ownerCloneId));
+  await addCollab(ownerCloneId, editorId, "editor");
+
+  const initialOwnerRead = await req("GET", `/api/agents/${ownerCloneId}`, ownerId);
+  assert.equal(initialOwnerRead.status, 200);
+  assert.equal(initialOwnerRead.json.systemPrompt, "PROMPT-PRIVAT-AWAL");
+  assert.equal((await req("GET", `/api/agents/${ownerCloneId}`, outsiderId)).status, 403);
+  assert.equal((await req("GET", `/api/agents/${ownerCloneId}`, editorId)).json.systemPrompt, undefined);
+
+  assert.equal((await req("PATCH", `/api/agents/${ownerCloneId}`, ownerId, {
+    systemPrompt: "PROMPT-PRIVAT-SETELAH-UPDATE",
+  })).status, 200);
+  const reloadedOwnerRead = await req("GET", `/api/agents/${ownerCloneId}`, ownerId);
+  assert.equal(reloadedOwnerRead.status, 200);
+  assert.equal(reloadedOwnerRead.json.systemPrompt, "PROMPT-PRIVAT-SETELAH-UPDATE");
+  assert.equal((await storageDb.getAgent(String(master.id))).systemPrompt, "PROMPT-KANONIK-TEMPLATE");
 });
 
 // ── 2. PATCH /api/agents/:id (mutasi konfigurasi) ─────────────────────────────
