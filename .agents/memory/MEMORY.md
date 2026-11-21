@@ -28,6 +28,7 @@
 - [Pending agent invites](agent-invite-pending.md) — sharing to unknown email = persist pending invite + 202, never 404; auto-apply grant at EVERY signup path (idempotent, non-blocking, lowercased email).
 - [getAgent must expose userId](agent-userid-mapping.md) — mapAgentRow drop userId → owner 403 di agennya sendiri + daftar agen non-admin kosong. Authz baca agent.userId; integration test HTTP nyata yang menangkapnya.
 - [Premium Privat clone + auto-delivery](premium-private-clone.md) — per-buyer clone (override isPublic+isListed, reset custom* keys, copy knowledge_chunks too); Scalev webhook delivers (pending-queue→login); clone MUST be atomic txn + partial-unique index (cloned_from,user).
+- [Per-Claw access model](claw-access-model.md) — entitlement is per visible Claw; users may get one Claw directly or a curated package bundle, with authorization enforced on server chat routes.
 - [KB endpoint authz parity](kb-endpoint-authz.md) — every KB route resolves the owning agent; raw read uses source-read guard, mutate uses edit guard; never isAuthenticated-only.
 - [Raw KB versus public chat](raw-kb-vs-public-chat.md) — public-agent chat permission does not permit raw KB dumps; source reads require owner/admin/collaborator, with ownerless system KB still shared.
 - [Conversation/voice API authz](conversation-api-authz.md) — Replit chat/audio integration ships /api/conversations* with NO auth + NO owner column (IDOR); must add userId, isAuthenticated, ownership checks on import.
