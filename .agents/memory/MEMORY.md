@@ -137,6 +137,7 @@
 - [GitHub write readiness](github-write-readiness.md) — akses baca/metadata admin tidak membuktikan penulisan PR berhasil; 403 non-JSON belum memastikan sumber penolakan.
 - [Browser shutdown evidence](browser-shutdown-evidence.md) — Puppeteer disconnects on normal close; a resolved close alone cannot distinguish transport loss from a clean owned-process exit.
 - [Vite middleware WebSocket isolation](vite-middleware-websocket-isolation.md) — Vite 7 hmr:false still connects; attach each fixture's HMR to its own HTTP server.
+- [Vite dev cache isolation](vite-dev-cache-isolation.md) — app and test Vite servers need separate optimizer caches; no-store prevents stale chunk graphs after restarts.
 - [Archive alias provenance](archive-alias-provenance.md) — a new lookup alias may point to old evidence; the alias must not substitute for independently retained original bytes.
 - [Local test isolation](local-test-server-lifetime.md) — keep temporary PostgreSQL alive through cleanup; isolate provider credentials and external effects as well as database writes.
 - [Taxonomy deletion confirmation](taxonomy-deletion-confirmation.md) — verifikasi ulang jumlah KB dalam transaksi terkunci; hapus kategori hanya melepas tautan, bukan dokumen.

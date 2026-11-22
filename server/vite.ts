@@ -13,11 +13,17 @@ export async function setupVite(server: Server, app: Express) {
     middlewareMode: true,
     hmr: { server, path: "/vite-hmr" },
     allowedHosts: true as const,
+    // Keep the long-lived Replit preview from reusing immutable optimized
+    // dependency URLs after a restart or when another Vite test server runs.
+    headers: { "Cache-Control": "no-store, max-age=0, must-revalidate" },
   };
 
   const vite = await createViteServer({
     ...viteConfig,
     configFile: false,
+    // Test fixtures use Vite's default cache directory. Isolate the app's
+    // optimizer so parallel fixtures cannot replace the app's dependency graph.
+    cacheDir: path.resolve(import.meta.dirname, "..", "node_modules", ".vite-app"),
     customLogger: {
       ...viteLogger,
       error: (msg, options) => {
@@ -49,7 +55,10 @@ export async function setupVite(server: Server, app: Express) {
         `src="/src/main.tsx?v=${nanoid()}"`,
       );
       const page = await vite.transformIndexHtml(url, template);
-      res.status(200).set({ "Content-Type": "text/html" }).end(page);
+      res.status(200).set({
+        "Content-Type": "text/html",
+        "Cache-Control": "no-store, max-age=0, must-revalidate",
+      }).end(page);
     } catch (e) {
       vite.ssrFixStacktrace(e as Error);
       next(e);

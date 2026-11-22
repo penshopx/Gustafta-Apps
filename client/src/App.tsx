@@ -497,7 +497,20 @@ function MarketplaceRedirect() {
 /** Root route: host mitra melihat landing netral mitra, bukan landing Gustafta. */
 function HomeRoute() {
   const { partner, isLoading } = usePartnerBranding();
-  if (isLoading) return null;
+  if (isLoading) {
+    return (
+      <main
+        role="status"
+        aria-live="polite"
+        className="grid min-h-screen place-items-center bg-[#f7f1e6] px-6 text-[#173847]"
+      >
+        <div className="flex items-center gap-3 rounded-2xl border border-[#d4ded8] bg-white/80 px-6 py-5 shadow-sm">
+          <span aria-hidden="true" className="h-5 w-5 animate-spin rounded-full border-2 border-[#173847]/20 border-t-[#173847]" />
+          <span className="text-sm font-medium">Menyiapkan halaman Gustafta…</span>
+        </div>
+      </main>
+    );
+  }
   return partner ? <PartnerLanding /> : <Landing />;
 }
 
