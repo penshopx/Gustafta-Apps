@@ -5,9 +5,11 @@ import { invalidateAgentCache, parseSubAgentsValue } from "./db-storage";
 import {
   AiBuilderTemplateError,
   cloneAiBuilderSystemTemplate,
+  canUseAiBuilderTemplate,
   includeAiBuilderPrivateCloneConfig,
   listAiBuilderOwnedAgents,
-  listAiBuilderTemplates,
+  listEntitledAiBuilderTemplates,
+  isAiBuilderSystemTemplate,
 } from "./lib/ai-builder-access";
 import {
   multiclawAdminOverrideKey,
@@ -20971,10 +20973,9 @@ Return HANYA JSON berikut (tanpa penjelasan lain):
     });
   });
 
-  // Internal AI Builder surfaces. Templates are system-owned only; private
-  // copies are always stamped to the authenticated admin and edited through
-  // the normal owner-authorized agent/dashboard APIs.
-  app.get("/api/ai-builder/mine", isAuthenticated, requireAdmin, async (req: any, res: any) => {
+  // AI Builder is available to active signed-in accounts. System templates are
+  // filtered by effective Claw entitlements; admins retain their existing bypass.
+  app.get("/api/ai-builder/mine", isAuthenticated, async (req: any, res: any) => {
     res.setHeader("Cache-Control", "private, no-store");
     try {
       const userId = getSessionUserId(req);
@@ -20986,17 +20987,62 @@ Return HANYA JSON berikut (tanpa penjelasan lain):
     }
   });
 
-  app.get("/api/ai-builder/templates", isAuthenticated, requireAdmin, async (_req: any, res: any) => {
+  const getAiBuilderEntitlements = async (req: any, userId: string, templates: any[]) => {
+    const role = await getDbRole(req);
+    const isAdmin = role === "admin" || role === "superadmin";
+    if (isAdmin) {
+      return { isAdmin: true, tier: 4, selectedPackageIds: [], individuallyLicensedAgentIds: new Set<string>() };
+    }
+
+    const [tier, selectedPackageIds] = await Promise.all([
+      resolveUserTier(req),
+      storage.getUserClawPackages(userId),
+    ]);
+    let email = [
+      req.user?.claims?.email,
+      req.user?.email,
+      req.user?.emailUser?.email,
+    ].find((value) => typeof value === "string" && value.trim()) as string | undefined;
+    if (!email) {
+      const [user] = await db.select({ email: users.email }).from(users)
+        .where(eq(users.id, userId)).limit(1);
+      email = user?.email || undefined;
+    }
+
+    const individuallyLicensedAgentIds = new Set<string>();
+    const agentIds = templates
+      .map((agent) => Number(agent.id))
+      .filter((id) => Number.isSafeInteger(id) && id > 0);
+    if (email && agentIds.length > 0) {
+      const licenses = await db.select({ agentId: clientSubscriptions.agentId })
+        .from(clientSubscriptions)
+        .where(and(
+          inArray(clientSubscriptions.agentId, agentIds),
+          sqlExpr`lower(${clientSubscriptions.customerEmail}) = ${email.trim().toLowerCase()}`,
+          eq(clientSubscriptions.status, "active"),
+          or(isNull(clientSubscriptions.endDate), sqlExpr`${clientSubscriptions.endDate} > now()`),
+        ));
+      for (const license of licenses) individuallyLicensedAgentIds.add(String(license.agentId));
+    }
+    return { isAdmin: false, tier, selectedPackageIds, individuallyLicensedAgentIds };
+  };
+
+  app.get("/api/ai-builder/templates", isAuthenticated, async (req: any, res: any) => {
     res.setHeader("Cache-Control", "private, no-store");
     try {
-      return res.json(listAiBuilderTemplates(await storage.getAgents()));
+      const userId = getSessionUserId(req);
+      if (!userId) return res.status(401).json({ error: "Tidak terautentikasi" });
+      const agents = await storage.getAgents();
+      const candidates = agents.filter(isAiBuilderSystemTemplate);
+      const entitlements = await getAiBuilderEntitlements(req, userId, candidates);
+      return res.json(listEntitledAiBuilderTemplates(candidates, entitlements));
     } catch (error) {
       console.error("[ai-builder] failed to list system templates:", error);
       return res.status(500).json({ error: "Gagal memuat AI Specialist sistem." });
     }
   });
 
-  app.post("/api/ai-builder/templates/:id/clone", isAuthenticated, requireAdmin, async (req: any, res: any) => {
+  app.post("/api/ai-builder/templates/:id/clone", isAuthenticated, async (req: any, res: any) => {
     res.setHeader("Cache-Control", "private, no-store");
     try {
       const idText = String(req.params.id || "");
@@ -21005,6 +21051,15 @@ Return HANYA JSON berikut (tanpa penjelasan lain):
       }
       const userId = getSessionUserId(req);
       if (!userId) return res.status(401).json({ error: "Tidak terautentikasi" });
+
+      const master = await storage.getAgent(idText);
+      if (!master || !isAiBuilderSystemTemplate(master)) {
+        return res.status(404).json({ error: "AI Specialist sistem tidak ditemukan atau tidak tersedia." });
+      }
+      const entitlements = await getAiBuilderEntitlements(req, userId, [master]);
+      if (!canUseAiBuilderTemplate(master, entitlements)) {
+        return res.status(403).json({ error: "Lisensi individual atau paket aktif diperlukan untuk mengustomisasi Claw ini." });
+      }
 
       const { agent: clone, reused } = await cloneAiBuilderSystemTemplate(storage, idText, userId);
       return res.status(201).json({

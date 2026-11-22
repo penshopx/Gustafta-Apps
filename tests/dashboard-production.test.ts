@@ -75,6 +75,22 @@ test("production dashboard opens real panels/dialogs and keeps its shell for adm
       const fetched = new Set<string>();
       const apiReads: string[] = [];
       const adminStatuses: number[] = [];
+      let aiBuilderCloneCreated = false;
+      let aiBuilderSavedPrompt = "Fixture only";
+      let aiBuilderAgent: Record<string, any> = {
+        id: "dashboard-fixture",
+        userId: "dashboard-fixture-user",
+        name: "Dashboard Fixture Agent",
+        description: "Isolated fixture",
+        tagline: "Private clone fixture",
+        systemPrompt: aiBuilderSavedPrompt,
+        isPublic: false,
+        isListed: false,
+        aiModel: "gpt-4o-mini",
+        temperature: 0.7,
+        maxTokens: 2048,
+        conversationStarters: [],
+      };
       let step = "initial Persona";
       page.on("pageerror", error => errors.push(String(error)));
       page.on("response", response => {
@@ -88,7 +104,40 @@ test("production dashboard opens real panels/dialogs and keeps its shell for adm
       await page.setRequestInterception(true);
       page.on("request", request => {
         const url = new URL(request.url());
-        if (url.origin !== new URL(server.url).origin || request.method() !== "GET") {
+        if (url.origin !== new URL(server.url).origin) {
+          forbidden.push(`${request.method()} ${url.origin}${url.pathname}`);
+          void request.abort();
+          return;
+        }
+        if (url.pathname === "/api/ai-builder/templates/501/clone" && request.method() === "POST") {
+          // The non-admin fixture is an active user with an individual Claw
+          // entitlement; server-side denial for unentitled users is covered by
+          // the isolated PostgreSQL integration test.
+          aiBuilderCloneCreated = true;
+          void request.respond({
+            status: 201,
+            contentType: "application/json",
+            body: JSON.stringify({ agent: { id: aiBuilderAgent.id, name: aiBuilderAgent.name }, reused: false }),
+          });
+          return;
+        }
+        if (url.pathname === "/api/agents/dashboard-fixture" && request.method() === "PATCH") {
+          if (!aiBuilderCloneCreated) {
+            forbidden.push("Edit before private clone ownership was established");
+            void request.respond({ status: 403, contentType: "application/json", body: '{"message":"Forbidden"}' });
+            return;
+          }
+          const patch = JSON.parse(request.postData() || "{}");
+          aiBuilderAgent = { ...aiBuilderAgent, ...patch };
+          aiBuilderSavedPrompt = aiBuilderAgent.systemPrompt;
+          void request.respond({
+            status: 200,
+            contentType: "application/json",
+            body: JSON.stringify(aiBuilderAgent),
+          });
+          return;
+        }
+        if (request.method() !== "GET") {
           forbidden.push(`${request.method()} ${url.origin}${url.pathname}`);
           void request.abort();
           return;
@@ -98,6 +147,22 @@ test("production dashboard opens real panels/dialogs and keeps its shell for adm
         let body: unknown;
         let status = 200;
         switch (url.pathname) {
+          case "/api/admin/me":
+            body = { isAdmin: admin, isSuperAdmin: admin, role: admin ? "admin" : "user" }; break;
+          case "/api/ai-builder/mine":
+            body = aiBuilderCloneCreated ? [{
+              id: aiBuilderAgent.id,
+              name: aiBuilderAgent.name,
+              tagline: aiBuilderAgent.tagline,
+              avatar: null,
+              createdAt: "2026-01-01T00:00:00.000Z",
+              clonedFromAgentId: "501",
+            }] : [];
+            break;
+          case "/api/ai-builder/templates":
+            body = [{ id: 501, name: "Fixture System Claw", tagline: "Synthetic browser fixture", avatar: null }]; break;
+          case "/api/organization/drafts": body = []; break;
+          case "/api/agents/dashboard-fixture": body = aiBuilderAgent; break;
           case "/api/partner/by-host": body = null; break;
           case "/api/analytics/dashboard-fixture/summary":
             body = { totalMessages: 42, totalSessions: 7, totalIntegrationCalls: 0, messagesLast7Days: [1, 2, 3, 4, 5, 6, 21], topHours: [] }; break;
@@ -251,6 +316,56 @@ test("production dashboard opens real panels/dialogs and keeps its shell for adm
         await dialog(() => clickSelector(page, '[data-testid="button-edit-bigidea-2"]'), '[data-testid="input-edit-bigidea-name"]');
         await open("Persona", "input#name");
         await page.screenshot({ path: resolve(output, admin ? "admin.png" : "user.png") });
+
+        // Exercise AI Builder, the manual Blueprint builder, and the optional
+        // Organization builder for both an ordinary entitled account and admin.
+        // API data is isolated and synthetic; no customer DB/provider is contacted.
+        step = "AI Builder access";
+        await page.goto(`${server.url}ai-builder?admin=${admin}`, { waitUntil: "networkidle0" });
+        await page.waitForFunction(() => document.body.textContent?.includes("AI Builder"));
+        await page.waitForFunction(() => document.body.textContent?.includes("Fixture System Claw"));
+        assert.match(await page.$eval("body", element => element.textContent ?? ""), /level lanjutan kelima yang opsional/i);
+        await page.screenshot({ path: resolve(output, admin ? "ai-builder-admin.png" : "ai-builder-user.png") });
+
+        step = "Blueprint Builder route";
+        await page.$eval('a[href="/blueprint-builder"]', element => (element as HTMLAnchorElement).click());
+        await page.waitForFunction(() => document.body.textContent?.includes("Rancang Agen AI lewat Dialog Terpandu"));
+        assert.match(await page.$eval("body", element => element.textContent ?? ""), /Mulai dari Ide Besar/i);
+        await page.waitForSelector('button');
+
+        step = "optional Organization Builder route";
+        await page.goto(`${server.url}ai-builder?admin=${admin}`, { waitUntil: "networkidle0" });
+        await page.$eval('a[href="/organization-builder"]', element => (element as HTMLAnchorElement).click());
+        await page.waitForFunction(() => document.body.textContent?.includes("Rakit Satu Tim Agen yang Saling Bekerja Sama"));
+
+        step = "private clone and prompt save";
+        await page.goto(`${server.url}ai-builder?admin=${admin}`, { waitUntil: "networkidle0" });
+        await page.waitForFunction(() => document.body.textContent?.includes("Fixture System Claw"));
+        await page.evaluate(() => {
+          for (const button of document.querySelectorAll("button")) {
+            if (button.textContent?.trim() === "Kustomisasi") {
+              button.click();
+              return;
+            }
+          }
+        });
+        await page.waitForFunction(() => location.pathname === "/dashboard");
+        await page.waitForSelector("textarea#systemPrompt", { visible: true });
+        const prompt = `Prompt hasil uji UI AI Builder ${admin ? "admin" : "user"} yang disimpan.`;
+        await page.locator("textarea#systemPrompt").fill(prompt);
+        await page.evaluate(() => {
+          for (const button of document.querySelectorAll("button")) {
+            if (button.textContent?.includes("Save Changes")) {
+              button.click();
+              return;
+            }
+          }
+        });
+        await page.waitForResponse(response =>
+          new URL(response.url()).pathname === "/api/agents/dashboard-fixture" &&
+          response.request().method() === "PATCH",
+        );
+        assert.equal(aiBuilderSavedPrompt, prompt, "Persona panel must submit the edited prompt for the private clone");
         for (const name of modules) assert.ok(fetched.has(chunks[name]), `Real production chunk not loaded: ${name}`);
         assert.deepEqual(errors, [], "Browser errors");
         assert.deepEqual(forbidden, [], "Unexpected requests (no writes or external services allowed)");

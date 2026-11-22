@@ -1,3 +1,12 @@
+import {
+  BASE_CLAW_ROUTES,
+  CLAW_PACKAGES,
+  isBaseClawRoute,
+  packageAllowanceForTier,
+  packageForRoute,
+} from "@shared/claw-packages";
+import { MULTICLAW_AGENT_ROUTE_BY_SLUG } from "@shared/multiclaw-agent-slugs";
+
 export interface AiBuilderAgentRecord {
   id: number | string;
   name?: string | null;
@@ -10,6 +19,7 @@ export interface AiBuilderAgentRecord {
   isPublic?: boolean | null;
   isListed?: boolean | null;
   isEnabled?: boolean | null;
+  slug?: string | null;
   systemPrompt?: string | null;
   agenticSubAgents?: unknown;
 }
@@ -24,6 +34,13 @@ export interface AiBuilderTemplateCard {
 export interface AiBuilderOwnedAgentCard extends AiBuilderTemplateCard {
   createdAt: string | Date | null;
   clonedFromAgentId: string | null;
+}
+
+export interface AiBuilderTemplateEntitlements {
+  isAdmin?: boolean;
+  tier: number;
+  selectedPackageIds?: readonly string[];
+  individuallyLicensedAgentIds?: ReadonlySet<string>;
 }
 
 export class AiBuilderTemplateError extends Error {
@@ -61,6 +78,47 @@ export function listAiBuilderTemplates<T extends AiBuilderAgentRecord>(agents: T
     .filter(isAiBuilderSystemTemplate)
     .map(toCard)
     .sort((a, b) => a.name.localeCompare(b.name, "id"));
+}
+
+function routeForTemplate(agent: AiBuilderAgentRecord): string | null {
+  const slug = String(agent.slug || "").trim().replace(/^\/+|\/+$/g, "");
+  if (!slug) return null;
+  const route = MULTICLAW_AGENT_ROUTE_BY_SLUG[slug];
+  if (!route) return null;
+  return BASE_CLAW_ROUTES.includes(route) || CLAW_PACKAGES.some((pkg) => pkg.routes.includes(route))
+    ? route
+    : null;
+}
+
+/** Server-side Claw entitlement for Builder visibility and cloning. Unknown route
+ * mappings fail closed; an individual active license can still grant that Claw. */
+export function canUseAiBuilderTemplate(
+  agent: AiBuilderAgentRecord,
+  entitlements: AiBuilderTemplateEntitlements,
+): boolean {
+  if (!isAiBuilderSystemTemplate(agent)) return false;
+  if (entitlements.isAdmin) return true;
+  if (entitlements.individuallyLicensedAgentIds?.has(String(agent.id))) return true;
+
+  const route = routeForTemplate(agent);
+  if (!route) return false;
+  if (isBaseClawRoute(route)) return entitlements.tier >= 1;
+
+  const pkg = packageForRoute(route);
+  if (!pkg) return false;
+  const allowance = packageAllowanceForTier(entitlements.tier);
+  return allowance === "all"
+    || (typeof allowance === "number" && allowance > 0 && entitlements.selectedPackageIds?.includes(pkg.id) === true);
+}
+
+export function listEntitledAiBuilderTemplates<T extends AiBuilderAgentRecord>(
+  agents: T[],
+  entitlements: AiBuilderTemplateEntitlements,
+): AiBuilderTemplateCard[] {
+  const eligibleIds = new Set(
+    agents.filter((agent) => canUseAiBuilderTemplate(agent, entitlements)).map((agent) => String(agent.id)),
+  );
+  return listAiBuilderTemplates(agents.filter((agent) => eligibleIds.has(String(agent.id))));
 }
 
 /** Return only the signed-in user's own, non-archived agents (not collaborations). */

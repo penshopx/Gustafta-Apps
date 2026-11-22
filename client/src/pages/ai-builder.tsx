@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, Link } from "wouter";
+import { useAuth } from "@/hooks/use-auth";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertCircle,
   ArrowRight,
@@ -24,11 +24,6 @@ import {
   Sparkles,
   UsersRound,
 } from "lucide-react";
-
-type AdminAccess = {
-  isAdmin: boolean;
-  isSuperAdmin: boolean;
-};
 
 type OwnedAgent = {
   id: number;
@@ -132,24 +127,18 @@ export default function AiBuilderPage() {
   const [, setLocation] = useLocation();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [cloningTemplateId, setCloningTemplateId] = useState<number | null>(null);
-
-  const accessQuery = useQuery<AdminAccess>({
-    queryKey: ["/api/admin/me"],
-    queryFn: () => apiRequest("GET", "/api/admin/me"),
-    retry: false,
-  });
-  const isAdmin = accessQuery.data?.isAdmin === true;
 
   const mineQuery = useQuery<OwnedAgent[]>({
     queryKey: ["/api/ai-builder/mine"],
     queryFn: () => apiRequest("GET", "/api/ai-builder/mine"),
-    enabled: isAdmin,
+    enabled: isAuthenticated,
   });
   const templatesQuery = useQuery<TemplateAgent[]>({
     queryKey: ["/api/ai-builder/templates"],
     queryFn: () => apiRequest("GET", "/api/ai-builder/templates"),
-    enabled: isAdmin,
+    enabled: isAuthenticated,
   });
   const ownedAgents = mineQuery.data ?? [];
   const specialistTemplates = templatesQuery.data ?? [];
@@ -177,9 +166,6 @@ export default function AiBuilderPage() {
     onSettled: () => setCloningTemplateId(null),
   });
 
-  const accessStatus = getErrorStatus(accessQuery.error);
-  const unauthorized = accessStatus === 401 || accessStatus === 403 || (accessQuery.isSuccess && !isAdmin);
-
   return (
     <main className="min-h-[100dvh] bg-[#edf5fc] text-slate-950">
       <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
@@ -195,42 +181,35 @@ export default function AiBuilderPage() {
             </span>
             <span>
               <span className="block text-sm font-bold tracking-tight text-slate-950">Gustafta</span>
-              <span className="block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500">Ruang kerja admin</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.17em] text-slate-500">Ruang kerja AI Builder</span>
             </span>
           </Link>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/75 px-3 py-1.5 text-xs font-semibold text-slate-600">
             <ShieldCheck className="h-4 w-4 text-sky-700" />
-            AI Builder internal
+            AI Builder
           </div>
         </header>
 
-        {accessQuery.isLoading ? (
+        {authLoading ? (
           <section className="mx-auto mt-20 max-w-lg rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-sm">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-800">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
             <h1 className="mt-5 text-xl font-bold">Memeriksa akses ruang kerja</h1>
-            <p className="mt-2 text-sm text-slate-600">Memverifikasi izin administrator Gustafta Anda.</p>
+            <p className="mt-2 text-sm text-slate-600">Memeriksa sesi dan status akun Anda.</p>
           </section>
-        ) : accessQuery.isError && !unauthorized ? (
-          <section className="mx-auto mt-20 max-w-xl">
-            <InlineError
-              message={localizedError(accessQuery.error, "Gangguan koneksi membuat akses tidak dapat diperiksa.")}
-              onRetry={() => void accessQuery.refetch()}
-            />
-          </section>
-        ) : unauthorized ? (
+        ) : !isAuthenticated ? (
           <section className="mx-auto mt-20 max-w-xl rounded-3xl border border-slate-200 bg-white p-8 text-center shadow-[0_20px_70px_-40px_rgba(15,23,42,.35)]">
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#101c2e] text-sky-100">
               <LockKeyhole className="h-6 w-6" />
             </div>
-            <SectionEyebrow>Ruang kerja terbatas</SectionEyebrow>
-            <h1 className="mt-3 text-2xl font-bold tracking-tight">Akses administrator diperlukan</h1>
+            <SectionEyebrow>Masuk diperlukan</SectionEyebrow>
+            <h1 className="mt-3 text-2xl font-bold tracking-tight">Masuk untuk menggunakan AI Builder</h1>
             <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-slate-600">
-              AI Builder adalah ruang kerja internal untuk administrator Gustafta. Anda belum memiliki izin untuk mengaksesnya.
+              Akun aktif diperlukan untuk merancang sistem AI dan menyimpan hasilnya di ruang kerja pribadi.
             </p>
-            <Link href="/dashboard" className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-[#101c2e] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800">
-              Kembali ke dasbor <ArrowRight className="h-4 w-4" />
+            <Link href="/login?redirect=%2Fai-builder" className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg bg-[#101c2e] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800">
+              Masuk <ArrowRight className="h-4 w-4" />
             </Link>
           </section>
         ) : (
@@ -258,8 +237,7 @@ export default function AiBuilderPage() {
                   Rangkai sistem untuk organisasi, mulai dari spesialis yang tersedia, atau buat salinan privat untuk pemilik tertentu.
                 </p>
                 <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium text-slate-300">
-                  <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-sky-300" /> Khusus administrator</span>
-                  {accessQuery.data?.isSuperAdmin && <Badge className="border border-sky-300/20 bg-sky-300/10 text-sky-200 hover:bg-sky-300/10">Superadmin</Badge>}
+                  <span className="inline-flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-sky-300" /> Tersedia untuk akun aktif</span>
                 </div>
               </div>
             </section>
@@ -383,7 +361,7 @@ export default function AiBuilderPage() {
                 <div className="mt-5 flex flex-col items-center rounded-2xl border border-dashed border-slate-300 bg-white/65 px-6 py-10 text-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-100 text-sky-800"><Compass className="h-5 w-5" /></div>
                   <h3 className="mt-4 text-base font-bold">Belum ada spesialis</h3>
-                  <p className="mt-1 max-w-sm text-sm leading-5 text-slate-600">AI Specialist sistem akan muncul di sini saat tersedia untuk dikustomisasi.</p>
+                  <p className="mt-1 max-w-sm text-sm leading-5 text-slate-600">Claw sistem muncul di sini jika tercakup lisensi individual atau paket aktif Anda.</p>
                 </div>
               ) : (
                 <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">

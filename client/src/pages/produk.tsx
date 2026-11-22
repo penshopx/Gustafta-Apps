@@ -708,10 +708,8 @@ export default function ProdukPage() {
             ))}
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link href="/auth">
-              <button className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-                <Zap className="h-3.5 w-3.5" /> Mulai Merakit AI
-              </button>
+            <Link href="/ai-builder" className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+              <Zap className="h-3.5 w-3.5" /> Mulai Merakit AI
             </Link>
             <a href={`https://wa.me/${contact.secondary}?text=Halo%2C%20saya%20ingin%20tahu%20lebih%20lanjut%20tentang%20Gustafta%20Builder`} onClick={() => trackLead({ content_name: "WhatsApp CTA" })} target="_blank" rel="noopener noreferrer">
               <button className="inline-flex items-center gap-2 border border-indigo-400 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-xs font-semibold px-4 py-2 rounded-lg transition-colors">

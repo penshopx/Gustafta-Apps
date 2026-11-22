@@ -233,10 +233,13 @@ let agents: any;
 let agentCollaborators: any;
 let knowledgeBases: any;
 let knowledgeChunks: any;
+let clientSubscriptions: any;
+let subscriptionsTable: any;
 let storageDb: any;
 let registerRoutes: any;
 let eq: any;
 let inArray: any;
+const originalBrevoApiKey = process.env.BREVO_API_KEY;
 
 let server: Server;
 let baseUrl = "";
@@ -310,6 +313,10 @@ async function req(
 
 before(async () => {
   if (!testDatabaseReady) return;
+  // Sharing an agent normally sends a transactional notification. Keep this
+  // disposable integration suite offline and prevent test fixtures from reaching
+  // Brevo even if the workspace has production credentials configured.
+  process.env.BREVO_API_KEY = "";
   if (!HAS_DB) return;
 
   // Tandai admin lewat ADMIN_USER_IDS — dibaca getDbRole/guards secara dinamis
@@ -320,7 +327,7 @@ before(async () => {
 
   ({ db, pool } = await import("../server/db"));
   ({ users } = await import("../shared/models/auth"));
-  ({ agents, agentCollaborators, knowledgeBases, knowledgeChunks } = await import("../shared/schema"));
+  ({ agents, agentCollaborators, knowledgeBases, knowledgeChunks, clientSubscriptions, subscriptionsTable } = await import("../shared/schema"));
   ({ storage: storageDb } = await import("../server/storage"));
   ({ registerRoutes } = await import("../server/routes"));
   ({ eq, inArray } = await import("drizzle-orm"));
@@ -359,7 +366,11 @@ before(async () => {
 
 after(async () => {
   if (!testDatabaseReady) return;
-  if (!HAS_DB) return;
+  if (!HAS_DB) {
+    if (originalBrevoApiKey === undefined) delete process.env.BREVO_API_KEY;
+    else process.env.BREVO_API_KEY = originalBrevoApiKey;
+    return;
+  }
   try {
     if (createdAgentIds.length) {
       const kbRows = await db.select({ id: knowledgeBases.id }).from(knowledgeBases)
@@ -385,6 +396,8 @@ after(async () => {
   } catch (e) {
     console.error("[it pool close]", e);
   }
+  if (originalBrevoApiKey === undefined) delete process.env.BREVO_API_KEY;
+  else process.env.BREVO_API_KEY = originalBrevoApiKey;
 });
 
 // ── 1. GET /api/agents/:id (baca konfigurasi tersanitasi) ─────────────────────
@@ -427,6 +440,7 @@ test("AI Builder: clone sistem tersimpan privat, idempoten, dan prompt clone dap
   const [master] = await db.insert(agents).values({
     userId: "",
     name: `IT AI Builder template ${suffix}`,
+    slug: "manprojakclaw-orchestrator",
     tagline: "Template uji disposable",
     systemPrompt: "PROMPT-KANONIK-TEMPLATE",
     isPublic: true,
@@ -435,6 +449,15 @@ test("AI Builder: clone sistem tersimpan privat, idempoten, dan prompt clone dap
     archived: false,
   }).returning({ id: agents.id });
   createdAgentIds.push(master.id);
+  // Inserted directly for a precise fixture; invalidate DatabaseStorage's
+  // cached agent listing before exercising the real template-list route.
+  await storageDb.updateAgent(String(master.id), {
+    slug: "manprojakclaw-orchestrator",
+    isPublic: true,
+    isListed: true,
+    isEnabled: true,
+    archived: false,
+  } as any);
   const [sourceKb] = await db.insert(knowledgeBases).values({
     agentId: master.id,
     visibility: "platform",
@@ -453,11 +476,55 @@ test("AI Builder: clone sistem tersimpan privat, idempoten, dan prompt clone dap
 
   const templates = await req("GET", "/api/ai-builder/templates", adminId);
   assert.equal(templates.status, 200);
-  const templateCard = templates.json.find((row: any) => row.id === master.id);
+  const templateCard = templates.json.find((row: any) => String(row.id) === String(master.id));
   assert.ok(templateCard, "template sistem tersedia untuk admin");
   assert.equal(templateCard.systemPrompt, undefined, "API katalog tidak membocorkan prompt");
 
+  assert.equal((await req("GET", "/api/ai-builder/mine", null)).status, 401, "anonim tidak dapat membuka ruang AI milik");
+  assert.equal((await req("GET", "/api/ai-builder/templates", null)).status, 401, "anonim tidak dapat melihat katalog Claw");
+  assert.equal((await req("POST", "/api/blueprint/start", outsiderId, {})).status, 200, "akun aktif biasa dapat memakai perakit manual");
   assert.equal((await req("POST", `/api/ai-builder/templates/${master.id}/clone`, outsiderId)).status, 403);
+  const outsiderTemplatesBeforeLicense = await req("GET", "/api/ai-builder/templates", outsiderId);
+  assert.equal(outsiderTemplatesBeforeLicense.status, 200);
+  assert.equal(outsiderTemplatesBeforeLicense.json.some((row: any) => String(row.id) === String(master.id)), false);
+
+  const [packageSubscription] = await db.insert(subscriptionsTable).values({
+    userId: outsiderId,
+    plan: "profesional",
+    status: "active",
+    startDate: new Date(),
+    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  }).returning({ id: subscriptionsTable.id });
+  await storageDb.updateUserClawPackages(outsiderId, ["skk-kompetensi"]);
+  const packageTemplates = await req("GET", "/api/ai-builder/templates", outsiderId);
+  assert.ok(packageTemplates.json.some((row: any) => String(row.id) === String(master.id)), "paket terpilih membuka template Claw");
+  const outsiderClone = await req("POST", `/api/ai-builder/templates/${master.id}/clone`, outsiderId);
+  assert.equal(outsiderClone.status, 201, "pemilik paket dapat membuat versi privat");
+  createdAgentIds.push(outsiderClone.json.agent.id);
+  const outsiderCloneRow = await storageDb.getAgent(String(outsiderClone.json.agent.id));
+  assert.equal(outsiderCloneRow.userId, outsiderId);
+  assert.equal(outsiderCloneRow.isPublic, false);
+
+  await db.delete(subscriptionsTable).where(eq(subscriptionsTable.id, packageSubscription.id));
+  await storageDb.updateUserClawPackages(outsiderId, []);
+  const [individualLicense] = await db.insert(clientSubscriptions).values({
+    agentId: master.id,
+    customerName: "Fixture AI Builder",
+    customerEmail: outsiderEmail,
+    accessToken: `fixture-${randomUUID()}`,
+    plan: "lifetime",
+    status: "active",
+    startDate: new Date(),
+    endDate: null,
+  }).returning({ id: clientSubscriptions.id });
+  assert.ok(individualLicense?.id, "fixture lisensi individual dibuat pada database disposable");
+  const outsiderTemplatesWithLicense = await req("GET", "/api/ai-builder/templates", outsiderId);
+  assert.ok(outsiderTemplatesWithLicense.json.some((row: any) => String(row.id) === String(master.id)));
+  const individualLicenseClone = await req("POST", `/api/ai-builder/templates/${master.id}/clone`, outsiderId);
+  assert.equal(individualLicenseClone.status, 201);
+  assert.equal(individualLicenseClone.json.reused, true, "lisensi individual juga mengizinkan akses ke Claw dan salinan yang sama");
+  await db.delete(clientSubscriptions).where(eq(clientSubscriptions.id, individualLicense.id));
+
   const first = await req("POST", `/api/ai-builder/templates/${master.id}/clone`, adminId);
   assert.equal(first.status, 201);
   assert.equal(first.json.reused, false);
@@ -466,7 +533,7 @@ test("AI Builder: clone sistem tersimpan privat, idempoten, dan prompt clone dap
 
   const cloneRow = await storageDb.getAgent(String(cloneId));
   assert.equal(cloneRow.userId, adminId, "salinan dimiliki admin yang meminta");
-  assert.equal(cloneRow.clonedFromAgentId, master.id);
+  assert.equal(String(cloneRow.clonedFromAgentId), String(master.id));
   assert.equal(cloneRow.isPublic, false);
   assert.equal(cloneRow.isListed, false);
   assert.equal(cloneRow.systemPrompt, "PROMPT-KANONIK-TEMPLATE");

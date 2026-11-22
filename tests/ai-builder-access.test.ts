@@ -3,13 +3,17 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
   cloneAiBuilderSystemTemplate,
+  canUseAiBuilderTemplate,
   includeAiBuilderPrivateCloneConfig,
   isAiBuilderPrivateCloneOwner,
   listAiBuilderOwnedAgents,
+  listEntitledAiBuilderTemplates,
   listAiBuilderTemplates,
 } from "../server/lib/ai-builder-access";
+import { MULTICLAW_AGENT_ROUTE_BY_SLUG } from "../shared/multiclaw-agent-slugs";
 
 const routesSource = readFileSync(new URL("../server/routes.ts", import.meta.url), "utf8");
+const multiclawAdminSource = readFileSync(new URL("../client/src/pages/multiclaw-admin.tsx", import.meta.url), "utf8");
 
 const agents = [
   { id: 1, name: "System Specialist", userId: null, clonedFromAgentId: null, archived: false, isEnabled: true, isPublic: true },
@@ -30,6 +34,51 @@ test("template catalogue contains only enabled, unarchived system roots and expo
   assert.deepEqual(templates.map((template) => template.id), [8, 1]);
   assert.equal("systemPrompt" in templates[0], false);
   assert.equal("customApiKey" in templates[0], false);
+});
+
+test("Builder Claw access follows individual licenses, package selections, base tier, and admin bypass", () => {
+  const packageClaw = {
+    id: 31, name: "Package Claw", userId: "", slug: "manprojakclaw-orchestrator",
+    isPublic: true, isListed: true, isEnabled: true, archived: false,
+  };
+  const baseClaw = {
+    id: 32, name: "Base Claw", userId: "", slug: "sbuclaw-orchestrator",
+    isPublic: true, isListed: true, isEnabled: true, archived: false,
+  };
+  const unknown = {
+    id: 33, name: "Unmapped Claw", userId: "", slug: "not-a-canonical-route",
+    isPublic: true, isListed: true, isEnabled: true, archived: false,
+  };
+
+  assert.equal(canUseAiBuilderTemplate(packageClaw, { tier: 2, selectedPackageIds: ["skk-kompetensi"] }), true);
+  assert.equal(canUseAiBuilderTemplate(packageClaw, { tier: 2, selectedPackageIds: ["teknik-konstruksi"] }), false);
+  assert.equal(canUseAiBuilderTemplate(packageClaw, { tier: 3 }), true);
+  assert.equal(canUseAiBuilderTemplate(packageClaw, { tier: 0, individuallyLicensedAgentIds: new Set(["31"]) }), true);
+  assert.equal(canUseAiBuilderTemplate(baseClaw, { tier: 1 }), true);
+  assert.equal(canUseAiBuilderTemplate(baseClaw, { tier: 0 }), false);
+  assert.equal(canUseAiBuilderTemplate(unknown, { tier: 3 }), false, "unknown route mapping fails closed");
+  assert.equal(canUseAiBuilderTemplate(unknown, { tier: 0, isAdmin: true }), true, "admin keeps the existing bypass");
+
+  assert.deepEqual(
+    listEntitledAiBuilderTemplates([packageClaw, baseClaw, unknown], {
+      tier: 2, selectedPackageIds: ["skk-kompetensi"],
+    }).map((row) => row.id),
+    [32, 31],
+  );
+});
+
+test("server Claw route identity map matches every MultiClaw admin registry entry", () => {
+  const registryPairs = [...multiclawAdminSource.matchAll(
+    /\{ href: "([^"]+)", slug: (?:"([^"]+)"|PANDUAN_SBU_AGENT_SLUG),/g,
+  )].map((match) => ({
+    route: match[1],
+    slug: match[2] || "hub-sbu-coach-all-in-one",
+  }));
+  assert.ok(registryPairs.length >= 70, "registry should include the system Claw catalog");
+  for (const { route, slug } of registryPairs) {
+    assert.equal(MULTICLAW_AGENT_ROUTE_BY_SLUG[slug], route, `canonical route must match slug ${slug}`);
+  }
+  assert.equal(Object.keys(MULTICLAW_AGENT_ROUTE_BY_SLUG).length, registryPairs.length, "no unmapped/stale canonical route entries");
 });
 
 test("AI Saya contains only exact-owner, unarchived creations and excludes collaborators", () => {
@@ -127,10 +176,12 @@ test("creating a private copy verifies owner/source on readback and leaves the t
   assert.equal(cloneCalls, 1, "repeat visits must not overwrite or recreate the owner's private edits");
 });
 
-test("all AI Builder API routes require an authenticated admin", () => {
-  assert.match(routesSource, /app\.get\("\/api\/ai-builder\/mine",\s*isAuthenticated,\s*requireAdmin,/);
-  assert.match(routesSource, /app\.get\("\/api\/ai-builder\/templates",\s*isAuthenticated,\s*requireAdmin,/);
-  assert.match(routesSource, /app\.post\("\/api\/ai-builder\/templates\/:id\/clone",\s*isAuthenticated,\s*requireAdmin,/);
+test("AI Builder API routes require an active authenticated account and recheck template entitlement", () => {
+  assert.match(routesSource, /app\.get\("\/api\/ai-builder\/mine",\s*isAuthenticated,/);
+  assert.match(routesSource, /app\.get\("\/api\/ai-builder\/templates",\s*isAuthenticated,/);
+  assert.match(routesSource, /app\.post\("\/api\/ai-builder\/templates\/:id\/clone",\s*isAuthenticated,/);
+  assert.match(routesSource, /canUseAiBuilderTemplate\(master,\s*entitlements\)/);
+  assert.match(routesSource, /listEntitledAiBuilderTemplates\(candidates,\s*entitlements\)/);
   assert.match(routesSource, /cloneAiBuilderSystemTemplate\(storage,\s*idText,\s*userId\)/);
 });
 
