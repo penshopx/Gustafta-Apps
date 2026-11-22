@@ -254,6 +254,17 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
   }
+
+  /* Use Title Case consistently for page and section headings without
+     changing paragraph copy, user-entered values, or persisted content. */
+  :where(h1, h2, h3, h4, h5, h6, [role="heading"], .title-case-heading) {
+    text-transform: capitalize;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6, [role="heading"], .title-case-heading)
+    :where(code, kbd, samp, pre) {
+    text-transform: none;
+  }
 }
 
 /* Custom scrollbar for dark theme */
