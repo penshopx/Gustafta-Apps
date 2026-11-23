@@ -252,6 +252,36 @@ export default function KatalogProdukPage() {
         </div>
       </section>
 
+      <section
+        className="border-b border-indigo-200 bg-indigo-50 px-4 py-6 dark:border-indigo-900 dark:bg-indigo-950/30"
+        aria-labelledby="ai-builder-promo-title"
+        data-testid="ai-builder-promo"
+      >
+        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white">
+              <Zap className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <div>
+              <Badge className="mb-1 border-0 bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-200">
+                AI Builder
+              </Badge>
+              <h2 id="ai-builder-promo-title" className="text-lg font-bold text-slate-900 dark:text-white">
+                Rakit AI Anda Sendiri
+              </h2>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                Mulai dari template sistem atau rakit chatbot sendiri, lalu atur prompt, knowledge base, persona, model, dan agen pendukung.
+              </p>
+            </div>
+          </div>
+          <Button asChild className="shrink-0 gap-2 bg-indigo-600 text-white hover:bg-indigo-700">
+            <Link href="/ai-builder" data-testid="btn-open-ai-builder">
+              Buka AI Builder <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+
       <main className="max-w-5xl mx-auto px-4 py-14">
         <div className="grid md:grid-cols-2 gap-6">
           {KELOMPOK.map((k) => {
