@@ -1,7 +1,8 @@
-# Panduan Penggunaan dan Operasional Gustafta
+# Panduan Penggunaan Dan Operasional Gustafta
 
 **Cakupan:** pengguna, admin, dan superadmin Gustafta Apps  
-**Versi dokumen:** 1.0 · 21 November 2026  
+**Versi dokumen:** 1.1 · 23 November 2026
+
 **Tujuan:** menjadi rujukan praktis untuk memahami menu, isi fitur, alur kerja, batas akses, dan penanganan masalah umum.
 
 > Nama menu dan akses dapat berubah mengikuti rilis, paket langganan, izin akun, dan ketersediaan integrasi. Panduan ini menjelaskan fitur yang ada di proyek; tidak berarti semua fitur terbuka pada setiap akun atau seluruh integrasi eksternal selalu aktif.
@@ -20,7 +21,7 @@ Tiga lapisan yang perlu dibedakan:
 
 AI membantu analisis dan penyusunan draf. Untuk keputusan legal, sertifikasi, keselamatan, pengadaan, pajak, atau keputusan bisnis, cocokkan hasil dengan sumber resmi dan penanggung jawab yang berwenang.
 
-## 2. Peran dan batas kewenangan
+## 2. Peran Dan Batas Kewenangan
 
 | Peran | Penggunaan utama | Kewenangan operasional |
 |---|---|---|
@@ -30,9 +31,9 @@ AI membantu analisis dan penyusunan draf. Untuk keputusan legal, sertifikasi, ke
 
 Peran efektif dapat berbeda dari label profil. Sistem memakai pemeriksaan akses admin yang berlaku di server. Jika menu admin tidak muncul atau akses ditolak, jangan mencoba melewati pembatasan; minta pemilik akun memeriksa peran dan status akun.
 
-## 3. Memulai sebagai pengguna
+## 3. Memulai Sebagai Pengguna
 
-### 3.1 Masuk dan mengenali dashboard
+### 3.1 Masuk Dan Mengenali Dashboard
 
 1. Buka situs Gustafta dan masuk dengan akun yang terdaftar.
 2. Buka **Dashboard** untuk memilih AI Specialist, fitur, dan mini app yang tersedia.
@@ -52,7 +53,7 @@ AI Specialist atau Claw dirancang untuk bidang tertentu. Pilih yang paling dekat
 
 MultiClaw adalah tim beberapa agen yang berkoordinasi. Gunakan tim ketika tugas benar-benar memerlukan keahlian berbeda; untuk pertanyaan sederhana, satu spesialis biasanya lebih tepat. Hasil spesialis tetap perlu dibaca dan disatukan secara kritis.
 
-### 3.3 Cara bertanya agar hasil lebih berguna
+### 3.3 Cara Bertanya Agar Hasil Lebih Berguna
 
 Berikan konteks secukupnya:
 
@@ -64,22 +65,23 @@ Berikan konteks secukupnya:
 
 Minta AI menyebutkan sumber, asumsi, data yang belum tersedia, dan hal yang perlu diverifikasi. Jangan masukkan kata sandi, token, kunci API, atau data pribadi yang tidak diperlukan.
 
-### 3.4 Paket Bidang dan langganan
+### 3.4 Paket Bidang Dan Langganan
 
 - Buka **Paket Bidang** (`/paket-bidang`) untuk melihat atau memilih paket bidang jika menu itu tersedia pada akun.
 - Batas pilihan dan daftar fitur mengikuti paket aktif. Pilihan tertentu dapat terkunci setelah disimpan; baca konfirmasi sebelum menyimpan.
 - Buka **Langganan Saya** (`/my-subscription`) untuk melihat status dan masa aktif.
 - Jangan menganggap tampilan produk berarti akses sudah aktif. Jika akses tidak sesuai bukti pembayaran/pemberian akses, hubungi admin dan sertakan nama fitur serta waktu kejadian—bukan token atau kata sandi.
 
-## 4. Peta fitur dan isi konten
+## 4. Peta Fitur Dan Isi Konten
 
 Menu berikut merupakan kelompok fitur yang tersedia dalam aplikasi. Tautan dapat memerlukan login, paket tertentu, atau layanan eksternal yang aktif.
 
-### 4.1 Peta menu utama
+### 4.1 Peta Menu Utama
 
 | Menu | Rute | Untuk apa |
 |---|---|---|
 | Dashboard | `/dashboard` | Memulai pekerjaan dan membuka fitur yang dapat diakses akun. |
+| AI Builder | `/ai-builder` | Membuat sistem AI baru secara privat atau mengustomisasi Claw sistem sesuai akses akun. |
 | Ruang Proyek | `/ruang-proyek` | Menata konteks dan portofolio proyek milik pengguna. |
 | Klinik Konsultasi | `/klinik-konsultasi` | Memulai alur konsultasi berdasarkan kebutuhan/domain. |
 | Bedah Dokumen | `/bedah-dokumen` | Membuka layanan analisis dokumen. |
@@ -104,13 +106,15 @@ Portal SBU, SKK, tender, ISO, serta sejumlah aplikasi ekosistem lain muncul mela
 | **Dokumen Proyek dan PKB-PUB/EXUM** | Pengelolaan bahan proyek dan penyusunan dokumen/ringkasan sesuai alur yang tersedia. Periksa kembali data sumber, versi, dan pihak yang akan menggunakan hasil. |
 | **Bedah Dokumen** | Membantu membaca, merangkum, dan menelaah dokumen yang diunggah atau dipilih. Pastikan dokumen memang boleh diproses dan hasil analisis diperiksa terhadap dokumen asli. |
 | **Mini Apps** | Aplikasi kecil untuk checklist, kalkulator, penilaian risiko, pelacak progres, generator, analisis kesenjangan, dan kebutuhan kerja lain. Jenis yang tersedia dapat berbeda; ikuti petunjuk pada tiap app dan simpan hasil sebelum meninggalkan halaman bila diminta. |
-| **Blueprint dan Rakit Tim Agen** | Membantu merumuskan kebutuhan, rancangan solusi, dan pembagian peran agen. Blueprint adalah rancangan yang perlu ditinjau, bukan konfigurasi aktif sampai perubahan benar-benar disimpan melalui alur yang tersedia. |
+| **AI Builder** | Ruang kerja untuk membuat sistem AI baru secara manual atau mengustomisasi salinan privat AI Specialist sistem. |
+| **Blueprint Builder** | Merumuskan kebutuhan lalu membuat satu agen baru melalui langkah perancangan terpandu. |
+| **Rakit Tim AI** | Menyusun beberapa agen sekaligus sebagai ketua tim dan anggota; gunakan bila pekerjaan memang perlu dikerjakan oleh tim spesialis. |
 | **Studio Belajar/Akademi** | Materi belajar, kursus, tutor, asesmen, dan dukungan kompetensi. Status pendaftaran, progres, serta sertifikat mengikuti halaman masing-masing. |
 | **AI Specialist Store/Produk** | Menemukan atau menggunakan AI Specialist dan produk digital yang tersedia. Lisensi, masa akses, dan biaya berkala mengikuti halaman produk/paket. |
 | **LexCom dan layanan hukum** | Dukungan informasi dan analisis awal pada domain hukum yang tersedia. Bukan pengganti nasihat profesional atau keputusan lembaga berwenang. |
 | **Afiliasi dan mitra** | Informasi referral atau pengelolaan mitra hanya tersedia bagi akun yang mendapat akses. Ketentuan komisi, kursi, dan branding mengikuti konfigurasi yang berlaku. |
 
-### 4.2 Isi yang dapat ditemui dalam AI Specialist
+### 4.2 Isi Yang Dapat Ditemui Dalam AI Specialist
 
 Konfigurasi spesialis dapat mencakup:
 
@@ -122,7 +126,7 @@ Konfigurasi spesialis dapat mencakup:
 
 Isi konfigurasi admin bukan selalu konten yang terlihat langsung oleh pengguna. Jawaban AI bergantung pada model, instruksi, dokumen yang diizinkan, dan pertanyaan. Agen publik tidak membuat dokumen privat otomatis dapat diunduh.
 
-### 4.3 Dokumen dan publikasi pengetahuan
+### 4.3 Dokumen Dan Publikasi Pengetahuan
 
 - Unggah hanya dokumen yang dimiliki atau diizinkan untuk digunakan.
 - Pastikan nama, versi, status, dan kategori dokumen benar.
@@ -130,11 +134,41 @@ Isi konfigurasi admin bukan selalu konten yang terlihat langsung oleh pengguna. 
 - Publikasi KB adalah publikasi **salinan pengetahuan yang disetujui**, bukan pembukaan akses ke file asli di Ruang Simpan.
 - Jika isi sumber berubah, tinjau ulang persetujuan/publikasi. Jangan berasumsi persetujuan lama tetap berlaku untuk konten baru.
 
-## 5. Ruang Simpan dan koneksi aplikasi
+### 4.4 AI Builder: Membuat Chatbot Baru Atau Mengustomisasi Claw
+
+AI Builder adalah ruang kerja untuk merakit sistem AI milik akun Anda. Ini berbeda dari katalog **Produk AI/Store**: katalog menawarkan produk siap pakai, sedangkan AI Builder dipakai untuk membuat sistem baru atau membuat salinan privat dari Claw sistem.
+
+**Cara membuka:**
+
+1. Masuk ke akun Gustafta yang aktif.
+2. Buka **Produk** (`/produk`) lalu pilih **Rakit AI Anda Sendiri → Buka AI Builder**, atau buka `/ai-builder`.
+3. Di AI Builder, pilih salah satu jalur berikut.
+
+Di Dashboard, pintasan **Rancang Agen (Blueprint Builder)** membuka jalur pembuatan manual yang sama. **Rakit Tim AI** adalah jalur berbeda untuk membentuk beberapa agen yang saling terhubung, bukan cara untuk mengubah satu Claw sistem.
+
+**Jalur A — Membuat chatbot yang benar-benar baru**
+
+1. Pilih **Bangun sistem secara manual** untuk membuka **Blueprint Builder** (`/blueprint-builder`).
+2. Ikuti empat langkah inti untuk merumuskan kebutuhan dan konfigurasi agen. Tinjau rancangan sebelum menyimpan.
+3. Setelah pembuatan berhasil, agen baru menjadi milik akun Anda dan bersifat privat secara default; agen tersebut tidak mengubah Claw sistem atau chatbot pengguna lain.
+4. Pembuatan chatbot baru mengikuti **langganan aktif dan kuota chatbot akun**. Jika kuota habis, selesaikan atau tingkatkan paket sesuai pilihan yang tersedia sebelum membuat chatbot tambahan.
+
+**Jalur B — Mengustomisasi Claw sistem**
+
+1. Buka bagian **Kustomisasi privat** di AI Builder.
+2. Pilih Claw yang tercakup oleh lisensi individual atau paket akses aktif Anda, lalu tekan **Kustomisasi**.
+3. AI Builder membuat salinan privat untuk akun Anda. Perubahan pada salinan—misalnya prompt, Knowledge Base, Persona & UX, Model & RAG, atau Sub-Agents—tidak mengubah Claw sistem yang menjadi sumbernya.
+4. Akses untuk memakai atau mengustomisasi Claw mengikuti lisensi individual atau paket akses Claw yang berlaku. Login saja tidak otomatis membuka semua Claw.
+
+Sistem yang dibuat atau disalin tampil pada bagian **Sistem AI milik Anda** di AI Builder. Pilih **Buka sistem** untuk menuju Dashboard dan melanjutkan penggunaan/pengelolaan agen tersebut. Bila ingin membangun organisasi dengan beberapa agen yang terhubung, pilih jalur **Susun hierarki tim** (`/organization-builder`); jalur ini opsional dan dapat memakai lebih dari satu slot chatbot sesuai jumlah agen yang dibuat.
+
+Monetisasi AI Builder tidak membuat biaya atau skema lisensi baru: pembuatan chatbot mengikuti langganan serta kuota akun yang sudah berlaku, sedangkan akses kustomisasi Claw sistem mengikuti lisensi atau paket akses Claw.
+
+## 5. Ruang Simpan Dan Koneksi Aplikasi
 
 Ruang Simpan adalah sumber dokumen bisnis pemilik, bukan folder bersama untuk semua AI Specialist.
 
-### Untuk pemilik dokumen
+### Untuk Pemilik Dokumen
 
 1. Buka **Ruang Simpan** (`/ruang-simpan`), pilih atau unggah dokumen.
 2. Periksa klasifikasi/status dan pastikan berkas tidak memuat data yang tidak boleh dibagikan.
@@ -142,11 +176,11 @@ Ruang Simpan adalah sumber dokumen bisnis pemilik, bukan folder bersama untuk se
 4. Simpan token sebagai secret di server aplikasi tujuan. Token ditampilkan satu kali; jangan tempelkan ke chat, URL, frontend, tiket, atau screenshot.
 5. Periksa riwayat akses dan cabut koneksi yang tidak diperlukan.
 
-### Untuk aplikasi yang terhubung
+### Untuk Aplikasi Yang Terhubung
 
 Integrasi dilakukan server-ke-server dengan token dan cakupan yang diatur pemilik. Aplikasi tidak boleh meminta akses browser langsung ke data privat. Jangan meminta atau menyimpan token di repositori atau konten bantuan. Jika respons ditolak, periksa izin dan pilihan dokumen melalui pemilik—jangan melewati otorisasi.
 
-## 6. Alur tugas: Blueprint, kolaborasi, Workroom
+## 6. Alur Tugas: Blueprint, Kolaborasi, Workroom
 
 1. **Dialog:** jelaskan masalah, tujuan, pemilik tugas, tenggat, dan hasil yang dianggap selesai.
 2. **Blueprint:** susun rencana, data yang diperlukan, risiko, dan pembagian peran.
@@ -157,9 +191,9 @@ Integrasi dilakukan server-ke-server dengan token dan cakupan yang diatur pemili
 
 Jangan menyatakan pekerjaan selesai hanya karena agen menampilkan status selesai. Pastikan hasil atau bukti benar-benar tersedia. Simpan informasi penting pada tempat yang memang menjadi sumber resminya, bukan hanya di percakapan.
 
-## 7. Menyimpan perubahan dan memecahkan masalah umum
+## 7. Menyimpan Perubahan Dan Memecahkan Masalah Umum
 
-### Perubahan tampak hilang setelah disimpan
+### Perubahan Tampak Hilang Setelah Disimpan
 
 1. Tunggu indikator simpan atau notifikasi berhasil/gagal.
 2. Jangan tutup halaman ketika status masih **Menyimpan**.
@@ -168,43 +202,43 @@ Jangan menyatakan pekerjaan selesai hanya karena agen menampilkan status selesai
 5. Untuk System Prompt, simpan salinan kerja di tempat aman sebelum mengubah teks panjang. Jangan menghapus marker/instruksi sistem yang ditandai penting.
 6. Jangan mengulang tindakan yang mungkin sudah tersimpan jika responsnya tidak jelas—periksa nilai terkini dahulu.
 
-### Menu kosong atau “agent not found”
+### Menu Kosong Atau “Agent Not Found”
 
 - Pastikan memilih agen/produk yang benar dan halaman tidak menggunakan tautan lama.
 - Coba muat ulang setelah deployment terbaru selesai.
 - Jika tetap kosong, laporkan nama menu dan teks error. Jangan mengganti ID atau slug secara manual.
 
-### Mini App tidak dapat digulir
+### Mini App Tidak Dapat Digulir
 
 - Pastikan pointer berada di area isi dialog/halaman, bukan di luar panel.
 - Coba roda mouse, trackpad, atau tombol Tab/arah pada kontrol yang berfokus.
 - Jika bagian bawah tetap terpotong, tutup dialog dan laporkan nama Mini App serta ukuran layar/browser.
 
-### Akses atau langganan tidak sesuai
+### Akses Atau Langganan Tidak Sesuai
 
 - Periksa akun yang sedang masuk, paket aktif, dan masa berlaku.
 - Ambil tangkapan layar status tanpa menampilkan data sensitif.
 - Hubungi admin dengan nama produk/fitur, waktu, dan bukti pembayaran yang disanitasi.
 
-### Gangguan layanan atau hasil AI
+### Gangguan Layanan Atau Hasil AI
 
 - Muat ulang sekali dan periksa koneksi.
 - Untuk jawaban faktual, minta sumber atau tanggal acuan dan verifikasi ke dokumen resmi.
 - Jika dokumen gagal diproses, jangan menganggapnya sudah menjadi KB; lihat status proses atau coba ulang sesuai petunjuk.
 - Hindari mengirim permintaan berulang untuk aksi yang berdampak (pembayaran, pengiriman, perubahan konfigurasi) sebelum statusnya diketahui.
 
-## 8. Panduan untuk Admin
+## 8. Panduan Untuk Admin
 
 Admin mengoperasikan panel yang diizinkan, namun tidak mengelola akun admin atau mengubah peran admin.
 
-### 8.1 Masuk ke panel
+### 8.1 Masuk Ke Panel
 
 1. Gunakan akun admin yang telah disetujui.
 2. Buka **Admin** (`/admin`) dari menu akun atau URL panel.
 3. Pastikan identitas/peran pada panel tertulis **Admin**.
 4. Jika fitur yang diperlukan tidak muncul, hentikan tindakan dan minta superadmin memeriksa kewenangan efektif.
 
-### 8.2 Area kerja Admin
+### 8.2 Area Kerja Admin
 
 Nama tab yang tersedia di panel dapat meliputi:
 
@@ -220,7 +254,7 @@ Nama tab yang tersedia di panel dapat meliputi:
 
 Admin juga dapat diberi akses ke pengelolaan mitra, seat, dan permintaan top-up. Gunakan data minimum untuk menyelesaikan tiket; jangan menyalin isi dokumen privat ke komentar atau log.
 
-### 8.3 Alur aman menangani pengguna
+### 8.3 Alur Aman Menangani Pengguna
 
 1. Cari akun berdasarkan informasi yang diperlukan dan pastikan tidak memilih orang yang salah.
 2. Periksa status akun, langganan, pembayaran, atau bukti permintaan.
@@ -228,11 +262,11 @@ Admin juga dapat diberi akses ke pengelolaan mitra, seat, dan permintaan top-up.
 4. Jelaskan konsekuensi kepada pengguna bila perubahan membatasi akses.
 5. Simpan bukti keputusan sesuai proses internal; hindari menyimpan token, kata sandi, atau isi dokumen pribadi.
 
-## 9. Panduan untuk Superadmin
+## 9. Panduan Untuk Superadmin
 
 Superadmin memiliki kewenangan platform yang lebih luas. Gunakan akun khusus dan lakukan perubahan penting dengan prinsip dua kali periksa.
 
-### 9.1 Manajemen admin
+### 9.1 Manajemen Admin
 
 Di **Admin → Admin**, superadmin dapat:
 
@@ -242,7 +276,7 @@ Di **Admin → Admin**, superadmin dapat:
 
 Sebelum perubahan peran, pastikan identitas dan kebutuhan bisnisnya benar. Pengubahan peran tidak boleh dipakai sebagai jalan pintas untuk menangani satu tiket pengguna.
 
-### 9.2 Operasional tambahan
+### 9.2 Operasional Tambahan
 
 Menu khusus yang dapat tersedia bagi superadmin antara lain **Product Registry**, **Sales Ladder**, **Product Bible**, **MultiClaw Admin**, serta area audit/operasional tertentu.
 
@@ -265,7 +299,7 @@ Setelah perubahan MultiClaw, lakukan verifikasi:
 
 Jangan menyamakan perubahan di workspace dengan perubahan pada domain publik. Perubahan baru tampil di produksi setelah proses publikasi selesai dan versi yang benar aktif.
 
-### 9.3 Kontrol berisiko tinggi
+### 9.3 Kontrol Berisiko Tinggi
 
 - Jangan melakukan perubahan massal pada agen, model, akses, atau data tanpa ruang lingkup dan rencana pemulihan yang jelas.
 - Jangan mengaktifkan jadwal monitor, mengirim ping produksi, mengirim notifikasi, atau menjalankan operasi eksternal hanya untuk menguji tanpa persetujuan tersendiri.
@@ -273,7 +307,7 @@ Jangan menyamakan perubahan di workspace dengan perubahan pada domain publik. Pe
 - Jangan memakai SQL atau endpoint internal untuk menghindari kontrol UI/API.
 - Jangan menyalin konten pribadi, token, atau identitas sensitif ke laporan bersama.
 
-## 10. Praktik keamanan dan privasi untuk semua peran
+## 10. Praktik Keamanan Dan Privasi Untuk Semua Peran
 
 1. Jangan berbagi akun, kata sandi, token, API key, atau kode pemulihan.
 2. Gunakan file dan data yang memang boleh diproses. Data milik orang lain tidak menjadi terbuka hanya karena suatu agen bersifat publik.
@@ -283,23 +317,23 @@ Jangan menyamakan perubahan di workspace dengan perubahan pada domain publik. Pe
 6. Jangan menganggap respons “berhasil” atau halaman konfirmasi sebagai bukti pembayaran/aktivasi jika status server belum mengonfirmasi.
 7. Laporkan insiden dengan waktu, menu, langkah reproduksi, dan pesan error yang sudah disanitasi.
 
-## 11. Daftar periksa singkat
+## 11. Daftar Periksa Singkat
 
-### Sebelum memulai pekerjaan
+### Sebelum Memulai Pekerjaan
 
 - [ ] Saya memakai akun dan peran yang benar.
 - [ ] Tujuan, keluaran, dan batas pekerjaan jelas.
 - [ ] Dokumen yang dipakai memang boleh saya akses.
 - [ ] Saya memilih spesialis/alat yang sesuai.
 
-### Sebelum menyimpan atau menerbitkan
+### Sebelum Menyimpan Atau Menerbitkan
 
 - [ ] Saya memeriksa agen, dokumen, versi, penerima, dan ruang lingkup yang benar.
 - [ ] Saya melihat konfirmasi berhasil dan membaca ulang perubahan.
 - [ ] Saya tidak memasukkan secret ke prompt, chat, atau dokumen.
 - [ ] Saya meminta persetujuan manusia untuk tindakan yang berdampak.
 
-### Sebelum melaporkan selesai
+### Sebelum Melaporkan Selesai
 
 - [ ] Hasil benar-benar tersedia, bukan hanya status yang dinyatakan agen.
 - [ ] Sumber, asumsi, risiko, dan hal yang belum diketahui dicatat.
@@ -319,7 +353,7 @@ Jangan menyamakan perubahan di workspace dengan perubahan pada domain publik. Pe
 | **Gerbang manusia (◆)** | Titik yang memerlukan keputusan orang yang berwenang sebelum pekerjaan tertentu dilanjutkan. |
 | **Superadmin** | Peran pengelola platform dengan kewenangan tambahan, termasuk manajemen admin; bukan izin otomatis atas semua data privat. |
 
-## 13. Rujukan lanjutan
+## 13. Rujukan Lanjutan
 
 - [Dokumentasi fitur Gustafta](https://gustafta.my.id/documentation)
 - [Panduan integrasi Ruang Simpan](ruang-simpan-app-integration.md)

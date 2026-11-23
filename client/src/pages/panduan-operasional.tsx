@@ -100,8 +100,8 @@ export default function PanduanOperasional() {
               </div>
               <div className="guide-hero-title-row">
                 <div>
-                  <p className="guide-kicker">OPERASIONAL · VERSI 1.0</p>
-                  <h1>Panduan <span>operasional</span></h1>
+                  <p className="guide-kicker">OPERASIONAL · VERSI 1.1</p>
+                  <h1>Panduan <span>Operasional</span></h1>
                 </div>
                 <div className="guide-edition" aria-label="Cakupan panduan">
                   <span>RUJUKAN UNTUK</span>
@@ -124,7 +124,7 @@ export default function PanduanOperasional() {
             <div className="guide-breadcrumb" aria-label="Breadcrumb">
               <Link href="/documentation" className="guide-breadcrumb-link">Dokumentasi</Link>
               <ChevronRight size={14} />
-              <span aria-current="page">Panduan operasional</span>
+              <span aria-current="page">Panduan Operasional</span>
             </div>
             <label className="guide-search">
               <Search size={17} aria-hidden="true" />
@@ -166,7 +166,7 @@ export default function PanduanOperasional() {
               <div className="guide-aside-note">
                 <span className="guide-note-icon"><FileText size={16} /></span>
                 <p>Konten mengikuti dokumen operasional resmi Gustafta.</p>
-                <span className="guide-note-date">21 NOVEMBER 2026</span>
+                <span className="guide-note-date">23 NOVEMBER 2026</span>
               </div>
             </aside>
 
