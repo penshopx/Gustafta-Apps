@@ -29,6 +29,11 @@ When an `/api/{name}-claw/orchestrator` route hardcodes `storage.getAgent("<id>"
 - Slug pattern: `{route-base}-orchestrator` (e.g. `ko-claw-orchestrator`, `kk-claw-orchestrator`) with exceptions for legacy hubs (e.g. `hub-ims-smk3-terintegrasi`, `hub-devproperti-pro-v1`).
 - Fallback chain: slug → systemPrompt marker ilike → name keyword ilike → 404.
 - If 404 is genuinely correct (orchestrator not yet seeded), let it 404 loudly — never fall back to "first agent that loosely matches".
+- Related boot seeders (KB, sub-agents, and settings) must resolve the parent by canonical slug too; derive new child links from returned IDs, never reuse historic numeric IDs.
+
+**Why:** the fixed-ID Konstra seeder attached AHSP knowledge to unrelated agents after IDs were reused, while the admin resolved the system by slug.
+
+**How to apply:** audit every seeder that targets an agent, not only chat routes. A missing canonical slug should skip/fail visibly, never fall back to an old ID.
 
 # Audit endpoint must mirror runtime, not lookup-by-ID
 

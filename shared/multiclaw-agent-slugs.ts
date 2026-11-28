@@ -3,6 +3,19 @@
  * The route label "panduan-sbu" is a URL alias, not the agent's stored slug.
  */
 export const PANDUAN_SBU_AGENT_SLUG = "hub-sbu-coach-all-in-one";
+export const KONSTRA_ORCHESTRATOR_SLUG = "konstra-claw-orchestrator";
+export const KONSTRA_LEGACY_ORCHESTRATOR_SLUG = "konstra-orchestrator";
+export const KONSTRA_SPECIALIST_SLUGS = {
+  proxima: "konstra-proxima",
+  teknik: "konstra-teknik",
+  kontrak: "konstra-kontrak",
+  safira: "konstra-safira",
+  mutu: "konstra-mutu",
+  envira: "konstra-envira",
+  equipra: "konstra-equipra",
+  logis: "konstra-logis",
+  fintax: "konstra-fintax",
+} as const;
 
 /** Canonical UI route for each stored system-Claw slug, shared by server access
  * checks and the MultiClaw admin registry. Unknown slugs must not inherit a
@@ -31,7 +44,7 @@ export const MULTICLAW_AGENT_ROUTE_BY_SLUG: Readonly<Record<string, string>> = {
   "bim-claw-orchestrator": "/bim-claw",
   "desain-claw-orchestrator": "/desain-claw",
   "siteops-claw-orchestrator": "/siteops-claw",
-  "konstra-claw-orchestrator": "/konstra-claw",
+  [KONSTRA_ORCHESTRATOR_SLUG]: "/konstra-claw",
   "brain-project-orchestrator": "/brain-claw",
   "safira-claw-orchestrator": "/safira-claw",
   "hub-ims-smk3-terintegrasi": "/smk3-claw",

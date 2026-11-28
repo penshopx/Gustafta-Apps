@@ -5,7 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { saveAndVerifyMulticlawPersona } from "@/lib/multiclaw-persona-save";
 import { saveAndVerifyMulticlawConfig, saveAndVerifyMulticlawSystemPrompt } from "@/lib/multiclaw-config-save";
-import { PANDUAN_SBU_AGENT_SLUG } from "@shared/multiclaw-agent-slugs";
+import {
+  KONSTRA_ORCHESTRATOR_SLUG,
+  PANDUAN_SBU_AGENT_SLUG,
+} from "@shared/multiclaw-agent-slugs";
 import {
   ArrowLeft, Search, Settings, BookOpen, Sliders, Users, Loader2,
   Trash2, Plus, RefreshCw, CheckCircle2, Upload, ChevronRight,
@@ -41,7 +44,7 @@ const CLAW_REGISTRY = [
   { href: "/bim-claw", slug: "bim-claw-orchestrator", name: "BIMClaw", tagline: "AI Konsultan BIM & Konstruksi Digital", cat: "Teknik Konstruksi", color: "blue" },
   { href: "/desain-claw", slug: "desain-claw-orchestrator", name: "DesainClaw", tagline: "AI Konsultan Desain Arsitektur", cat: "Teknik Konstruksi", color: "rose" },
   { href: "/siteops-claw", slug: "siteops-claw-orchestrator", name: "SiteOpsClaw", tagline: "AI Konsultan Operasional Lapangan", cat: "Teknik Konstruksi", color: "orange" },
-  { href: "/konstra-claw", slug: "konstra-claw-orchestrator", name: "KonstraClaw", tagline: "Manajemen Proyek Konstruksi", cat: "Teknik Konstruksi", color: "slate" },
+  { href: "/konstra-claw", slug: KONSTRA_ORCHESTRATOR_SLUG, name: "KonstraClaw", tagline: "Manajemen Proyek Konstruksi", cat: "Teknik Konstruksi", color: "slate" },
   { href: "/brain-claw", slug: "brain-project-orchestrator", name: "BrainClaw", tagline: "Project Intelligence AI", cat: "Teknik Konstruksi", color: "cyan" },
   // K3 & Keselamatan
   { href: "/safira-claw", slug: "safira-claw-orchestrator", name: "SafiraClaw", tagline: "SKK K3 Konstruksi", cat: "K3 & Keselamatan", color: "red" },

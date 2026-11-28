@@ -7,17 +7,16 @@
  * - SE DJBK No. 182/2025 (AHSP TA 2025)
  * - SE DJBK No. 47/2026 (AHSP TA 2026 — terbaru)
  *
- * KB ini di-seed untuk:
- * - KONSTRA-ORCHESTRATOR (ID 1281)
- * - AGENT-TEKNIK (ID 1273)
- * - AGENT-KONTRAK (ID 1274)
- * - AGENT-MUTU (ID 1276)
- * - AGENT-FINTAX (ID 1280)
+ * KB ini di-seed untuk KonstraClaw dan spesialis terkait melalui slug kanonik.
  *
  * Marker: [AHSP_KB_v1]
  */
 
 import { storage } from "./storage";
+import {
+  KONSTRA_ORCHESTRATOR_SLUG,
+  KONSTRA_SPECIALIST_SLUGS,
+} from "../shared/multiclaw-agent-slugs";
 
 function log(msg: string) {
   const now = new Date().toLocaleTimeString();
@@ -26,8 +25,26 @@ function log(msg: string) {
 
 const PATCH_MARKER = "[AHSP_KB_v1]";
 
-// Agent IDs yang akan mendapat KB ini
-const TARGET_AGENT_IDS = [1281, 1273, 1274, 1276, 1280];
+// Resolve from stable slugs. Historic IDs 1273/1274/1276/1280/1281 now belong
+// to unrelated agents, so using numeric IDs here would contaminate their KB.
+export const AHSP_TARGET_AGENT_SLUGS = [
+  KONSTRA_ORCHESTRATOR_SLUG,
+  KONSTRA_SPECIALIST_SLUGS.teknik,
+  KONSTRA_SPECIALIST_SLUGS.kontrak,
+  KONSTRA_SPECIALIST_SLUGS.mutu,
+  KONSTRA_SPECIALIST_SLUGS.fintax,
+] as const;
+
+export async function resolveAhspTargetAgents(
+  getAgentBySlug: (slug: string) => Promise<{ id: string | number } | undefined | null>,
+) {
+  const resolved: Array<{ slug: string; agentId: string }> = [];
+  for (const slug of AHSP_TARGET_AGENT_SLUGS) {
+    const agent = await getAgentBySlug(slug);
+    if (agent) resolved.push({ slug, agentId: String(agent.id) });
+  }
+  return resolved;
+}
 
 // ─── AHSP DATA ────────────────────────────────────────────────────────────────
 
@@ -999,12 +1016,15 @@ ${DISCLAIMER}
 export async function seedAhspHspk() {
   try {
     // Cek apakah sudah pernah di-seed
-    for (const agentId of TARGET_AGENT_IDS) {
+    const targetAgents = await resolveAhspTargetAgents(
+      (slug) => storage.getAgentBySlug(slug),
+    );
+    for (const { slug, agentId } of targetAgents) {
       try {
         const existingKbs = await storage.getKnowledgeBases(String(agentId));
         const alreadySeeded = existingKbs.some((kb: any) => kb.name?.includes(PATCH_MARKER));
         if (alreadySeeded) {
-          log(`[Seed AHSP] Agent ${agentId} sudah ada KB AHSP, skip.`);
+          log(`[Seed AHSP] ${slug} sudah ada KB AHSP, skip.`);
           continue;
         }
 
@@ -1111,9 +1131,9 @@ export async function seedAhspHspk() {
           } as any);
           added++;
         }
-        log(`[Seed AHSP] Agent ${agentId} — ${added} KB AHSP/HSPK ditambahkan.`);
+        log(`[Seed AHSP] ${slug} — ${added} KB AHSP/HSPK ditambahkan.`);
       } catch (agentErr) {
-        log(`[Seed AHSP] Agent ${agentId} error: ${(agentErr as Error).message}`);
+        log(`[Seed AHSP] ${slug} error: ${(agentErr as Error).message}`);
       }
     }
   } catch (err) {

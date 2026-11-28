@@ -167,6 +167,7 @@ import * as M_pubLkutClaw from "./seed-pub-lkut-claw";
 import * as M_bgClaw from "./seed-bg-claw";
 import * as M_bsClaw from "./seed-bs-claw";
 import * as M_imClaw from "./seed-im-claw";
+import * as M_konstraClaw from "./seed-konstra-claw";
 import * as M_koClaw from "./seed-ko-claw";
 import * as M_kkClaw from "./seed-kk-claw";
 import * as M_pjbuClaw from "./seed-pjbu-claw";
@@ -274,6 +275,7 @@ const seedModuleRegistry: Record<string, any> = {
   "./seed-bg-claw": M_bgClaw,
   "./seed-bs-claw": M_bsClaw,
   "./seed-im-claw": M_imClaw,
+  "./seed-konstra-claw": M_konstraClaw,
   "./seed-ko-claw": M_koClaw,
   "./seed-kk-claw": M_kkClaw,
   "./seed-pjbu-claw": M_pjbuClaw,
@@ -2460,6 +2462,11 @@ Data yang belum tersedia akan saya estimasi dengan standar industri dan ditandai
       }
 
       // Seed: AHSP & HSPK Knowledge Base (KONSTRA agents)
+      try {
+        await M_konstraClaw.seedKonstraClaw();
+      } catch (err) {
+        log("[Seed KonstraClaw] Error: " + (err as Error).message);
+      }
       try {
         const { seedAhspHspk } = M_ahspHspk;
         await seedAhspHspk();

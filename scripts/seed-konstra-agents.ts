@@ -1,17 +1,11 @@
 /**
- * KONSTRA Multi-Agent System — Seed Script
- * 10 agents: KONSTRA-ORCHESTRATOR (ID 1281) + 9 Specialists (IDs 1272–1280)
- * All specialist prompts are ABD-Compliant v1.1 (Anti-Blocking Doctrine, May 2026)
- *
- * Run: npx tsx scripts/seed-konstra-agents.ts
+ * Canonical KonstraClaw prompt and specialist seed data.
+ * Legacy numeric IDs below describe the original seed only; runtime recovery
+ * resolves these records by stable slugs and never reuses those IDs.
  */
 
-import pg from "pg";
-const { Pool } = pg;
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
 // ─── ORCHESTRATOR SYSTEM PROMPT ──────────────────────────────────────────────
-const ORCHESTRATOR_PROMPT = `NAMA SYSTEM     : KONSTRA — Manajemen Konstruksi (OpenClaw Multi-Agent)
+export const ORCHESTRATOR_PROMPT = `NAMA SYSTEM     : KONSTRA — Manajemen Konstruksi (OpenClaw Multi-Agent)
 DOMAIN          : Project Management · Engineering · Kontrak · K3 · Mutu · Lingkungan · Peralatan · Logistik · Keuangan-Pajak
 STANDAR ACUAN   : PMBOK 7th + ISO 21500 + UU 2/2017 + Permen PUPR 8/2023 + Perpres 12/2021 + FIDIC + ISO 9001/14001/45001 + PSAK 34 + PP 9/2022
 VERSI           : v1.1 (ABD-Compliant, 2026-05-07)
@@ -1019,7 +1013,7 @@ const SHARED = {
   big_idea_id: 34, // Bidang Manajemen Pelaksanaan
 };
 
-const AGENTS = [
+export const AGENTS = [
   // ── 9 SPECIALIST AGENTS (IDs 1272–1280) ──────────────────────────────────
   {
     id: 1272,
@@ -1288,90 +1282,3 @@ Untuk mulai, bantu saya memahami konteks Anda:
     ]),
   },
 ];
-
-// ─── SEED FUNCTION ────────────────────────────────────────────────────────────
-async function seedKonstraAgents() {
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
-
-    // Set sequence past 1281 so auto-increment won't conflict
-    await client.query(`SELECT setval('agents_id_seq', 1281, true)`);
-
-    let inserted = 0;
-    let skipped = 0;
-
-    for (const agent of AGENTS) {
-      // Check if already exists
-      const existing = await client.query(
-        "SELECT id FROM agents WHERE id = $1",
-        [agent.id]
-      );
-
-      if (existing.rows.length > 0) {
-        console.log(`  SKIP  Agent ID ${agent.id} — ${agent.name} (already exists)`);
-        skipped++;
-        continue;
-      }
-
-      await client.query(
-        `INSERT INTO agents (
-          id, name, tagline, description, system_prompt, greeting_message,
-          personality, conversation_starters, language, ai_model,
-          is_active, is_public, trial_enabled, trial_days, guest_message_limit,
-          parent_agent_id, big_idea_id, behavior_preset, agent_role,
-          work_mode, primary_outcome, orchestrator_config,
-          agentic_sub_agents, domain_charter, quality_bar, risk_compliance
-        ) VALUES (
-          $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
-          $11,$12,$13,$14,$15,$16,$17,$18,$19,
-          $20,$21,$22,$23,$24,$25,$26
-        )`,
-        [
-          agent.id,
-          agent.name,
-          agent.tagline || "",
-          agent.description || "",
-          agent.system_prompt,
-          agent.greeting_message || "",
-          agent.personality || "",
-          JSON.stringify(agent.conversation_starters || []),
-          agent.language,
-          agent.ai_model,
-          agent.is_active,
-          agent.is_public,
-          agent.trial_enabled,
-          agent.trial_days,
-          agent.guest_message_limit,
-          agent.parent_agent_id || null,
-          agent.big_idea_id || null,
-          agent.behavior_preset || "specialist",
-          agent.agent_role || "",
-          agent.work_mode || "advisory",
-          agent.primary_outcome || "",
-          agent.orchestrator_config ? JSON.stringify(agent.orchestrator_config) : null,
-          agent.agentic_sub_agents,
-          (agent as any).domain_charter || "",
-          (agent as any).quality_bar || "",
-          (agent as any).risk_compliance || "",
-        ]
-      );
-
-      console.log(`  ✓ INSERT Agent ID ${agent.id} — ${agent.name}`);
-      inserted++;
-    }
-
-    await client.query("COMMIT");
-    console.log(`\n✅ Done! Inserted: ${inserted}, Skipped: ${skipped}`);
-    console.log(`   KONSTRA-ORCHESTRATOR (ID 1281) + 9 Specialist Agents (IDs 1272–1280)`);
-  } catch (err) {
-    await client.query("ROLLBACK");
-    console.error("❌ Error, rolled back:", err);
-    throw err;
-  } finally {
-    client.release();
-    await pool.end();
-  }
-}
-
-seedKonstraAgents();

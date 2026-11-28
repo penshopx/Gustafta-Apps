@@ -19,7 +19,10 @@ import {
 import { publicChatScope } from "./lib/public-chat-scope";
 import { createLegacyMemoryRecovery, RecoveryConflict } from "./lib/legacy-memory-recovery";
 import { ARCHIVE_REFERENCE_PATTERN, APPROVAL_REASON, REJECTION_REASONS } from "../shared/legacy-memory-evidence";
-import { PANDUAN_SBU_AGENT_SLUG } from "../shared/multiclaw-agent-slugs";
+import {
+  KONSTRA_ORCHESTRATOR_SLUG,
+  PANDUAN_SBU_AGENT_SLUG,
+} from "../shared/multiclaw-agent-slugs";
 import { db, pool } from "./db";
 import { registerTaxonomyAdminRoutes } from "./taxonomy-admin-routes";
 import { registerKBPublicationRoutes } from "./kb-publication-routes";
@@ -19179,7 +19182,7 @@ Jika informasi tidak ditemukan, isi dengan string kosong "".
       const { agents: agentsTable } = await import("@shared/schema");
       const { ilike } = await import("drizzle-orm");
 
-      let agent = await storage.getAgentBySlug("konstra-claw-orchestrator");
+      let agent = await storage.getAgentBySlug(KONSTRA_ORCHESTRATOR_SLUG);
 
       if (!agent) {
         const rows = await db.select().from(agentsTable)
@@ -19195,7 +19198,7 @@ Jika informasi tidak ditemukan, isi dengan string kosong "".
         if (rows.length > 0) agent = await storage.getAgent(String(rows[0].id));
       }
 
-      if (!agent) return res.status(404).json({ error: "KonstraClaw Orchestrator belum ditemukan. Pastikan agen ID 1281 ada di database." });
+      if (!agent) return res.status(404).json({ error: "KonstraClaw belum tersedia. Seed KonstraClaw perlu dipulihkan." });
       res.json({ id: agent.id, name: (agent as any).name, tagline: (agent as any).tagline, avatar: (agent as any).avatar });
     } catch (err: any) {
       res.status(500).json({ error: err.message });
